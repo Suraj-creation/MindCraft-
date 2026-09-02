@@ -105,30 +105,30 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-150">
-      <div className="w-full max-w-2xl bg-[#0a0a0a] border border-white/20 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[80vh]">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
+      <div className="w-full max-w-2xl bg-[#FBFAF6] border border-[rgba(20,25,26,0.16)] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
         {/* Search Input Bar */}
-        <div className="p-4 border-b border-white/10 flex items-center gap-3">
-          <Search className="w-5 h-5 text-indigo-400 shrink-0" />
+        <div className="p-4 border-b border-[rgba(20,25,26,0.1)] flex items-center gap-3 bg-white">
+          <Search className="w-5 h-5 text-[#123A2E] shrink-0" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search 24 industries, 45 African markets, capabilities, or business challenges..."
-            className="w-full bg-transparent text-sm md:text-base text-white placeholder-neutral-500 focus:outline-none"
+            className="w-full bg-transparent text-sm md:text-base text-[#16191A] placeholder-[#8A8578] focus:outline-none font-serif"
             autoFocus
           />
           {query && (
             <button 
               onClick={() => setQuery('')}
-              className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5"
+              className="p-1 rounded-lg text-[#8A8578] hover:text-[#16191A] hover:bg-black/5"
             >
               <X className="w-4 h-4" />
             </button>
           )}
           <button
             onClick={onClose}
-            className="text-xs font-mono text-neutral-400 border border-white/10 px-2 py-1 rounded-lg hover:bg-white/5"
+            className="text-xs font-mono text-[#8A8578] border border-[rgba(20,25,26,0.12)] px-2 py-1 rounded-md hover:bg-black/5"
           >
             ESC
           </button>
@@ -139,7 +139,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
           {searchResults ? (
             searchResults.length > 0 ? (
               <div className="space-y-2">
-                <div className="text-[11px] font-mono text-neutral-400 uppercase">
+                <div className="text-[11px] font-mono text-[#8A8578] uppercase">
                   Search Results ({searchResults.length})
                 </div>
                 {searchResults.map((res, idx) => (
@@ -152,10 +152,10 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
                       onNavigate(res.tab);
                       onClose();
                     }}
-                    className="w-full text-left p-3 rounded-xl bg-[#050505] border border-white/5 hover:border-indigo-500/40 hover:bg-indigo-950/20 transition-all flex items-center justify-between group"
+                    className="w-full text-left p-3 rounded-xl bg-white border border-[rgba(20,25,26,0.08)] hover:border-[#123A2E] hover:bg-[#F4F1EA] transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-white/5 text-neutral-400 group-hover:text-indigo-400 group-hover:bg-indigo-500/10 transition-colors">
+                      <div className="p-2 rounded-lg bg-[#123A2E]/10 text-[#123A2E] group-hover:bg-[#123A2E] group-hover:text-white transition-colors">
                         {res.type === 'Industry' && <Building2 className="w-4 h-4" />}
                         {res.type === 'Geography' && <Globe2 className="w-4 h-4" />}
                         {res.type === 'Business Challenge' && <HelpCircle className="w-4 h-4" />}
@@ -163,24 +163,24 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-white group-hover:text-indigo-300">
+                          <span className="text-sm font-serif font-normal text-[#16191A]">
                             {res.title}
                           </span>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-neutral-400 border border-white/10">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F4F1EA] text-[#4C524E] border border-[rgba(20,25,26,0.08)]">
                             {res.type}
                           </span>
                         </div>
-                        <p className="text-xs text-neutral-400 line-clamp-1 mt-0.5">
+                        <p className="text-xs text-[#4C524E] line-clamp-1 mt-0.5">
                           {res.subtitle}
                         </p>
                       </div>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-neutral-600 group-hover:text-indigo-400 transition-colors shrink-0" />
+                    <ArrowRight className="w-4 h-4 text-[#8A8578] group-hover:text-[#123A2E] transition-colors shrink-0" />
                   </button>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8 text-neutral-500 text-xs">
+              <div className="text-center py-8 text-[#8A8578] text-xs font-serif">
                 No matching results found for "{query}". Try searching for "Pharma", "Kenya", "Market Entry", or "Underwriting".
               </div>
             )
@@ -188,54 +188,54 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
             /* Default Suggested Fast-Access Links */
             <div className="space-y-4">
               <div>
-                <div className="text-[11px] font-mono text-neutral-400 uppercase mb-2">
+                <div className="text-[11px] font-mono text-[#8A8578] uppercase mb-2">
                   Popular Gateways & Frameworks
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <button
                     onClick={() => { onNavigate('industries'); onClose(); }}
-                    className="p-3 rounded-xl bg-[#050505] border border-white/5 hover:border-white/20 text-left transition-all"
+                    className="p-3 rounded-xl bg-white border border-[rgba(20,25,26,0.08)] hover:border-[#123A2E] text-left transition-all"
                   >
-                    <div className="text-xs font-semibold text-white flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-indigo-400" /> Universal Industry Explorer
+                    <div className="text-xs font-semibold text-[#16191A] flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-[#123A2E]" /> Universal Industry Explorer
                     </div>
-                    <div className="text-[11px] text-neutral-400 mt-0.5">24 Sectors (Pharma, Devices, Telco, Energy...)</div>
+                    <div className="text-[11px] text-[#4C524E] mt-0.5">24 Sectors (Pharma, Devices, Telco, Energy...)</div>
                   </button>
 
                   <button
                     onClick={() => { onNavigate('africa-explorer'); onClose(); }}
-                    className="p-3 rounded-xl bg-[#050505] border border-white/5 hover:border-white/20 text-left transition-all"
+                    className="p-3 rounded-xl bg-white border border-[rgba(20,25,26,0.08)] hover:border-[#123A2E] text-left transition-all"
                   >
-                    <div className="text-xs font-semibold text-white flex items-center gap-2">
-                      <Globe2 className="w-4 h-4 text-emerald-400" /> Africa Intelligence Hub
+                    <div className="text-xs font-semibold text-[#16191A] flex items-center gap-2">
+                      <Globe2 className="w-4 h-4 text-[#123A2E]" /> Africa Intelligence Hub
                     </div>
-                    <div className="text-[11px] text-neutral-400 mt-0.5">4 Regional Clusters & 45 Jurisdictions</div>
+                    <div className="text-[11px] text-[#4C524E] mt-0.5">4 Regional Clusters & 45 Jurisdictions</div>
                   </button>
 
                   <button
                     onClick={() => { onNavigate('market-entry'); onClose(); }}
-                    className="p-3 rounded-xl bg-[#050505] border border-white/5 hover:border-white/20 text-left transition-all"
+                    className="p-3 rounded-xl bg-white border border-[rgba(20,25,26,0.08)] hover:border-[#123A2E] text-left transition-all"
                   >
-                    <div className="text-xs font-semibold text-white flex items-center gap-2">
-                      <Compass className="w-4 h-4 text-sky-400" /> 9-Step Market Entry Framework
+                    <div className="text-xs font-semibold text-[#16191A] flex items-center gap-2">
+                      <Compass className="w-4 h-4 text-[#C0562F]" /> 9-Step Market Entry Framework
                     </div>
-                    <div className="text-[11px] text-neutral-400 mt-0.5">De-risk entry into any African market</div>
+                    <div className="text-[11px] text-[#4C524E] mt-0.5">De-risk entry into any African market</div>
                   </button>
 
                   <button
                     onClick={() => { onNavigate('matrix-3d'); onClose(); }}
-                    className="p-3 rounded-xl bg-[#050505] border border-white/5 hover:border-white/20 text-left transition-all"
+                    className="p-3 rounded-xl bg-white border border-[rgba(20,25,26,0.08)] hover:border-[#123A2E] text-left transition-all"
                   >
-                    <div className="text-xs font-semibold text-white flex items-center gap-2">
-                      <Layers className="w-4 h-4 text-amber-400" /> 3D Configuration Matrix
+                    <div className="text-xs font-semibold text-[#16191A] flex items-center gap-2">
+                      <Layers className="w-4 h-4 text-[#123A2E]" /> 3D Configuration Matrix
                     </div>
-                    <div className="text-[11px] text-neutral-400 mt-0.5">Industry × Geography × Capability</div>
+                    <div className="text-[11px] text-[#4C524E] mt-0.5">Industry × Geography × Capability</div>
                   </button>
                 </div>
               </div>
 
               <div>
-                <div className="text-[11px] font-mono text-neutral-400 uppercase mb-2">
+                <div className="text-[11px] font-mono text-[#8A8578] uppercase mb-2">
                   Top Industries
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -247,7 +247,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
                         onNavigate('industries');
                         onClose();
                       }}
-                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-neutral-300 border border-white/10 transition-colors"
+                      className="px-2.5 py-1 rounded-lg bg-white hover:bg-[#123A2E] hover:text-white text-xs text-[#3B4441] border border-[rgba(20,25,26,0.1)] transition-colors"
                     >
                       {i.name}
                     </button>
@@ -259,7 +259,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
         </div>
 
         {/* Footer info bar */}
-        <div className="p-3 border-t border-white/10 bg-[#050505] text-[11px] font-mono text-neutral-500 flex items-center justify-between">
+        <div className="p-3 border-t border-[rgba(20,25,26,0.08)] bg-[#F4F1EA] text-[11px] font-mono text-[#8A8578] flex items-center justify-between">
           <span>Navigate with mouse or keyboard</span>
           <span>Press ESC to close</span>
         </div>

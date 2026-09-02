@@ -2,515 +2,284 @@ import React, { useState } from 'react';
 import { NavTab, RoleLens } from '../types';
 import { 
   ArrowRight, 
-  Sparkles, 
   Globe2, 
-  Dna, 
+  Layers, 
+  Workflow, 
   Compass, 
   BarChart3, 
   GraduationCap, 
   Cpu, 
-  CheckCircle2, 
-  ShieldCheck, 
   ChevronRight,
-  TrendingUp,
-  Workflow,
-  Search,
-  Activity,
-  Layers
+  ShieldCheck,
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react';
 
 interface HeroOperatingSystemProps {
   setActiveTab: (tab: NavTab) => void;
-  roleLens: RoleLens;
+  roleLens?: RoleLens;
   onOpenIntake: () => void;
 }
 
 export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({
   setActiveTab,
-  roleLens,
+  roleLens = 'all',
   onOpenIntake
 }) => {
   const [selectedStage, setSelectedStage] = useState<number>(0);
 
-  const operatingStages = [
+  const glance = [
+    { k: 'Founded', v: '2026 · Nairobi, Kenya' },
+    { k: 'Core expertise', v: 'Life Sciences' },
+    { k: 'Geographic reach', v: 'Africa · Europe · USA' },
+    { k: 'Service pillars', v: 'Four, integrated' },
+  ];
+
+  const operatingSpine = [
     {
-      id: 'market-intel',
-      step: '01',
-      title: 'Market Intelligence',
-      sub: 'Primary Surveys & Pan-African Scans',
-      pillar: 'Market Research',
-      color: 'text-indigo-400',
-      badgeBorder: 'border-indigo-400/30 text-indigo-400',
-      details: 'Unvarnished primary physician/patient surveys, regulatory scans across 20+ African agencies, KOL mapping, and competitive pipeline intelligence.',
-      keyOutput: 'Decision-Ready Intelligence & Sizing Models'
+      k: '01',
+      label: 'Market',
+      role: 'The terrain',
+      body: 'We map the real structure of your market — its regulatory environment, channels, stakeholders, and competitive dynamics — before any strategic recommendation is made.'
     },
     {
-      id: 'strategy',
-      step: '02',
-      title: 'Strategic Advisory',
-      sub: 'Roadmaps, SOPs & Market Entry',
-      pillar: 'Business Consulting',
-      color: 'text-emerald-400',
-      badgeBorder: 'border-emerald-400/30 text-emerald-400',
-      details: 'Life Sciences market entry blueprints, portfolio prioritization, operating model redesign, and AI-readiness diagnostics.',
-      keyOutput: 'Board-Ready Strategic Roadmap'
+      k: '02',
+      label: 'Intelligence',
+      role: 'Evidence',
+      body: 'Primary and secondary research turn that terrain into decision-ready evidence: market sizing, competitive intelligence, and KOL/stakeholder insights.'
     },
     {
-      id: 'capability',
-      step: '03',
-      title: 'AI Capability',
-      sub: 'Executive & Workforce Enablement',
-      pillar: 'AI Training',
-      color: 'text-amber-400',
-      badgeBorder: 'border-amber-400/30 text-amber-400',
-      details: 'Applied executive literacy, function-specific prompt engineering (commercial, regulatory, clinical), and certified internal AI champion cohorts.',
-      keyOutput: 'Certified Internal AI Champions'
+      k: '03',
+      label: 'Strategy',
+      role: 'Direction',
+      body: 'Business consulting translates evidence into a clear strategic direction — where to play, how to win, and what to prioritise, grounded in sector reality.'
     },
     {
-      id: 'systems',
-      step: '04',
-      title: 'AI Deployment',
-      sub: 'Production Tenant-Isolated RAG',
-      pillar: 'AI Enterprise Solutions',
-      color: 'text-indigo-400',
-      badgeBorder: 'border-indigo-400/30 text-indigo-400',
-      details: 'Governed regulatory monitoring agents, automated pharmacovigilance screening, KOL influence graphs, and field sales AI copilots.',
-      keyOutput: 'Production AI Infrastructure'
+      k: '04',
+      label: 'AI Capability',
+      role: 'People',
+      body: 'Applied, function-specific AI training builds the internal literacy and champions your teams need to execute with modern tools.'
     },
     {
-      id: 'impact',
-      step: '05',
-      title: 'Continuous Value',
-      sub: 'Governed Clinical & Commercial ROI',
-      pillar: 'Continuous Value',
-      color: 'text-rose-400',
-      badgeBorder: 'border-rose-400/30 text-rose-400',
-      details: 'Accelerated market entry, compliance audit certainty, reduced clinical trial friction, and sustained commercial revenue growth.',
-      keyOutput: 'Verified Commercial & Clinical ROI'
+      k: '05',
+      label: 'AI Systems',
+      role: 'Technology',
+      body: 'Enterprise AI solutions operationalize intelligence — from market-monitoring platforms to regulatory automation embedded in daily workflows.'
+    },
+    {
+      k: '06',
+      label: 'Adoption',
+      role: 'Embedding',
+      body: 'Change management, governance and reinforcement ensure the strategy and systems are actually adopted — safely and consistently.'
+    },
+    {
+      k: '07',
+      label: 'Business Impact',
+      role: 'Outcome',
+      body: 'Everything ties back to measurable outcomes — efficiency, accuracy, and commercial growth — evaluated against the success criteria set at discovery.'
     }
   ];
 
   return (
-    <section className="relative pt-24 pb-16 overflow-hidden bg-[#050505] bg-grid-pattern border-b border-white/10">
-      {/* Ambient background glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-radial-glow pointer-events-none opacity-90" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="bg-[#F4F1EA]">
+      {/* 1. HERO ABOVE THE FOLD */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-12 sm:pb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
-        {/* Main Bento Grid Header Stage */}
-        <div className="grid grid-cols-12 gap-4 mb-6">
-          
-          {/* Bento Cell 1: Master Hero Display (Span 8) */}
-          <div className="col-span-12 lg:col-span-8 bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between group">
-            <div className="flex justify-between items-start mb-6">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-indigo-400 border border-indigo-400/30 px-2.5 py-0.5 rounded bg-indigo-950/40">
-                  MindCraft Core OS // v2026
-                </span>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 border border-white/10 px-2.5 py-0.5 rounded">
-                  Nairobi HQ · Pan-Africa
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest hidden sm:inline">Active Link</span>
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              </div>
-            </div>
-
-            <div>
-              <h1 className="text-3xl sm:text-5xl font-light tracking-tight text-white leading-[1.15] mb-5">
-                AI-Powered Growth <br />
-                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-teal-300 to-emerald-300">
-                  Grounded in African Context.
-                </span>
-              </h1>
-
-              <p className="text-sm sm:text-base text-white/70 leading-relaxed font-normal mb-8 max-w-2xl">
-                MindCraft bridges <span className="text-white font-medium">Business Consulting</span>, <span className="text-white font-medium">Primary Market Intelligence</span>, <span className="text-white font-medium">AI Workforce Training</span>, and <span className="text-white font-medium">Production AI Software</span> across Pan-African healthcare, pharmaceuticals, diagnostics, and diversified enterprise markets.
-              </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                onClick={onOpenIntake}
-                id="hero-primary-cta"
-                className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs sm:text-sm shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all flex items-center space-x-2"
-              >
-                <span>Start Engagement</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={() => setActiveTab('operating-model')}
-                id="hero-secondary-cta"
-                className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white/90 text-xs sm:text-sm font-mono uppercase tracking-wider border border-white/10 hover:border-white/20 transition-all flex items-center space-x-2"
-              >
-                <span>Explore Method</span>
-                <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />
-              </button>
-
-              <button
-                onClick={() => setActiveTab('industries')}
-                className="px-4 py-3 rounded-xl bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 text-xs sm:text-sm font-mono border border-indigo-500/30 transition-colors flex items-center space-x-2"
-              >
-                <Layers className="w-3.5 h-3.5 text-indigo-400" />
-                <span>24 Industries</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('africa-explorer')}
-                className="px-4 py-3 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 text-xs sm:text-sm font-mono border border-emerald-500/30 transition-colors flex items-center space-x-2"
-              >
-                <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Africa Hub</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('question-to-outcome')}
-                className="px-4 py-3 rounded-xl bg-transparent hover:bg-white/5 text-white/60 hover:text-white text-xs sm:text-sm font-mono border border-white/10 transition-colors flex items-center space-x-2"
-              >
-                <Workflow className="w-3.5 h-3.5 text-amber-400" />
-                <span>Problem-Led</span>
-              </button>
-            </div>
+        {/* Left Column: Clear Value Proposition */}
+        <div className="lg:col-span-7 space-y-6">
+          <div className="inline-flex items-center gap-2.5 font-mono text-[11px] tracking-widest uppercase text-[#C0562F] font-semibold">
+            <span className="w-5 h-[1.5px] bg-[#C0562F]"></span>
+            <span>AI-Powered Growth · Grounded in Intelligence</span>
           </div>
 
-          {/* Bento Cell 2: Live Telemetry & Allocation (Span 4) */}
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#16191A] leading-[1.05] tracking-tight font-normal">
+            From market complexity to{' '}
+            <em className="italic text-[#123A2E] font-normal">
+              measurable business impact.
+            </em>
+          </h1>
+
+          <p className="text-base sm:text-lg text-[#4C524E] leading-relaxed max-w-2xl">
+            MindCraft combines <strong className="text-[#16191A] font-semibold">Business Consulting</strong>, <strong className="text-[#16191A] font-semibold">Market Research</strong>, <strong className="text-[#16191A] font-semibold">AI Training</strong>, and <strong className="text-[#16191A] font-semibold">AI Enterprise Solutions</strong> — with deep Life Sciences expertise and a focused understanding of African markets.
+          </p>
+
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              onClick={onOpenIntake}
+              id="hero-primary-cta"
+              className="px-6 py-3.5 rounded-lg bg-[#123A2E] hover:bg-[#C0562F] text-[#F4F1EA] font-semibold text-sm shadow-sm transition-all duration-150 flex items-center space-x-2"
+            >
+              <span>Start a Conversation</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => setActiveTab('capabilities')}
+              id="hero-secondary-cta"
+              className="px-5 py-3.5 rounded-lg bg-transparent hover:bg-black/5 text-[#16191A] font-semibold text-sm border border-[rgba(20,25,26,0.22)] transition-all flex items-center space-x-2"
+            >
+              <span>Explore Capabilities</span>
+              <ChevronRight className="w-4 h-4 text-[#8A8578]" />
+            </button>
+          </div>
+
+          {/* Quick Factual At-A-Glance Indicators */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-[rgba(20,25,26,0.12)]">
+            {glance.map((g, idx) => (
+              <div key={idx} className="space-y-1">
+                <div className="font-mono text-[10px] tracking-wider uppercase text-[#8A8578]">
+                  {g.k}
+                </div>
+                <div className="text-xs sm:text-sm font-semibold text-[#16191A]">
+                  {g.v}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Column: 7-Stage MindCraft Operating Spine */}
+        <div className="lg:col-span-5">
+          <div className="border border-[rgba(20,25,26,0.14)] rounded-2xl bg-[#FBFAF6] p-5 sm:p-6 shadow-sm">
             
-            {/* Telemetry Metric Block 1 */}
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-5 flex flex-col justify-between flex-1">
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
-                  Intelligence Accuracy
-                </span>
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              </div>
-              <div className="my-3">
-                <div className="text-3xl sm:text-4xl font-light text-white mb-1">
-                  98.4<span className="text-lg text-white/30 font-mono">%</span>
-                </div>
-                <div className="text-[11px] text-white/40 font-mono uppercase tracking-wider">
-                  Harmonized Dossier Precision · 12 African Nations
-                </div>
-              </div>
-              <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                <div className="w-[98.4%] h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
-              </div>
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-[rgba(20,25,26,0.08)]">
+              <span className="font-mono text-[10px] tracking-widest uppercase text-[#8A8578]">
+                The MindCraft Operating Model
+              </span>
+              <span className="font-mono text-[10px] text-[#C0562F] font-semibold">
+                {operatingSpine[selectedStage].k} / 07
+              </span>
             </div>
 
-            {/* Telemetry Metric Block 2 */}
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-5 flex flex-col justify-between flex-1">
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
-                  Active Corridors
-                </span>
-                <span className="text-xs font-mono text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded bg-indigo-950/30">
-                  HQ NAIROBI
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-2 my-2 text-center font-mono">
-                <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-                  <div className="text-[10px] text-white/40 uppercase">EAC</div>
-                  <div className="text-base font-medium text-white">4 Markets</div>
-                </div>
-                <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-                  <div className="text-[10px] text-white/40 uppercase">ECOWAS</div>
-                  <div className="text-base font-medium text-white">3 Markets</div>
-                </div>
-                <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-                  <div className="text-[10px] text-white/40 uppercase">SADC</div>
-                  <div className="text-base font-medium text-white">5 Markets</div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center text-[10px] font-mono text-white/40 pt-1">
-                <span>PPB · NAFDAC · SAHPRA</span>
-                <span className="text-emerald-400">SYNCED</span>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Interactive Operating System Value Chain Bento Grid */}
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 sm:p-7 shadow-2xl mb-6">
-          
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-5 border-b border-white/10 gap-3">
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-indigo-400 border border-indigo-400/30 px-2 py-0.5 rounded">
-                  Operating Model Value Chain
-                </span>
-                <span className="text-[10px] font-mono uppercase text-white/40">
-                  Interactive Stages
-                </span>
-              </div>
-              <h2 className="text-lg font-normal text-white mt-1">
-                From Raw Market Complexity to Scalable Production Value
-              </h2>
-            </div>
-
-            <div className="text-[11px] font-mono text-white/40">
-              [Click any stage below to inspect]
-            </div>
-          </div>
-
-          {/* Value Chain Stages Bento Cells */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-5">
-            {operatingStages.map((stage, idx) => {
-              const isSelected = selectedStage === idx;
-              return (
-                <button
-                  key={stage.id}
-                  onClick={() => setSelectedStage(idx)}
-                  id={`hero-stage-${stage.id}`}
-                  className={`text-left p-4 rounded-xl border transition-all relative overflow-hidden group ${
-                    isSelected 
-                      ? 'bg-indigo-950/30 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.2)]' 
-                      : 'bg-[#050505] border-white/10 hover:border-white/20 hover:bg-white/5'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono font-bold text-white/40">
-                      {stage.step}
+            {/* Stage Selector Buttons */}
+            <div className="space-y-1">
+              {operatingSpine.map((stage, idx) => {
+                const isSelected = selectedStage === idx;
+                return (
+                  <button
+                    key={stage.k}
+                    onClick={() => setSelectedStage(idx)}
+                    className={`w-full text-left flex items-start gap-3 p-2.5 rounded-lg transition-all ${
+                      isSelected
+                        ? 'bg-[rgba(18,58,46,0.08)] text-[#123A2E]'
+                        : 'hover:bg-black/5 text-[#3B4441]'
+                    }`}
+                  >
+                    <span className={`font-mono text-[11px] pt-0.5 w-6 flex-none ${isSelected ? 'text-[#C0562F] font-bold' : 'text-[#8A8578]'}`}>
+                      {stage.k}
                     </span>
-                    <span className={`text-[9px] font-mono uppercase px-2 py-0.5 rounded border ${stage.badgeBorder}`}>
-                      {stage.pillar}
-                    </span>
-                  </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className={`text-sm font-semibold ${isSelected ? 'text-[#123A2E]' : 'text-[#16191A]'}`}>
+                          {stage.label}
+                        </span>
+                        <span className="text-[11px] font-mono text-[#8A8578]">
+                          {stage.role}
+                        </span>
+                      </div>
+                    </div>
+                    <span className={`w-2 h-2 rounded-full mt-1.5 flex-none ${isSelected ? 'bg-[#C0562F]' : 'bg-[rgba(20,25,26,0.15)]'}`} />
+                  </button>
+                );
+              })}
+            </div>
 
-                  <h3 className="text-xs font-bold text-white mb-1">
-                    {stage.title}
-                  </h3>
-
-                  <p className="text-[11px] text-white/50 leading-snug">
-                    {stage.sub}
-                  </p>
-
-                  {/* Active Indicator Bar */}
-                  {isSelected && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Active Stage Deep-Dive Bento Panel */}
-          <div className="rounded-xl bg-[#050505] border border-white/10 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1 max-w-3xl">
-              <div className="flex items-center space-x-2 text-xs font-mono">
-                <span className="font-semibold text-indigo-400">
-                  STAGE {operatingStages[selectedStage].step}: {operatingStages[selectedStage].title}
-                </span>
-                <span className="text-white/20">|</span>
-                <span className="text-white/50 text-[11px]">
-                  Delivered by {operatingStages[selectedStage].pillar}
-                </span>
-              </div>
-              <p className="text-xs text-white/70 leading-relaxed">
-                {operatingStages[selectedStage].details}
+            {/* Active Stage Explanation */}
+            <div className="mt-3 pt-3.5 border-t border-[rgba(20,25,26,0.08)]">
+              <p className="text-xs sm:text-sm text-[#3B4441] leading-relaxed">
+                {operatingSpine[selectedStage].body}
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
-              <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-right font-mono">
-                <div className="text-[9px] uppercase text-white/40">
-                  Deliverable Artifact
-                </div>
-                <div className="text-xs font-medium text-emerald-400">
-                  {operatingStages[selectedStage].keyOutput}
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  if (selectedStage === 0) setActiveTab('market-research');
-                  else if (selectedStage === 1) setActiveTab('consulting');
-                  else if (selectedStage === 2) setActiveTab('ai-training');
-                  else if (selectedStage === 3) setActiveTab('ai-solutions');
-                  else setActiveTab('question-to-outcome');
-                }}
-                className="px-3.5 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 text-xs font-mono flex items-center space-x-1.5 transition-colors"
-              >
-                <span>Deep Dive Pillar</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
           </div>
-
         </div>
 
-        {/* Global Exploration Gateways Bento Row */}
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 sm:p-7 shadow-2xl mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-5 border-b border-white/10 gap-2">
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-indigo-400 border border-indigo-400/30 px-2.5 py-0.5 rounded bg-indigo-950/40">
-                Where Do You Want to Explore?
-              </span>
-              <h2 className="text-lg font-semibold text-white mt-1.5">
-                Three Distinct Pathways Into MindCraft Intelligence
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-neutral-400">
-              Universal Coverage
+      </section>
+
+      {/* 2. "WHERE DO YOU WANT TO EXPLORE?" THREE GATEWAY PATHWAYS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
+        <div className="border-t border-[rgba(20,25,26,0.12)] pt-8">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-6">
+            <h2 className="font-serif text-2xl sm:text-3xl text-[#16191A] font-normal tracking-tight">
+              Where do you want to explore?
+            </h2>
+            <span className="font-mono text-[11px] tracking-wider uppercase text-[#8A8578]">
+              Three ways in · One unified intelligence system
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Pathway 1: By Industry */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            
+            {/* Gateway 1: By Industry */}
             <button
               onClick={() => setActiveTab('industries')}
-              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-indigo-500/60 hover:bg-indigo-950/20 transition-all text-left group flex flex-col justify-between"
+              className="p-6 rounded-xl border border-[rgba(20,25,26,0.14)] bg-[#FBFAF6] hover:border-[#123A2E] hover:shadow-md transition-all text-left flex flex-col justify-between group"
             >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                    <Layers className="w-5 h-5" />
-                  </span>
-                  <span className="text-xs font-mono text-indigo-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    Explore <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-                <h3 className="text-base font-bold text-white group-hover:text-indigo-300">
+              <div className="space-y-3">
+                <span className="font-mono text-[10px] tracking-widest uppercase text-[#C0562F] font-semibold">
                   By Industry Vertical
+                </span>
+                <h3 className="font-serif text-2xl text-[#16191A] group-hover:text-[#123A2E] leading-snug">
+                  “I know my sector.”
                 </h3>
-                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                  24 sectors including 6 Core Life Sciences (Pharma, Devices, Diagnostics...) and 18 Diversified Verticals (Telco, Energy, Mining, Agribusiness, Banking).
+                <p className="text-xs sm:text-sm text-[#4C524E] leading-relaxed">
+                  24 industries, from deep Life Sciences (Pharma, Devices, Diagnostics) to diversified sectors (Telco, Financial Services, Energy, Mining, Agribusiness).
                 </p>
               </div>
-              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
-                <span>24 Dossiers & Matrices</span>
-                <span className="text-indigo-400">View All →</span>
+              <div className="pt-4 mt-4 border-t border-[rgba(20,25,26,0.08)] flex items-center justify-between text-xs font-semibold text-[#123A2E]">
+                <span>Explore 24 Industries</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </button>
 
-            {/* Pathway 2: By African Geography */}
+            {/* Gateway 2: By Geography */}
             <button
               onClick={() => setActiveTab('africa-explorer')}
-              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-emerald-500/60 hover:bg-emerald-950/20 transition-all text-left group flex flex-col justify-between"
+              className="p-6 rounded-xl border border-[rgba(20,25,26,0.14)] bg-[#123A2E] text-[#EDE7D9] hover:bg-[#0E2C23] hover:shadow-md transition-all text-left flex flex-col justify-between group"
             >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    <Globe2 className="w-5 h-5" />
-                  </span>
-                  <span className="text-xs font-mono text-emerald-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    Explore <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-                <h3 className="text-base font-bold text-white group-hover:text-emerald-300">
-                  By African Geography
+              <div className="space-y-3">
+                <span className="font-mono text-[10px] tracking-widest uppercase text-[#D98A5F] font-semibold">
+                  By Geography & Markets
+                </span>
+                <h3 className="font-serif text-2xl text-[#F4F1EA] leading-snug">
+                  “I need market intelligence.”
                 </h3>
-                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                  4 Regional Clusters (East, West, Southern, North Africa) across 45 Jurisdictions with Country Dossiers and Industry Crossover Engine.
+                <p className="text-xs sm:text-sm text-[rgba(237,231,217,0.75)] leading-relaxed">
+                  Four African regional clusters, 45 national market dossiers, and bidirectional trade corridors linking Africa with Europe and the United States.
                 </p>
               </div>
-              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
-                <span>45 Markets & 9-Step Entry</span>
-                <span className="text-emerald-400">View Hub →</span>
+              <div className="pt-4 mt-4 border-t border-[rgba(237,231,217,0.15)] flex items-center justify-between text-xs font-semibold text-[#D98A5F]">
+                <span>Explore African Hub</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </button>
 
-            {/* Pathway 3: By Business Challenge */}
+            {/* Gateway 3: By Business Challenge */}
             <button
               onClick={() => setActiveTab('question-to-outcome')}
-              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-amber-500/60 hover:bg-amber-950/20 transition-all text-left group flex flex-col justify-between"
+              className="p-6 rounded-xl border border-[rgba(20,25,26,0.14)] bg-[#FBFAF6] hover:border-[#123A2E] hover:shadow-md transition-all text-left flex flex-col justify-between group"
             >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    <Workflow className="w-5 h-5" />
-                  </span>
-                  <span className="text-xs font-mono text-amber-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    Explore <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-                <h3 className="text-base font-bold text-white group-hover:text-amber-300">
+              <div className="space-y-3">
+                <span className="font-mono text-[10px] tracking-widest uppercase text-[#C0562F] font-semibold">
                   By Business Challenge
+                </span>
+                <h3 className="font-serif text-2xl text-[#16191A] group-hover:text-[#123A2E] leading-snug">
+                  “I know the problem.”
                 </h3>
-                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                  10 Archetypal Problem Cross-Sections: market entry, customer understanding, competitive intelligence, AI capability, automation, and digital transformation.
+                <p className="text-xs sm:text-sm text-[#4C524E] leading-relaxed">
+                  Start directly from the question you face (market entry, competitive intelligence, AI capability, process automation) and trace the full path to outcome.
                 </p>
               </div>
-              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
-                <span>10 Solution Architectures</span>
-                <span className="text-amber-400">Solve Now →</span>
+              <div className="pt-4 mt-4 border-t border-[rgba(20,25,26,0.08)] flex items-center justify-between text-xs font-semibold text-[#123A2E]">
+                <span>See Question to Outcome</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </button>
+
           </div>
         </div>
-
-        {/* Four Integrated Pillars Summary Bento Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <button
-            onClick={() => setActiveTab('consulting')}
-            className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center space-x-2 text-indigo-400">
-                <Compass className="w-4 h-4" />
-                <span className="text-xs font-mono uppercase font-bold text-white group-hover:text-indigo-300">
-                  Business Consulting
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-white/30">01</span>
-            </div>
-            <p className="text-[11px] text-white/50">Strategy, Operating Models, SOPs & Governance</p>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('market-research')}
-            className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center space-x-2 text-indigo-400">
-                <BarChart3 className="w-4 h-4" />
-                <span className="text-xs font-mono uppercase font-bold text-white group-hover:text-indigo-300">
-                  Market Research
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-white/30">02</span>
-            </div>
-            <p className="text-[11px] text-white/50">Primary Surveys, Physician Panels & Reg Scans</p>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('ai-training')}
-            className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center space-x-2 text-amber-400">
-                <GraduationCap className="w-4 h-4" />
-                <span className="text-xs font-mono uppercase font-bold text-white group-hover:text-amber-300">
-                  AI Training
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-white/30">03</span>
-            </div>
-            <p className="text-[11px] text-white/50">Executive Briefings, Prompting & AI Champions</p>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('ai-solutions')}
-            className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center space-x-2 text-emerald-400">
-                <Cpu className="w-4 h-4" />
-                <span className="text-xs font-mono uppercase font-bold text-white group-hover:text-emerald-300">
-                  AI Enterprise Solutions
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-white/30">04</span>
-            </div>
-            <p className="text-[11px] text-white/50">Production PV, Regulatory Monitors & Copilots</p>
-          </button>
-        </div>
-
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };

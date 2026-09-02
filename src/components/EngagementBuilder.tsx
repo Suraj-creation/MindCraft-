@@ -5,8 +5,6 @@ import {
   Layers, 
   CheckCircle2, 
   ArrowRight, 
-  Download, 
-  Share2, 
   Calendar, 
   Users, 
   Target, 
@@ -148,35 +146,34 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
   const blueprint = generateBlueprint();
 
   return (
-    <div className="py-20 bg-[#050505] border-b border-white/10" id="engagement-builder-section">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-[#F4F1EA] py-16 sm:py-24 border-b border-[rgba(20,25,26,0.12)]" id="engagement-builder-section">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#0a0a0a] border border-indigo-500/30 text-indigo-400 text-xs font-mono mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="uppercase tracking-widest text-[10px]">Interactive Architecture</span>
+        <div className="max-w-3xl">
+          <div className="font-mono text-[11px] tracking-widest uppercase text-[#C0562F] mb-3">
+            Interactive Architecture
           </div>
-          <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight">
-            Build Your <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-300">Engagement Blueprint</span>
+          <h2 className="font-serif text-3xl sm:text-5xl text-[#16191A] font-normal leading-tight tracking-tight">
+            Build Your Engagement Blueprint
           </h2>
-          <p className="text-white/60 text-sm sm:text-base mt-3 leading-relaxed">
+          <p className="text-sm sm:text-base text-[#4C524E] mt-3 leading-relaxed">
             Select your industry, geographic market, core capability need, and strategic objective to instantly generate a tailored MindCraft engagement architecture.
           </p>
         </div>
 
-        {/* 4 Interactive Dropdown / Selector Controls in Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        {/* 4 Interactive Dropdowns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           
           {/* Industry */}
-          <div className="p-5 rounded-2xl bg-[#0a0a0a] border border-white/10 space-y-2">
-            <label className="text-[10px] font-mono uppercase font-bold text-indigo-400 block">
-              01. Industry Vertical
+          <div className="p-5 rounded-xl bg-[#FBFAF6] border border-[rgba(20,25,26,0.12)] space-y-2">
+            <label className="font-mono text-[10px] uppercase font-bold text-[#C0562F] block">
+              01 · Industry Vertical
             </label>
             <select
               value={selectedIndustry}
               onChange={(e) => setSelectedIndustry(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-[#050505] border border-white/10 text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+              className="w-full p-2.5 rounded-lg bg-white border border-[rgba(20,25,26,0.12)] text-xs text-[#16191A] focus:outline-none focus:border-[#123A2E] font-sans"
             >
               {industries.map((ind, i) => (
                 <option key={i} value={ind}>{ind}</option>
@@ -185,14 +182,14 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
           </div>
 
           {/* Geography */}
-          <div className="p-5 rounded-2xl bg-[#0a0a0a] border border-white/10 space-y-2">
-            <label className="text-[10px] font-mono uppercase font-bold text-indigo-400 block">
-              02. Target Geography
+          <div className="p-5 rounded-xl bg-[#FBFAF6] border border-[rgba(20,25,26,0.12)] space-y-2">
+            <label className="font-mono text-[10px] uppercase font-bold text-[#123A2E] block">
+              02 · Target Geography
             </label>
             <select
               value={selectedGeography}
               onChange={(e) => setSelectedGeography(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-[#050505] border border-white/10 text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+              className="w-full p-2.5 rounded-lg bg-white border border-[rgba(20,25,26,0.12)] text-xs text-[#16191A] focus:outline-none focus:border-[#123A2E] font-sans"
             >
               {geographies.map((geo, i) => (
                 <option key={i} value={geo}>{geo}</option>
@@ -201,14 +198,14 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
           </div>
 
           {/* Need */}
-          <div className="p-5 rounded-2xl bg-[#0a0a0a] border border-white/10 space-y-2">
-            <label className="text-[10px] font-mono uppercase font-bold text-indigo-400 block">
-              03. Capability Need
+          <div className="p-5 rounded-xl bg-[#FBFAF6] border border-[rgba(20,25,26,0.12)] space-y-2">
+            <label className="font-mono text-[10px] uppercase font-bold text-[#123A2E] block">
+              03 · Capability Need
             </label>
             <select
               value={selectedNeed}
               onChange={(e) => setSelectedNeed(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-[#050505] border border-white/10 text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+              className="w-full p-2.5 rounded-lg bg-white border border-[rgba(20,25,26,0.12)] text-xs text-[#16191A] focus:outline-none focus:border-[#123A2E] font-sans"
             >
               {needs.map((nd, i) => (
                 <option key={i} value={nd}>{nd}</option>
@@ -217,14 +214,14 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
           </div>
 
           {/* Objective */}
-          <div className="p-5 rounded-2xl bg-[#0a0a0a] border border-white/10 space-y-2">
-            <label className="text-[10px] font-mono uppercase font-bold text-emerald-400 block">
-              04. Strategic Objective
+          <div className="p-5 rounded-xl bg-[#FBFAF6] border border-[rgba(20,25,26,0.12)] space-y-2">
+            <label className="font-mono text-[10px] uppercase font-bold text-[#C0562F] block">
+              04 · Strategic Objective
             </label>
             <select
               value={selectedObjective}
               onChange={(e) => setSelectedObjective(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-[#050505] border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono"
+              className="w-full p-2.5 rounded-lg bg-white border border-[rgba(20,25,26,0.12)] text-xs text-[#16191A] focus:outline-none focus:border-[#123A2E] font-sans"
             >
               {objectives.map((obj, i) => (
                 <option key={i} value={obj}>{obj}</option>
@@ -234,63 +231,57 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
 
         </div>
 
-        {/* DYNAMICALLY GENERATED ENGAGEMENT BLUEPRINT DOSSIER IN BENTO CONTAINER */}
-        <div className="rounded-2xl bg-[#0a0a0a] border border-indigo-500/50 p-6 sm:p-8 shadow-2xl space-y-8 relative overflow-hidden">
+        {/* Blueprint Output Panel */}
+        <div className="rounded-2xl border border-[rgba(20,25,26,0.14)] bg-[#FBFAF6] p-6 sm:p-10 shadow-sm space-y-8">
           
-          <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
-
-          {/* Blueprint Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-6 border-b border-white/10 gap-4">
+          {/* Top Info */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-6 border-b border-[rgba(20,25,26,0.08)] gap-4">
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 font-bold">
-                  CUSTOM ENGAGEMENT BLUEPRINT
+                <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-[#123A2E]/10 text-[#123A2E] font-bold uppercase">
+                  Custom Engagement Blueprint
                 </span>
-                <span className="text-xs px-2.5 py-1 rounded bg-[#050505] border border-white/10 text-white/60 font-mono">
+                <span className="text-xs px-2.5 py-1 rounded bg-white border border-[rgba(20,25,26,0.1)] text-[#6A6F6B] font-mono">
                   {blueprint.industry} · {blueprint.geography}
                 </span>
               </div>
-              <h3 className="text-2xl sm:text-3xl font-light text-white">
+              <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#16191A]">
                 {blueprint.objective}
               </h3>
-              <p className="text-xs sm:text-sm text-indigo-300 mt-1 font-mono">
+              <p className="text-xs sm:text-sm text-[#4C524E] mt-1 font-serif italic">
                 Integrated delivery model spanning research, strategic consulting, AI enablement & enterprise architecture.
               </p>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-3 shrink-0">
-              <button
-                onClick={() => onOpenIntakeWithBlueprint(blueprint)}
-                id="discuss-blueprint-btn"
-                className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono font-semibold text-xs sm:text-sm shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all flex items-center space-x-2"
-              >
-                <span>Discuss This Engagement</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
+            <button
+              onClick={() => onOpenIntakeWithBlueprint(blueprint)}
+              className="px-5 py-3 rounded-lg bg-[#123A2E] hover:bg-[#C0562F] text-white font-semibold text-xs sm:text-sm transition-colors flex items-center space-x-2 shrink-0 self-start lg:self-auto"
+            >
+              <span>Discuss This Engagement</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
 
           {/* 4 Workstreams Grid */}
           <div className="space-y-3">
-            <div className="text-xs font-mono uppercase font-bold text-indigo-400 flex items-center space-x-2">
-              <Layers className="w-3.5 h-3.5" />
+            <div className="font-mono text-xs uppercase font-bold text-[#123A2E] flex items-center space-x-2">
+              <Layers className="w-3.5 h-3.5 text-[#C0562F]" />
               <span>Recommended Integrated Workstreams</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
               {blueprint.workstreams.map((ws, i) => (
-                <div key={i} className="p-5 rounded-2xl bg-[#050505] border border-white/10 flex flex-col justify-between hover:border-indigo-500/30 transition-all">
+                <div key={i} className="p-5 rounded-xl bg-white border border-[rgba(20,25,26,0.08)] flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-bold text-white font-mono">{ws.pillar}</span>
-                      <span className="text-[10px] font-mono text-indigo-400">{ws.timeline}</span>
+                      <span className="text-xs font-bold text-[#16191A] font-serif">{ws.pillar}</span>
+                      <span className="text-[10px] font-mono text-[#C0562F] font-bold">{ws.timeline}</span>
                     </div>
-                    <p className="text-xs text-white/60 leading-relaxed">
+                    <p className="text-xs text-[#4C524E] leading-relaxed">
                       {ws.scope}
                     </p>
                   </div>
-                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] text-white/40 font-mono">
+                  <div className="mt-3 pt-2 border-t border-[rgba(20,25,26,0.06)] text-[10px] text-[#8A8578] font-mono">
                     Lead: MindCraft Senior Practice
                   </div>
                 </div>
@@ -298,22 +289,22 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
             </div>
           </div>
 
-          {/* 4 Indicative Delivery Phases */}
+          {/* 4 Phased Milestones */}
           <div className="space-y-3 pt-2">
-            <div className="text-xs font-mono uppercase font-bold text-indigo-300 flex items-center space-x-2">
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Indicative 12-Week Delivery Phasing</span>
+            <div className="font-mono text-xs uppercase font-bold text-[#123A2E] flex items-center space-x-2">
+              <Calendar className="w-3.5 h-3.5 text-[#C0562F]" />
+              <span>Indicative 12-Week Phased Milestones</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {blueprint.indicativePhases.map((ph, i) => (
-                <div key={i} className="p-5 rounded-2xl bg-[#050505] border border-white/10">
+                <div key={i} className="p-5 rounded-xl bg-white border border-[rgba(20,25,26,0.08)]">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-mono text-indigo-400 font-bold">{ph.phase}</span>
-                    <span className="text-[10px] text-white/40 font-mono">{ph.duration}</span>
+                    <span className="text-[10px] font-mono text-[#123A2E] font-bold">{ph.phase}</span>
+                    <span className="text-[10px] text-[#8A8578] font-mono">{ph.duration}</span>
                   </div>
-                  <div className="text-xs font-bold text-white mb-1.5 font-mono">{ph.title}</div>
-                  <p className="text-xs text-white/60 leading-relaxed">{ph.activities}</p>
+                  <div className="text-xs font-bold text-[#16191A] mb-1 font-serif">{ph.title}</div>
+                  <p className="text-xs text-[#4C524E] leading-relaxed">{ph.activities}</p>
                 </div>
               ))}
             </div>
@@ -322,65 +313,51 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
           {/* Deliverables + Stakeholders + Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
             
-            <div className="p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-2">
-              <div className="text-[11px] font-mono uppercase font-bold text-emerald-400 flex items-center space-x-1.5">
+            <div className="p-5 rounded-xl bg-white border border-[rgba(20,25,26,0.08)] space-y-2">
+              <div className="font-mono text-[10px] uppercase font-bold text-[#123A2E] flex items-center space-x-1.5">
                 <FileText className="w-3.5 h-3.5" />
                 <span>Expected Deliverables</span>
               </div>
               <ul className="space-y-1.5">
                 {blueprint.expectedDeliverables.map((del, i) => (
-                  <li key={i} className="text-xs text-white/70 flex items-start space-x-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <li key={i} className="text-xs text-[#3B4441] flex items-start space-x-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#123A2E] shrink-0 mt-0.5" />
                     <span>{del}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-2">
-              <div className="text-[11px] font-mono uppercase font-bold text-indigo-400 flex items-center space-x-1.5">
+            <div className="p-5 rounded-xl bg-white border border-[rgba(20,25,26,0.08)] space-y-2">
+              <div className="font-mono text-[10px] uppercase font-bold text-[#C0562F] flex items-center space-x-1.5">
                 <Users className="w-3.5 h-3.5" />
                 <span>Key Stakeholders Required</span>
               </div>
               <ul className="space-y-1.5">
                 {blueprint.keyStakeholders.map((stk, i) => (
-                  <li key={i} className="text-xs text-white/70 flex items-start space-x-2">
-                    <span className="text-indigo-400 font-bold">•</span>
+                  <li key={i} className="text-xs text-[#3B4441] flex items-start space-x-2">
+                    <span className="text-[#C0562F] font-bold">•</span>
                     <span>{stk}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="p-5 rounded-2xl bg-[#050505] border border-indigo-500/30 space-y-2">
-              <div className="text-[11px] font-mono uppercase font-bold text-indigo-300 flex items-center space-x-1.5">
-                <Target className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Success Impact Targets</span>
+            <div className="p-5 rounded-xl bg-[#123A2E]/5 border border-[#123A2E]/15 space-y-2">
+              <div className="font-mono text-[10px] uppercase font-bold text-[#123A2E] flex items-center space-x-1.5">
+                <Target className="w-3.5 h-3.5" />
+                <span>Measured Impact Targets</span>
               </div>
               <ul className="space-y-1.5">
                 {blueprint.successMetrics.map((met, i) => (
-                  <li key={i} className="text-xs text-indigo-200 font-mono font-medium flex items-start space-x-2">
-                    <span className="text-indigo-400 font-bold">↑</span>
+                  <li key={i} className="text-xs text-[#123A2E] font-medium flex items-start space-x-2">
+                    <span className="text-[#C0562F] font-bold">↑</span>
                     <span>{met}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-          </div>
-
-          {/* Bottom Confirmation Footer */}
-          <div className="p-5 rounded-2xl bg-[#050505] border border-indigo-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <span className="text-xs text-white/70 font-mono">
-              Ready to refine this blueprint with a senior MindCraft partner?
-            </span>
-            <button
-              onClick={() => onOpenIntakeWithBlueprint(blueprint)}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-semibold shrink-0 transition-colors flex items-center space-x-1.5 shadow-[0_0_10px_rgba(99,102,241,0.25)]"
-            >
-              <span>Schedule Blueprint Consultation</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
           </div>
 
         </div>
