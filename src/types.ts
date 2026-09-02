@@ -3,7 +3,10 @@ export type NavTab =
   | 'home'
   | 'operating-model'
   | 'life-sciences'
+  | 'industries'
   | 'africa-intelligence'
+  | 'africa-explorer'
+  | 'market-entry'
   | 'consulting'
   | 'market-research'
   | 'ai-training'
@@ -11,6 +14,7 @@ export type NavTab =
   | 'question-to-outcome'
   | 'scenarios'
   | 'capability-graph'
+  | 'matrix-3d'
   | 'maturity-model'
   | 'engagement-builder'
   | 'builder'
@@ -52,6 +56,48 @@ export interface ServicePillar {
   }[];
 }
 
+export interface UniversalIndustry {
+  id: string;
+  name: string;
+  category: 'core-lifesciences' | 'diversified-vertical';
+  tier: 'core' | 'cross-sector';
+  tagline: string;
+  description: string;
+  heritageNote?: string;
+  designMetaphor: {
+    theme: string;
+    accentColor: string;
+    icon: string;
+    keyMetricType: string;
+  };
+  context: string;
+  keyQuestions: string[];
+  researchAndIntelligence: string[];
+  consultingAndStrategy: string[];
+  aiOpportunities: string[];
+  capabilityBuilding: string[];
+  enterpriseSolutions: string[];
+  illustrativeEngagement: {
+    title: string;
+    challenge: string;
+    investigation: string;
+    strategicDecision: string;
+    aiLayer: string;
+    deliverables: string[];
+    outcomeFramework: string[];
+  };
+  sectorEcosystem: {
+    market: string;
+    competitors: string;
+    customers: string;
+    regulators: string;
+    operations: string;
+    technology: string;
+    people: string;
+    aiOpportunities: string;
+  };
+}
+
 export interface LifeSciencesSector {
   id: string;
   name: string;
@@ -82,13 +128,32 @@ export interface DiversifiedIndustry {
   methodology: string;
 }
 
+export type AfricaRegionName = 'East Africa' | 'West Africa' | 'Southern Africa' | 'North Africa';
+
+export interface AfricaRegionData {
+  name: AfricaRegionName;
+  countries: string[];
+  headline: string;
+  regionalContext: string;
+  industryOpportunity: string[];
+  researchCapability: string[];
+  strategicQuestions: string[];
+  aiOpportunities: string[];
+  potentialEngagements: string[];
+}
+
 export interface CountryDossier {
   id: string;
   name: string;
-  region: 'East Africa' | 'West Africa' | 'Southern Africa' | 'North Africa' | 'Central Africa';
+  region: AfricaRegionName | 'Central Africa';
   isHQ?: boolean;
   capital: string;
   currency: string;
+  regionalContext?: string;
+  mindcraftRelevance?: string;
+  industryLens?: string[];
+  intelligenceQuestions?: string[];
+  potentialEngagements?: string[];
   marketHighlights: string[];
   capabilityCoverage: {
     marketResearch: string;
@@ -100,6 +165,22 @@ export interface CountryDossier {
   keySectors: string[];
   typicalQuestions: string[];
   engagementModels: string[];
+}
+
+export interface ProblemCrossSection {
+  id: string;
+  problemTitle: string;
+  tagline: string;
+  triggerQuestion: string;
+  commonIndustries: string[];
+  mindcraftApproach: {
+    research: string;
+    strategy: string;
+    aiEnablement: string;
+    training: string;
+    measurableOutcome: string;
+  };
+  illustrativeEngagement: string;
 }
 
 export interface ProblemOutcomeScenario {

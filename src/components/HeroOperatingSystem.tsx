@@ -151,11 +151,27 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({
               </button>
 
               <button
+                onClick={() => setActiveTab('industries')}
+                className="px-4 py-3 rounded-xl bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 text-xs sm:text-sm font-mono border border-indigo-500/30 transition-colors flex items-center space-x-2"
+              >
+                <Layers className="w-3.5 h-3.5 text-indigo-400" />
+                <span>24 Industries</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('africa-explorer')}
+                className="px-4 py-3 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 text-xs sm:text-sm font-mono border border-emerald-500/30 transition-colors flex items-center space-x-2"
+              >
+                <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Africa Hub</span>
+              </button>
+
+              <button
                 onClick={() => setActiveTab('question-to-outcome')}
                 className="px-4 py-3 rounded-xl bg-transparent hover:bg-white/5 text-white/60 hover:text-white text-xs sm:text-sm font-mono border border-white/10 transition-colors flex items-center space-x-2"
               >
                 <Workflow className="w-3.5 h-3.5 text-amber-400" />
-                <span>Question-to-Outcome</span>
+                <span>Problem-Led</span>
               </button>
             </div>
           </div>
@@ -325,6 +341,106 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({
             </div>
           </div>
 
+        </div>
+
+        {/* Global Exploration Gateways Bento Row */}
+        <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 sm:p-7 shadow-2xl mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-5 border-b border-white/10 gap-2">
+            <div>
+              <span className="text-[10px] font-mono uppercase tracking-widest text-indigo-400 border border-indigo-400/30 px-2.5 py-0.5 rounded bg-indigo-950/40">
+                Where Do You Want to Explore?
+              </span>
+              <h2 className="text-lg font-semibold text-white mt-1.5">
+                Three Distinct Pathways Into MindCraft Intelligence
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-neutral-400">
+              Universal Coverage
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Pathway 1: By Industry */}
+            <button
+              onClick={() => setActiveTab('industries')}
+              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-indigo-500/60 hover:bg-indigo-950/20 transition-all text-left group flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <Layers className="w-5 h-5" />
+                  </span>
+                  <span className="text-xs font-mono text-indigo-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                    Explore <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-white group-hover:text-indigo-300">
+                  By Industry Vertical
+                </h3>
+                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
+                  24 sectors including 6 Core Life Sciences (Pharma, Devices, Diagnostics...) and 18 Diversified Verticals (Telco, Energy, Mining, Agribusiness, Banking).
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
+                <span>24 Dossiers & Matrices</span>
+                <span className="text-indigo-400">View All →</span>
+              </div>
+            </button>
+
+            {/* Pathway 2: By African Geography */}
+            <button
+              onClick={() => setActiveTab('africa-explorer')}
+              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-emerald-500/60 hover:bg-emerald-950/20 transition-all text-left group flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <Globe2 className="w-5 h-5" />
+                  </span>
+                  <span className="text-xs font-mono text-emerald-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                    Explore <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-white group-hover:text-emerald-300">
+                  By African Geography
+                </h3>
+                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
+                  4 Regional Clusters (East, West, Southern, North Africa) across 45 Jurisdictions with Country Dossiers and Industry Crossover Engine.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
+                <span>45 Markets & 9-Step Entry</span>
+                <span className="text-emerald-400">View Hub →</span>
+              </div>
+            </button>
+
+            {/* Pathway 3: By Business Challenge */}
+            <button
+              onClick={() => setActiveTab('question-to-outcome')}
+              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-amber-500/60 hover:bg-amber-950/20 transition-all text-left group flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    <Workflow className="w-5 h-5" />
+                  </span>
+                  <span className="text-xs font-mono text-amber-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                    Explore <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-white group-hover:text-amber-300">
+                  By Business Challenge
+                </h3>
+                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
+                  10 Archetypal Problem Cross-Sections: market entry, customer understanding, competitive intelligence, AI capability, automation, and digital transformation.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
+                <span>10 Solution Architectures</span>
+                <span className="text-amber-400">Solve Now →</span>
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Four Integrated Pillars Summary Bento Strip */}

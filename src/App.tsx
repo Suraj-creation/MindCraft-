@@ -16,14 +16,28 @@ import { CapabilityGraphView } from './components/CapabilityGraphView';
 import { AboutLeadership } from './components/AboutLeadership';
 import { EngagementIntakeModal } from './components/EngagementIntakeModal';
 import { Footer } from './components/Footer';
-import { ArrowUp, Sparkles, ShieldCheck, Compass, BarChart3, GraduationCap, Cpu, Dna, Globe2 } from 'lucide-react';
+
+// New Advanced Bento Components
+import { IndustryIntelligenceExplorer } from './components/IndustryIntelligenceExplorer';
+import { AfricaIntelligenceExplorer } from './components/AfricaIntelligenceExplorer';
+import { ProblemCrossSectionView } from './components/ProblemCrossSectionView';
+import { MarketEntryFrameworkView } from './components/MarketEntryFrameworkView';
+import { Matrix3DView } from './components/Matrix3DView';
+import { MindCraftUniverseOrbital } from './components/MindCraftUniverseOrbital';
+import { GlobalCommandSearchModal } from './components/GlobalCommandSearchModal';
+
+import { ArrowUp } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<NavTab>('overview');
+  const [activeTab, setActiveTab] = useState<NavTab>('home');
   const [activeRole, setActiveRole] = useState<RoleLens>('all');
   const [isIntakeOpen, setIsIntakeOpen] = useState<boolean>(false);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [activeBlueprint, setActiveBlueprint] = useState<EngagementBlueprint | null>(null);
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
+  
+  // Cross-component selected entities
+  const [preselectedIndustry, setPreselectedIndustry] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +49,18 @@ export default function App() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Global keydown listener for Cmd+K / Ctrl+K
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
   const handleOpenIntakeWithBlueprint = (blueprint: EngagementBlueprint) => {
@@ -51,7 +77,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Role perspective banner descriptions
+  // Role perspective descriptions
   const roleSummaries: { [key in RoleLens]: { title: string; desc: string; focus: string } } = {
     all: {
       title: 'Full Executive Overview',
@@ -85,7 +111,7 @@ export default function App() {
     },
     africa: {
       title: 'Pan-African Market Lead Lens',
-      desc: 'Highlighting 12+ national dossiers, local associate networks & regional harmonization.',
+      desc: 'Highlighting 45+ national dossiers, local associate networks & regional harmonization.',
       focus: 'Pan-Continental Operational Scale'
     },
     learning: {
@@ -112,14 +138,15 @@ export default function App() {
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        activeRole={activeRole}
-        setActiveRole={setActiveRole}
+        roleLens={activeRole}
+        setRoleLens={setActiveRole}
         onOpenIntake={handleOpenIntakeGeneric}
+        onOpenSearch={() => setIsSearchOpen(true)}
       />
 
       {/* Role Lens Active Notice Banner (if filtered) */}
       {activeRole !== 'all' && (
-        <div className="bg-[#0a0a0a] border-b border-indigo-500/20 px-4 py-2.5">
+        <div className="bg-[#0a0a0a] border-b border-indigo-500/20 px-4 py-2.5 mt-16">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
@@ -139,38 +166,36 @@ export default function App() {
       )}
 
       {/* Main View Router */}
-      <main>
-        {activeTab === 'overview' && (
+      <main className="pt-16">
+        {/* 1. Overview / Home */}
+        {(activeTab === 'home' || activeTab === 'overview') && (
           <div>
             <HeroOperatingSystem 
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
+              roleLens={activeRole}
             />
             <IntegratedModelSection 
               setActiveTab={setActiveTab}
               onOpenIntake={handleOpenIntakeGeneric}
             />
+            <IndustryIntelligenceExplorer
+              onNavigate={setActiveTab}
+              onSelectIndustryForEngagement={(ind) => setPreselectedIndustry(ind)}
+            />
+            <AfricaIntelligenceExplorer
+              onNavigate={setActiveTab}
+            />
+            <ProblemCrossSectionView
+              onNavigate={setActiveTab}
+            />
             <LifeSciencesEcosystem 
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
-            />
-            <AfricaIntelligenceMap 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
-            />
-            <MindCraftMethod 
-              onOpenIntake={handleOpenIntakeGeneric}
-            />
-            <QuestionToOutcomeEngine 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              roleLens={activeRole}
             />
             <EngagementBuilder 
               onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint}
-            />
-            <CapabilityGraphView 
-              setActiveTab={setActiveTab}
-              onOpenIntake={handleOpenIntakeGeneric}
             />
             <AboutLeadership 
               onOpenIntake={handleOpenIntakeGeneric}
@@ -179,6 +204,63 @@ export default function App() {
           </div>
         )}
 
+        {/* 2. 24 Industry Verticals Explorer */}
+        {activeTab === 'industries' && (
+          <div>
+            <IndustryIntelligenceExplorer
+              onNavigate={setActiveTab}
+              onSelectIndustryForEngagement={(ind) => setPreselectedIndustry(ind)}
+            />
+          </div>
+        )}
+
+        {/* 3. Africa Regional Clusters & 45 Jurisdictions Hub */}
+        {activeTab === 'africa-explorer' && (
+          <div>
+            <AfricaIntelligenceExplorer
+              onNavigate={setActiveTab}
+            />
+          </div>
+        )}
+
+        {/* 4. Problem-Led Cross-Sections ("What Are You Trying to Solve?") */}
+        {(activeTab === 'question-to-outcome' || activeTab === 'problem-cross-sections') && (
+          <div>
+            <ProblemCrossSectionView
+              onNavigate={setActiveTab}
+            />
+          </div>
+        )}
+
+        {/* 5. 9-Step Signature Market Entry Framework */}
+        {activeTab === 'market-entry' && (
+          <div>
+            <MarketEntryFrameworkView
+              onNavigate={setActiveTab}
+            />
+          </div>
+        )}
+
+        {/* 6. 3D Matrix Configuration Engine (24 Ind × 5 Geo × 4 Cap) */}
+        {activeTab === 'matrix-3d' && (
+          <div>
+            <Matrix3DView
+              onNavigate={setActiveTab}
+            />
+          </div>
+        )}
+
+        {/* 7. MindCraft Universe Orbital Graph */}
+        {activeTab === 'capability-graph' && (
+          <div>
+            <MindCraftUniverseOrbital
+              onNavigate={setActiveTab}
+              onSelectIndustry={(ind) => setPreselectedIndustry(ind)}
+            />
+          </div>
+        )}
+
+        {/* 8. Core Service Pillars */}
         {activeTab === 'consulting' && (
           <div>
             <BusinessConsultingPillar 
@@ -193,10 +275,6 @@ export default function App() {
         {activeTab === 'market-research' && (
           <div>
             <MarketResearchWorkspace 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
-            />
-            <AfricaIntelligenceMap 
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
@@ -220,98 +298,62 @@ export default function App() {
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
-            <CapabilityGraphView 
-              setActiveTab={setActiveTab}
-              onOpenIntake={handleOpenIntakeGeneric}
-            />
             <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
+        {/* 9. Life Sciences Heritage Hub */}
         {activeTab === 'life-sciences' && (
           <div>
             <LifeSciencesEcosystem 
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
+              roleLens={activeRole}
             />
-            <MarketResearchWorkspace 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+            <IndustryIntelligenceExplorer
+              onNavigate={setActiveTab}
             />
             <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
+        {/* 10. Africa Intelligence Map */}
         {activeTab === 'africa-intelligence' && (
           <div>
             <AfricaIntelligenceMap 
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
-            <LifeSciencesEcosystem 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+            <AfricaIntelligenceExplorer
+              onNavigate={setActiveTab}
             />
             <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
-        {activeTab === 'method' && (
+        {/* 11. Operating Model & MindCraft Method */}
+        {activeTab === 'operating-model' && (
           <div>
-            <MindCraftMethod onOpenIntake={handleOpenIntakeGeneric} />
-            <QuestionToOutcomeEngine 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
-            />
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
-          </div>
-        )}
-
-        {activeTab === 'scenarios' && (
-          <div>
-            <QuestionToOutcomeEngine 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
-            />
-            <CapabilityGraphView 
-              setActiveTab={setActiveTab}
-              onOpenIntake={handleOpenIntakeGeneric}
-            />
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
-          </div>
-        )}
-
-        {activeTab === 'builder' && (
-          <div>
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
             <IntegratedModelSection 
               setActiveTab={setActiveTab}
               onOpenIntake={handleOpenIntakeGeneric}
             />
+            <MindCraftMethod onOpenIntake={handleOpenIntakeGeneric} />
+            <MindCraftUniverseOrbital onNavigate={setActiveTab} />
           </div>
         )}
 
-        {activeTab === 'capability-graph' && (
+        {/* 12. Engagement Builder */}
+        {(activeTab === 'engagement-builder' || activeTab === 'builder') && (
           <div>
-            <CapabilityGraphView 
-              setActiveTab={setActiveTab}
-              onOpenIntake={handleOpenIntakeGeneric}
-            />
-            <QuestionToOutcomeEngine 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
-            />
             <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
+        {/* 13. About / Leadership */}
         {activeTab === 'about' && (
           <div>
             <AboutLeadership 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
-            />
-            <AfricaIntelligenceMap 
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
@@ -326,6 +368,14 @@ export default function App() {
         initialBlueprint={activeBlueprint}
       />
 
+      {/* Global Command Search Modal (Cmd+K) */}
+      <GlobalCommandSearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onNavigate={setActiveTab}
+        onSelectIndustry={(indId) => setPreselectedIndustry(indId)}
+      />
+
       {/* Global Footer */}
       <Footer 
         setActiveTab={setActiveTab}
@@ -337,7 +387,7 @@ export default function App() {
         <button
           onClick={scrollToTop}
           id="back-to-top-btn"
-          className="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-teal-600 hover:bg-teal-500 text-white shadow-xl shadow-teal-950 transition-all animate-in fade-in zoom-in-75 duration-200"
+          className="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-xl shadow-indigo-950 transition-all animate-in fade-in zoom-in-75 duration-200"
           aria-label="Back to Top"
         >
           <ArrowUp className="w-5 h-5" />

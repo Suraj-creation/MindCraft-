@@ -53,13 +53,33 @@ export const Header: React.FC<HeaderProps> = ({
   const navItems = [
     { id: 'home' as NavTab, label: 'Overview' },
     { 
-      id: 'life-sciences' as NavTab, 
-      label: 'Life Sciences',
-      badge: 'Core Heritage',
+      id: 'industries' as NavTab, 
+      label: 'Industries',
+      badge: '24 Sectors',
       dropdown: [
-        { id: 'life-sciences', label: 'Life Sciences Hub', desc: 'Core domain ecosystem across 6 healthcare sectors' },
-        { id: 'africa-intelligence', label: 'Africa Market Intelligence', desc: 'Pan-African regulatory & commercial coverage' },
-        { id: 'question-to-outcome', label: 'From Question to Outcome', desc: 'Interactive strategic problem-solving engine' }
+        { id: 'industries', label: '24 Industry Verticals Explorer', desc: 'Comprehensive dossiers & key strategic questions across 24 sectors' },
+        { id: 'matrix-3d', label: '3D Matrix Configuration', desc: 'Intersect 24 Industries × 5 Geographies × 4 Capabilities' },
+        { id: 'life-sciences', label: 'Core Life Sciences Ecosystem', desc: 'Deep heritage across Pharma, Devices, Diagnostics, and Biotech' }
+      ]
+    },
+    { 
+      id: 'africa-explorer' as NavTab, 
+      label: 'Africa Hub',
+      badge: '4 Regions',
+      dropdown: [
+        { id: 'africa-explorer', label: '4 Regional Clusters & 45 Jurisdictions', desc: 'East, West, Southern, North Africa intelligence & country dossiers' },
+        { id: 'market-entry', label: '9-Step Pan-African Market Entry', desc: 'Signature framework to de-risk and accelerate expansion' },
+        { id: 'africa-intelligence', label: 'Interactive Regulatory Map', desc: 'PPB, NAFDAC, SAHPRA and regional harmonization tracker' }
+      ]
+    },
+    { 
+      id: 'question-to-outcome' as NavTab, 
+      label: 'Problem-Led',
+      badge: '10 Challenges',
+      dropdown: [
+        { id: 'question-to-outcome', label: 'What Are You Trying to Solve?', desc: '10 Archetypal business challenges with 5-pillar integrated solutions' },
+        { id: 'capability-graph', label: 'MindCraft Universe (Orbital)', desc: 'Concentric system topology of capabilities, sectors & geographies' },
+        { id: 'engagement-builder', label: 'Engagement Blueprint Builder', desc: 'Instant scoping and timeline generation for executive sign-off' }
       ]
     },
     { 
@@ -76,14 +96,12 @@ export const Header: React.FC<HeaderProps> = ({
       id: 'operating-model' as NavTab,
       label: 'Operating System',
       dropdown: [
-        { id: 'operating-model', label: 'The MindCraft Model', desc: 'Four integrated capabilities under one partner' },
-        { id: 'capability-graph', label: 'Capability Network Graph', desc: 'Interactive multi-dimensional capability map' },
-        { id: 'maturity-model', label: 'AI Transformation Maturity', desc: 'Level 0 to Level 5 readiness ladder' },
-        { id: 'engagement-builder', label: 'Engagement Blueprint Builder', desc: 'Generate customized engagement blueprints' }
+        { id: 'operating-model', label: 'The MindCraft Model', desc: 'Four integrated capabilities under one multidisciplinary partner' },
+        { id: 'maturity-model', label: 'AI Transformation Maturity', desc: 'Level 0 to Level 5 enterprise readiness ladder' },
+        { id: 'engagement-builder', label: 'Custom Engagement Builder', desc: 'Generate customized scoped engagement blueprints' }
       ]
     },
     { id: 'responsible-ai' as NavTab, label: 'Responsible AI' },
-    { id: 'insights' as NavTab, label: 'Insights' },
     { id: 'about' as NavTab, label: 'About' }
   ];
 
