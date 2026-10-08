@@ -1,34 +1,38 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { MotionConfig, motion, AnimatePresence } from 'motion/react';
 import {
   Orbit,
   CheckCircle2,
-  ArrowRight,
 } from 'lucide-react';
 import { UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { SERVICE_PILLARS } from '../data/mindcraftData';
 import { NavTab } from '../types';
+import { ContextualCTA, EASE } from './ui/primitives';
 
 interface Props {
   onNavigate: (tab: NavTab) => void;
   onSelectIndustry?: (industryId: string) => void;
+  /** Heading level for the page title. Defaults to 2 (this view follows the model + method on the operating-model page). */
+  headingLevel?: 1 | 2;
 }
 
 type RingId = 'center' | 'capabilities' | 'industries' | 'regions' | 'outcomes';
 
-const EASE = [0.16, 1, 0.3, 1] as const;
-
 const OUTCOMES = [
   'Accelerated Pan-African Market Access & Fast-Track Approvals',
   'Protected Commercial Margins & Vetted Distributor Networks',
-  '70%+ Daily Governed Enterprise AI Tool Adoption',
+  'Sustained Daily Adoption of Governed Enterprise AI Tools',
   'Automated Claims, Tender Tracking & Intelligent Document Engines'
 ];
 
+const TOTAL_JURISDICTIONS = AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0);
+
 export const MindCraftUniverseOrbital: React.FC<Props> = ({
   onNavigate,
-  onSelectIndustry
+  onSelectIndustry,
+  headingLevel = 2
 }) => {
+  const Heading = headingLevel === 1 ? 'h1' : 'h2';
   const [activeRing, setActiveRing] = useState<RingId>('capabilities');
 
   const ringsInfo: { id: RingId; name: string; desc: string; count: string }[] = [
@@ -53,7 +57,7 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({
     {
       id: 'regions',
       name: 'Ring 3: African Geographies',
-      desc: 'East Africa, West Africa, Southern Africa, North Africa (45 Jurisdictions).',
+      desc: `East Africa, West Africa, Southern Africa, North Africa (${TOTAL_JURISDICTIONS} Jurisdictions).`,
       count: '4 Regions'
     },
     {
@@ -77,33 +81,25 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({
   const activate = (id: RingId) => setActiveRing(id);
 
   return (
-    <div className="w-full min-h-dvh bg-[#050505] text-white overflow-x-clip">
-      <div className="mc-container mc-section !border-b-0 space-y-6 md:space-y-8">
-        {/* Header: intent + single CTA */}
-        <header className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-          <div className="space-y-3 min-w-0">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="mc-eyebrow">MindCraft Universe</span>
-              <span className="text-[11px] text-neutral-400 font-mono">Orbital Systems & Ecosystem Topology</span>
-            </div>
-            <h1 className="mc-h1 font-semibold tracking-tight">Orbital Architecture Explorer</h1>
-            <p className="mc-lead">
-              A concentric visualization illustrating how MindCraft’s nucleus powers 4 capabilities, 24 industry verticals, 4 African geographic clusters, and verified business outcomes.
-            </p>
-          </div>
-          <button
-            onClick={() => onNavigate('industries')}
-            className="mc-tap px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition-colors active:scale-[0.98] shrink-0 inline-flex items-center justify-center gap-2"
-          >
-            Explore 24 Industries <ArrowRight className="w-4 h-4" />
-          </button>
+    <MotionConfig reducedMotion="user">
+    <section className="mc-section bg-[#050505] text-white" id="model-universe">
+      <div className="mc-container space-y-6 md:space-y-8">
+        {/* A. Intent */}
+        <header className="max-w-3xl">
+          <span className="mc-eyebrow">MindCraft universe</span>
+          <Heading className={`${headingLevel === 1 ? 'mc-h1' : 'mc-h2'} mt-3 font-light`}>
+            Where the model <span className="font-semibold">applies</span>
+          </Heading>
+          <p className="mc-lead mt-3">
+            One nucleus powers 4 capabilities across 24 industry verticals, {AFRICA_REGIONS_DATA.length} African regional clusters and measurable business outcomes. Select a layer to inspect it.
+          </p>
         </header>
 
-        {/* Layer selector: vertical list on phones (fallback to the graph), grid on larger screens */}
+        {/* Layer selector: swipeable chips on phones, grid on larger screens */}
         <div
           role="tablist"
           aria-label="Orbital layers"
-          className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3"
+          className="mc-snap-row sm:!grid sm:!grid-cols-3 lg:!grid-cols-5 sm:!overflow-visible sm:!gap-3"
         >
           {ringsInfo.map((r) => {
             const isActive = activeRing === r.id;
@@ -111,22 +107,25 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({
             return (
               <button
                 key={r.id}
+                type="button"
                 role="tab"
+                id={`orbital-tab-${r.id}`}
                 aria-selected={isActive}
+                aria-controls="orbital-panel"
                 onClick={() => activate(r.id)}
-                className={`mc-tap p-3.5 sm:p-4 rounded-2xl border text-left transition-colors active:scale-[0.98] ${
+                className={`mc-tap !flex-none !basis-auto sm:!basis-auto px-3.5 py-2.5 sm:p-4 rounded-xl border text-left transition-colors active:scale-[0.98] ${
                   isActive
                     ? 'bg-[#0d0f17] border-indigo-500/60'
                     : 'bg-[#0a0a0a] border-white/10 hover:border-white/25'
                 }`}
               >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-sm text-white">{head}</span>
-                  <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-white/5 text-neutral-400 shrink-0">
+                <div className="flex items-center gap-2 sm:justify-between">
+                  <span className="font-semibold text-sm text-white whitespace-nowrap">{head}</span>
+                  <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-white/5 text-neutral-400 shrink-0 whitespace-nowrap">
                     {r.count}
                   </span>
                 </div>
-                <p className="text-xs text-neutral-400 mt-1 sm:line-clamp-2">{tail?.trim()}</p>
+                <p className="hidden sm:block text-xs text-neutral-400 mt-1 sm:line-clamp-2">{tail?.trim()}</p>
               </button>
             );
           })}
@@ -220,9 +219,9 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({
           </div>
 
           {/* Active layer inspector */}
-          <div className="lg:col-span-5 sm:max-lg:col-span-1 min-w-0 bg-[#0a0a0a] border border-indigo-500/35 rounded-2xl p-5 md:p-7 space-y-5">
+          <div id="orbital-panel" role="tabpanel" aria-labelledby={`orbital-tab-${activeRing}`} className="lg:col-span-5 sm:max-lg:col-span-1 min-w-0 bg-[#0a0a0a] border border-indigo-500/35 rounded-2xl p-4 md:p-7 space-y-4">
             <div>
-              <span className="mc-eyebrow">Active Layer Inspector</span>
+              <span className="mc-eyebrow">Active layer</span>
               <h3 className="text-xl font-bold text-white mt-2">{active.name}</h3>
               <p className="text-sm text-neutral-400 mt-1">{active.desc}</p>
             </div>
@@ -249,15 +248,16 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({
                 {activeRing === 'industries' && (
                   <div className="space-y-3">
                     <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">Core Life Sciences (6) & Verticals (18)</div>
-                    <div className="flex flex-wrap gap-2 max-h-[40dvh] lg:max-h-[300px] overflow-y-auto pr-1">
+                    <div className="flex flex-wrap gap-2 max-h-[16rem] lg:max-h-[300px] overflow-y-auto pr-1">
                       {UNIVERSAL_INDUSTRIES.map(i => (
                         <button
                           key={i.id}
+                          type="button"
                           onClick={() => {
                             if (onSelectIndustry) onSelectIndustry(i.id);
                             onNavigate('industries');
                           }}
-                          className={`min-h-9 px-3 py-1.5 rounded-lg text-xs transition-colors active:scale-[0.98] ${
+                          className={`mc-tap px-3 py-1.5 rounded-lg text-xs transition-colors active:scale-[0.98] ${
                             i.category === 'core-lifesciences'
                               ? 'bg-[#0d0f17] text-indigo-400 border border-indigo-500/35 hover:bg-indigo-500/10'
                               : 'bg-white/5 text-[#E0E0E0] border border-white/10 hover:bg-white/10'
@@ -299,24 +299,27 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({
                   <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] flex items-start gap-3 text-sm text-[#E0E0E0]">
                     <Orbit className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" aria-hidden="true" />
                     <p>
-                      MindCraft is the specialized consulting, research, and enterprise AI transformation house operating from Nairobi, Kenya with bi-directional reach across Africa, Europe, and North America.
+                      MindCraft is the specialized consulting, research, and enterprise AI transformation house headquartered in Nairobi, Kenya, serving Africa (primary focus), Europe and the United States.
                     </p>
                   </div>
                 )}
               </motion.div>
             </AnimatePresence>
 
-            <div className="pt-4 border-t border-white/10">
-              <button
-                onClick={() => onNavigate('engagement-builder')}
-                className="mc-tap w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
-              >
-                Configure Custom Engagement <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
           </div>
         </div>
+
+        {/* One closing CTA for the whole page */}
+        <ContextualCTA
+          title="Configure an engagement across the model"
+          body="Combine capabilities, industries and geographies into a scoped engagement."
+          primaryLabel="Configure custom engagement"
+          onPrimary={() => onNavigate('engagement-builder')}
+          secondaryLabel="Explore 24 industries"
+          onSecondary={() => onNavigate('industries')}
+        />
       </div>
-    </div>
+    </section>
+    </MotionConfig>
   );
 };

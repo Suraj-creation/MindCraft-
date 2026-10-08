@@ -45,6 +45,7 @@ interface Props {
   onNavigate: (tab: NavTab) => void;
   onSelectIndustryForEngagement?: (industryName: string) => void;
   initialIndustryId?: string;
+  headingLevel?: 1 | 2;
 }
 
 type CategoryFilter = 'all' | 'core-lifesciences' | 'diversified-vertical';
@@ -152,8 +153,10 @@ const BulletList: React.FC<{ items: string[]; tone: Tone }> = ({ items, tone }) 
 export const IndustryIntelligenceExplorer: React.FC<Props> = ({
   onNavigate,
   onSelectIndustryForEngagement,
-  initialIndustryId
+  initialIndustryId,
+  headingLevel = 2
 }) => {
+  const Heading = headingLevel === 1 ? 'h1' : 'h2';
   const [selectedIndustryId, setSelectedIndustryId] = useState<string>(
     initialIndustryId || UNIVERSAL_INDUSTRIES[0].id
   );
@@ -310,9 +313,9 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
             <Layers className="w-3.5 h-3.5" aria-hidden="true" />
             Universal Industry Intelligence Explorer
           </p>
-          <h2 id="industry-explorer-title" className="mc-h2 font-semibold">
+          <Heading id="industry-explorer-title" className={`${headingLevel === 1 ? 'mc-h1' : 'mc-h2'} font-semibold`}>
             Industry Intelligence &amp; Capabilities
-          </h2>
+          </Heading>
           <p className="mc-lead">
             Explore MindCraft’s specialized research, strategic consulting, AI capability building, and custom enterprise systems across {totalCount} distinct industry sectors.
           </p>

@@ -20,6 +20,7 @@ import { NavTab } from '../types';
 interface Props {
   onNavigate: (tab: NavTab) => void;
   onSelectEngagementConfig?: (industry: string, geography: string, capability: string) => void;
+  headingLevel?: 1 | 2;
 }
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -61,8 +62,10 @@ const SelectChevron = () => (
 
 export const Matrix3DView: React.FC<Props> = ({
   onNavigate,
-  onSelectEngagementConfig
+  onSelectEngagementConfig,
+  headingLevel = 2
 }) => {
+  const Heading = headingLevel === 1 ? 'h1' : 'h2';
   const [selectedIndustryId, setSelectedIndustryId] = useState('pharmaceuticals');
   const [selectedGeography, setSelectedGeography] = useState('East Africa');
   const [selectedCapabilityId, setSelectedCapabilityId] = useState('consulting');
@@ -171,9 +174,9 @@ export const Matrix3DView: React.FC<Props> = ({
               <Box className="w-3.5 h-3.5" aria-hidden="true" />
               Multi-Dimensional Configuration Engine
             </p>
-            <h2 id="matrix-title" className="mc-h2 font-semibold">
+            <Heading id="matrix-title" className={`${headingLevel === 1 ? 'mc-h1' : 'mc-h2'} font-semibold`}>
               Industry × Geography × Capability 3D Matrix
-            </h2>
+            </Heading>
             <p className="mc-lead">
               Synthesize an instant, custom engagement profile by intersecting any industry vertical with a regional geographic footprint and a core MindCraft service pillar.
             </p>

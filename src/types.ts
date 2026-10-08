@@ -22,7 +22,9 @@ export type NavTab =
   | 'responsible-ai'
   | 'insights'
   | 'about'
-  | 'contact';
+  | 'contact'
+  | 'localization'
+  | 'senior-expertise';
 
 export type RoleLens = 
   | 'all' 

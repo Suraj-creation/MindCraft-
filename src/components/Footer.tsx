@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { NavTab } from '../types';
+import logoMark from '../assets/logo-mark.png';
 import {
   Sparkles,
   MapPin,
@@ -68,22 +69,20 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) =>
           {/* Brand & mission */}
           <div className="col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-400 flex items-center justify-center text-[#050505] font-extrabold text-lg">
-                M
-              </div>
+              <img src={logoMark} alt="" width={52} height={33} className="h-8 w-auto" />
               <div className="leading-tight">
-                <span className="text-base font-light text-white tracking-tight">MINDCRAFT</span>
+                <span className="font-heading text-base font-bold text-white tracking-tight uppercase">MindCraft</span>
                 <span className="block text-[11px] font-mono text-indigo-400 tracking-widest uppercase">Consultancy Services</span>
               </div>
             </div>
 
             <p className="text-[13px] text-white/60 leading-relaxed max-w-md">
-              A multidisciplinary management consulting, market research, AI training and enterprise AI solutions firm. Anchored in Life Sciences heritage and pan-African market realities, delivering end-to-end transformation from boardroom strategy to production software.
+              Business Consulting, Market Research, AI Training and AI Enterprise Solutions, delivered as one integrated engagement. Core expertise in Life Sciences, with a deliberate focus on African markets.
             </p>
 
             <div className="flex items-start gap-2 text-xs text-white/60 font-mono leading-relaxed">
               <MapPin className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-              <span>Global HQ: Nairobi, Kenya · Pan-African Field Network · Europe &amp; US Corridors</span>
+              <span>Headquarters: Nairobi, Kenya · Africa (primary focus) · Europe · United States</span>
             </div>
           </div>
 
@@ -99,7 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) =>
           </div>
 
           {/* Life sciences */}
-          <div>
+          <div className="hidden lg:block">
             <div className="mc-eyebrow !text-white mb-2">Life Sciences</div>
             <ul>
               {['Pharmaceuticals & Biologics', 'Medical Devices & Implants', 'Diagnostics & Laboratory Systems', 'Hospital & Provider Networks', 'Surgical Consumables'].map((label) => (
@@ -108,18 +107,17 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) =>
             </ul>
           </div>
 
-          {/* Governance */}
+          {/* Explore + contact */}
           <div className="col-span-2 lg:col-span-1">
-            <div className="mc-eyebrow !text-white mb-3">Governance &amp; Compliance</div>
-            <div className="space-y-2 text-[13px] leading-relaxed">
-              <div className="flex items-center gap-1.5 text-emerald-400 font-mono text-xs">
-                <ShieldCheck className="w-4 h-4 shrink-0" />
-                <span>GDPR &amp; Africa DPA Aligned</span>
-              </div>
-              <p>Kenya Data Protection Act 2019</p>
-              <p>South Africa POPIA Compliance</p>
-              <p>Nigeria NDPR Compliance</p>
-              <p className="text-white/50 pt-1 font-mono text-xs">Zero Public Model Training on Client Data</p>
+            <div className="mc-eyebrow !text-white mb-2">Explore</div>
+            <ul>
+              <li><button onClick={() => go('localization')} className={linkClass}>Market Localization</button></li>
+              <li><button onClick={() => go('senior-expertise')} className={linkClass}>Senior Expertise</button></li>
+              <li><button onClick={() => go('insights')} className={linkClass}>Insights</button></li>
+              <li><button onClick={() => go('responsible-ai')} className={linkClass}><ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />Responsible AI</button></li>
+            </ul>
+            <div className="mt-3 space-y-1 text-xs font-mono text-white/60">
+              <a href="mailto:info@mindcraftconsultancy.com" className="block min-h-11 py-2.5 hover:text-white">info@mindcraftconsultancy.com</a>
             </div>
           </div>
         </div>
@@ -128,8 +126,8 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) =>
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-white/50 font-mono">
           <div>© 2026 MindCraft Consultancy Services Ltd. All Rights Reserved.</div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6">
-            <span>Nairobi · Lagos · Johannesburg · Cairo · London Corridor</span>
-            <span className="text-indigo-400 font-bold">Confidential Enterprise System</span>
+            <span>Nairobi, Kenya · Africa · Europe · United States</span>
+            <span className="text-white/50">www.mindcraftconsultancy.com</span>
           </div>
         </div>
       </div>

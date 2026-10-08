@@ -3,7 +3,12 @@ import { NavTab, RoleLens, EngagementBlueprint } from './types';
 import { Header } from './components/Header';
 import { HeroOperatingSystem } from './components/HeroOperatingSystem';
 import { Footer } from './components/Footer';
-import { OperatingChainSection, PathwaysSection, LifeSciencesBand, WhyMindCraftSection } from './components/LandingSections';
+import { CapabilitiesSection, WhySection, LifeSciencesBand, ProblemsSection, EngagementSection } from './components/LandingSections';
+import { PathwayExplorer } from './components/PathwayExplorer';
+import { LocalizationModule } from './components/LocalizationModule';
+import { SeniorExpertiseCard } from './components/SeniorExpertise';
+import { InsightsStrip } from './components/InsightsStrip';
+import { SectionHeader } from './components/ui/primitives';
 
 // New Advanced Bento Components
 
@@ -19,6 +24,8 @@ const AITrainingSimulation = lazy(() => import('./components/AITrainingSimulatio
 const AIEnterpriseSolutionsView = lazy(() => import('./components/AIEnterpriseSolutionsView').then(m => ({ default: m.AIEnterpriseSolutionsView })));
 const MindCraftMethod = lazy(() => import('./components/MindCraftMethod').then(m => ({ default: m.MindCraftMethod })));
 const EngagementBuilder = lazy(() => import('./components/EngagementBuilder').then(m => ({ default: m.EngagementBuilder })));
+const LocalizationView = lazy(() => import('./components/LocalizationView').then(m => ({ default: m.LocalizationView })));
+const InsightsView = lazy(() => import('./components/InsightsView').then(m => ({ default: m.InsightsView })));
 const AboutLeadership = lazy(() => import('./components/AboutLeadership').then(m => ({ default: m.AboutLeadership })));
 const EngagementIntakeModal = lazy(() => import('./components/EngagementIntakeModal').then(m => ({ default: m.EngagementIntakeModal })));
 const IndustryIntelligenceExplorer = lazy(() => import('./components/IndustryIntelligenceExplorer').then(m => ({ default: m.IndustryIntelligenceExplorer })));
@@ -54,7 +61,21 @@ export default function App() {
 
   // Every navigation starts at the top of the new view
   useEffect(() => {
-    window.scrollTo({ top: 0 });
+    if (activeTab !== 'senior-expertise') {
+      window.scrollTo({ top: 0 });
+      return;
+    }
+    // The About view is lazy-loaded: wait for the anchor to exist, then scroll to it
+    let tries = 0;
+    const id = window.setInterval(() => {
+      const el = document.getElementById('senior-expertise');
+      if (el || ++tries > 40) {
+        window.clearInterval(id);
+        if (el) el.scrollIntoView({ block: 'start' });
+        else window.scrollTo({ top: 0 });
+      }
+    }, 50);
+    return () => window.clearInterval(id);
   }, [activeTab]);
 
   // Nav targets that share content with an existing view
@@ -63,7 +84,7 @@ export default function App() {
     'maturity-model': 'consulting',
     'responsible-ai': 'ai-solutions',
     scenarios: 'question-to-outcome',
-    insights: 'about',
+    'senior-expertise': 'about',
     contact: 'about'
   };
   const view: NavTab = VIEW_ALIASES[activeTab] ?? activeTab;
@@ -193,10 +214,27 @@ export default function App() {
               setActiveTab={setActiveTab}
               roleLens={activeRole}
             />
-            <OperatingChainSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
-            <PathwaysSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <CapabilitiesSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <WhySection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
             <LifeSciencesBand setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
-            <WhyMindCraftSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <PathwayExplorer
+              onNavigate={setActiveTab}
+              onSelectIndustry={(ind) => setPreselectedIndustry(ind)}
+              onOpenIntake={handleOpenIntakeGeneric}
+            />
+            <LocalizationModule variant="compact" onNavigate={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <section className="mc-section" id="senior-expertise-home">
+              <div className="mc-container">
+                <SectionHeader
+                  eyebrow="Who proves it"
+                  title="Senior Life Sciences expertise behind every engagement"
+                />
+                <SeniorExpertiseCard onOpenProfile={() => setActiveTab('senior-expertise')} />
+              </div>
+            </section>
+            <ProblemsSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <InsightsStrip onNavigate={setActiveTab} />
+            <EngagementSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
           </div>
         )}
 
@@ -204,6 +242,7 @@ export default function App() {
         {view === 'industries' && (
           <div>
             <IndustryIntelligenceExplorer
+              headingLevel={1}
               onNavigate={setActiveTab}
               onSelectIndustryForEngagement={(ind) => setPreselectedIndustry(ind)}
             />
@@ -241,6 +280,7 @@ export default function App() {
         {view === 'matrix-3d' && (
           <div>
             <Matrix3DView
+              headingLevel={1}
               onNavigate={setActiveTab}
             />
           </div>
@@ -250,6 +290,7 @@ export default function App() {
         {view === 'capability-graph' && (
           <div>
             <MindCraftUniverseOrbital
+              headingLevel={1}
               onNavigate={setActiveTab}
               onSelectIndustry={(ind) => setPreselectedIndustry(ind)}
             />
@@ -263,8 +304,6 @@ export default function App() {
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
-            <MindCraftMethod onOpenIntake={handleOpenIntakeGeneric} />
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
@@ -274,7 +313,6 @@ export default function App() {
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
@@ -284,7 +322,6 @@ export default function App() {
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
@@ -294,7 +331,6 @@ export default function App() {
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
@@ -306,10 +342,6 @@ export default function App() {
               setActiveTab={setActiveTab}
               roleLens={activeRole}
             />
-            <IndustryIntelligenceExplorer
-              onNavigate={setActiveTab}
-            />
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
@@ -320,10 +352,6 @@ export default function App() {
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
             />
-            <AfricaIntelligenceExplorer
-              onNavigate={setActiveTab}
-            />
-            <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
@@ -343,6 +371,20 @@ export default function App() {
         {(view === 'engagement-builder' || view === 'builder') && (
           <div>
             <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
+          </div>
+        )}
+
+        {/* Localization capability */}
+        {view === 'localization' && (
+          <div>
+            <LocalizationView onNavigate={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+          </div>
+        )}
+
+        {/* Insights */}
+        {view === 'insights' && (
+          <div>
+            <InsightsView onNavigate={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
           </div>
         )}
 

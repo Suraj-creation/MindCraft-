@@ -683,7 +683,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                       Central coordination hub orchestrating primary research, strategic consulting, role-based AI training cohorts, and enterprise AI software builds across 4 African regions.
                     </p>
                     <div className="text-[12px] font-mono text-indigo-400 pt-3 border-t border-indigo-500/35">
-                      Network: 500+ KOLs • Field Force • Regulatory Experts
+                      Network: Associate consultants • In-country research partners • Subject-matter experts
                     </div>
                   </div>
 

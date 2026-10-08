@@ -124,7 +124,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
           phase: 'Phase 02',
           title: 'Evidence Gathering & Analysis',
           duration: 'Weeks 3-5',
-          activities: 'Double-blind interviews, statistical modeling, regulatory scans, and AI use case prioritization.'
+          activities: 'Stakeholder interviews, statistical modeling, regulatory scans, and AI use case prioritization.'
         },
         {
           phase: 'Phase 03',
@@ -140,9 +140,9 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
         }
       ],
       successMetrics: [
-        'Decision-ready strategy delivered 40% faster than legacy consulting timelines',
-        'Zero compliance or regulatory data leakage incidents',
-        '100% adoption of approved AI workflows across core functional teams'
+        'Decision-ready strategy delivered against an agreed timeline',
+        'Data privacy and governance safeguards built in from the start',
+        'Approved AI workflows adopted across core functional teams'
       ]
     };
   };
@@ -174,9 +174,9 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
             <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Interactive Architecture</span>
           </div>
-          <h2 className="mc-h2 font-light tracking-tight">
+          <h1 className="mc-h2 font-light tracking-tight">
             Build Your <span className="font-bold text-indigo-400">Engagement Blueprint</span>
-          </h2>
+          </h1>
           <p className="mc-lead mx-auto mt-3">
             Select your industry, geographic market, core capability need, and strategic objective to instantly generate a tailored MindCraft engagement architecture.
           </p>

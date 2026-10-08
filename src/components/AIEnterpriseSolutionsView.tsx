@@ -5,37 +5,26 @@ import { AISolutionItem, NavTab } from '../types';
 import {
   Cpu,
   Sparkles,
-  CheckCircle2,
   ArrowRight,
   ChevronDown,
   ShieldCheck,
   Database,
   Workflow,
   Users,
-  FileText,
-  Server
+  Server,
+  Compass,
+  LineChart,
+  MessageSquare,
+  Cog,
+  Microscope
 } from 'lucide-react';
+import { ContextualCTA, DeepDive, EASE, RelatedLinks, SectionHeader, reveal } from './ui/primitives';
+import { DeliverablesBlock, GroupCard, PillarHero } from './PillarParts';
 
 interface AIEnterpriseSolutionsViewProps {
   onOpenIntake: () => void;
   setActiveTab: (tab: NavTab) => void;
 }
-
-const EASE = [0.16, 1, 0.3, 1] as const;
-
-const reveal = (i = 0) => ({
-  initial: { opacity: 0, y: 12 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-10%' },
-  transition: { duration: 0.25, ease: EASE, delay: Math.min(i, 5) * 0.05 }
-});
-
-const PILLAR_TABS: Record<string, NavTab> = {
-  'Business Consulting': 'consulting',
-  'Market Research': 'market-research',
-  'AI Training': 'ai-training',
-  'AI Enterprise Solutions': 'ai-solutions'
-};
 
 const STATUS_STYLE: Record<string, string> = {
   'Production Architecture Pattern': 'border-emerald-500/30 text-emerald-400',
@@ -43,9 +32,9 @@ const STATUS_STYLE: Record<string, string> = {
   'Illustrative Blueprint': 'border-indigo-500/35 text-indigo-400'
 };
 
-type Tone = 'neutral' | 'indigo' | 'emerald';
+type TierTone = 'neutral' | 'indigo' | 'emerald';
 
-const TONE: Record<Tone, { border: string; icon: string; title: string; tag: string }> = {
+const TIER_TONE: Record<TierTone, { border: string; icon: string; title: string; tag: string }> = {
   neutral: {
     border: 'border-white/[0.08]',
     icon: 'border-white/[0.08] bg-white/5 text-[#9CA3AF]',
@@ -66,13 +55,7 @@ const TONE: Record<Tone, { border: string; icon: string; title: string; tag: str
   }
 };
 
-const ARCHITECTURE_TIERS: {
-  icon: React.ReactNode;
-  title: string;
-  detail: string;
-  tag: string;
-  tone: Tone;
-}[] = [
+const ARCHITECTURE_TIERS: { icon: React.ReactNode; title: string; detail: string; tag: string; tone: TierTone }[] = [
   {
     icon: <Users className="h-4 w-4" />,
     title: 'Tier 1: Business Users & Clinical Stakeholders',
@@ -117,35 +100,58 @@ const ARCHITECTURE_TIERS: {
   }
 ];
 
-const ArchitectureTier: React.FC<{ tier: (typeof ARCHITECTURE_TIERS)[number]; index: number }> = ({ tier, index }) => {
-  const [open, setOpen] = useState(false);
-  const t = TONE[tier.tone];
-  return (
-    <motion.li
-      {...reveal(index)}
-      className={`rounded-xl border bg-[#050505] ${t.border}`}
-    >
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="mc-tap flex w-full items-center gap-3 rounded-xl p-3.5 text-left md:pointer-events-none md:items-start"
-      >
-        <span className={`mt-0.5 shrink-0 rounded-lg border p-2 ${t.icon}`}>{tier.icon}</span>
-        <span className="min-w-0 flex-1">
-          <span className={`block font-mono text-xs font-bold leading-snug ${t.title}`}>{tier.title}</span>
-          <span className={`mt-0.5 block font-mono text-[11px] ${t.tag}`}>{tier.tag}</span>
-          <span className={`${open ? 'block' : 'hidden'} mt-2 text-xs leading-relaxed text-[#9CA3AF] md:block`}>
-            {tier.detail}
-          </span>
-        </span>
-        <ChevronDown
-          className={`h-4 w-4 shrink-0 text-[#9CA3AF] transition-transform duration-200 md:hidden ${open ? 'rotate-180' : ''}`}
-        />
-      </button>
-    </motion.li>
-  );
-};
+const LIFECYCLE_STEPS = [
+  'Problem Framing', 'Use Case Discovery', 'Data Readiness', 'Architecture Design',
+  'Secure Build', 'Enterprise Integration', 'Governed Deployment', 'Champion Training', 'ROI Measurement'
+];
+
+/** The five solution groups exactly as the corporate profile names them. */
+const GROUPS = [
+  {
+    name: 'AI Strategy & Solution Architecture',
+    icon: Compass,
+    what: 'Enterprise AI strategy and use-case prioritization, solution architecture, vendor and technology stack selection, and data strategy and governance advisory.',
+    why: 'Aligns every build to business value and data readiness before development starts.',
+    outcome: 'Prioritized use cases and an architecture ready to build.'
+  },
+  {
+    name: 'Custom AI & Analytics Solutions',
+    icon: LineChart,
+    what: 'Custom AI/ML for commercial, operational and clinical use cases, AI-powered market intelligence and monitoring platforms, BI dashboards and predictive analytics.',
+    why: 'Turns insight into tools that sales, finance and operations teams use daily.',
+    outcome: 'Dashboards and platforms embedded in how teams work.'
+  },
+  {
+    name: 'Conversational AI & Engagement Tools',
+    icon: MessageSquare,
+    what: 'AI chatbots and virtual assistants for patient engagement, customer service and field-force support, plus call center and helpdesk augmentation.',
+    why: 'Extends reach to patients, customers and field teams in banking, healthcare and consumer-facing organizations.',
+    outcome: 'Assistants that serve patients, customers and field forces.'
+  },
+  {
+    name: 'Process Automation',
+    icon: Cog,
+    what: 'RPA combined with AI for document processing, claims, invoicing and compliance workflows, integrated with existing CRM, ERP and enterprise systems.',
+    why: 'Embeds intelligence into daily operations without replacing the systems already in place.',
+    outcome: 'Faster, more accurate document and compliance workflows.'
+  },
+  {
+    name: 'Life Sciences-Specific AI Solutions',
+    icon: Microscope,
+    what: 'AI-assisted pharmacovigilance and adverse-event monitoring, regulatory intelligence automation across African and international regulators, and AI-powered KOL and market-access analytics.',
+    why: 'Built on MindCraft’s Life Sciences heritage for pharmaceutical and medical device clients.',
+    outcome: 'Safety, regulatory and stakeholder intelligence on tap.'
+  }
+];
+
+const DELIVERABLES = [
+  'Functional AI solutions, dashboards or tools deployed into the client’s environment.',
+  'Technical documentation, user guides and post-deployment support plans.',
+  'Measurable efficiency, accuracy or revenue impact tied to each deployed solution.'
+];
+
+const CATEGORIES = ['All', 'Life Sciences Core', 'Intelligence Platforms', 'Process Automation', 'Conversational & Engagement'];
+const COLLAPSED_COUNT = 3;
 
 const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }> = ({ sol, onOpenIntake }) => {
   const [techOpen, setTechOpen] = useState(false);
@@ -164,16 +170,13 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
         <p className="mt-2 text-sm leading-relaxed text-[#9CA3AF]">{sol.description}</p>
       </div>
 
-      {/* Outcome first */}
       <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
-        <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
-          Projected operational & commercial outcome
-        </div>
+        <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">Projected operational & commercial outcome</h4>
         <p className="mt-1 text-sm font-medium leading-relaxed text-white">{sol.projectedOutcome}</p>
       </div>
 
       <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-        <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">01. Business problem</div>
+        <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">01. Business problem</h4>
         <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.businessProblem}</p>
       </div>
 
@@ -182,44 +185,45 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
         type="button"
         onClick={() => setTechOpen((v) => !v)}
         aria-expanded={techOpen}
+        aria-controls={`tech-${sol.id}`}
         className="mc-tap flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-[#050505] px-4 font-mono text-xs text-emerald-400 transition-colors hover:text-white active:scale-[0.98] lg:hidden"
       >
         <span>{techOpen ? 'Hide data, model & integration' : 'Show data, model & integration (3)'}</span>
         <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${techOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      <div className={`${techOpen ? 'grid' : 'hidden'} gap-3 lg:grid`}>
+      <div id={`tech-${sol.id}`} className={`${techOpen ? 'grid' : 'hidden'} gap-3 lg:grid`}>
         <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-          <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-400">02. Data ingestion feeds</div>
+          <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-400">02. Data ingestion feeds</h4>
           <ul className="mt-2 space-y-1.5">
-            {sol.dataInputs.map((inp, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-[#E0E0E0]">
-                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-indigo-500" />
+            {sol.dataInputs.map((inp) => (
+              <li key={inp} className="flex items-start gap-2 text-sm leading-relaxed text-[#E0E0E0]">
+                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-indigo-500" aria-hidden="true" />
                 <span>{inp}</span>
               </li>
             ))}
           </ul>
         </div>
         <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-          <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">03. AI analytics / model layer</div>
+          <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">03. AI analytics / model layer</h4>
           <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.aiAnalyticsLayer}</p>
         </div>
         <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-          <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-400">04. Enterprise integration</div>
+          <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-400">04. Enterprise integration</h4>
           <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.workflowIntegration}</p>
         </div>
       </div>
 
       <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-        <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">05. Human interaction & review</div>
+        <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">05. Human interaction & review</h4>
         <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.humanInteraction}</p>
       </div>
 
       <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
-        <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
-          <ShieldCheck className="h-3.5 w-3.5" />
+        <h4 className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
+          <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
           <span>06. Governance safeguards</span>
-        </div>
+        </h4>
         <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.governanceSafeguards}</p>
       </div>
 
@@ -235,38 +239,17 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
   );
 };
 
-export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps> = ({
-  onOpenIntake,
-  setActiveTab
-}) => {
-  const solutionsPillar = SERVICE_PILLARS.find(p => p.id === 'ai-solutions') || SERVICE_PILLARS[3];
+export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps> = ({ onOpenIntake, setActiveTab }) => {
+  const solutionsPillar = SERVICE_PILLARS.find((p) => p.id === 'ai-solutions') || SERVICE_PILLARS[3];
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeSolutionId, setActiveSolutionId] = useState<string>(AI_SOLUTIONS_CATALOG[0].id);
   const [mobileOpenId, setMobileOpenId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
-  const categories = ['All', 'Life Sciences Core', 'Intelligence Platforms', 'Process Automation', 'Conversational & Engagement'];
-
-  const filteredSolutions = AI_SOLUTIONS_CATALOG.filter(s =>
-    selectedCategory === 'All' || s.category === selectedCategory
-  );
-
-  const activeSolution =
-    filteredSolutions.find(s => s.id === activeSolutionId) || filteredSolutions[0] || AI_SOLUTIONS_CATALOG[0];
-
-  const countFor = (cat: string) =>
-    cat === 'All' ? AI_SOLUTIONS_CATALOG.length : AI_SOLUTIONS_CATALOG.filter(s => s.category === cat).length;
-
-  const lifecycleSteps = [
-    'Problem Framing', 'Use Case Discovery', 'Data Readiness', 'Architecture Design',
-    'Secure Build', 'Enterprise Integration', 'Governed Deployment', 'Champion Training', 'ROI Measurement'
-  ];
-
-  const facts = [
-    { value: String(AI_SOLUTIONS_CATALOG.length), label: 'Solution architectures in the catalog' },
-    { value: String(categories.length - 1), label: 'Solution categories' },
-    { value: String(ARCHITECTURE_TIERS.length), label: 'Architecture tiers, one governance layer' },
-    { value: String(lifecycleSteps.length), label: 'Lifecycle stages, concept to ROI' }
-  ];
+  const filteredSolutions = AI_SOLUTIONS_CATALOG.filter((s) => selectedCategory === 'All' || s.category === selectedCategory);
+  const activeSolution = filteredSolutions.find((s) => s.id === activeSolutionId) || filteredSolutions[0] || AI_SOLUTIONS_CATALOG[0];
+  const countFor = (cat: string) => (cat === 'All' ? AI_SOLUTIONS_CATALOG.length : AI_SOLUTIONS_CATALOG.filter((s) => s.category === cat).length);
+  const hiddenCount = Math.max(0, filteredSolutions.length - COLLAPSED_COUNT);
 
   const selectSolution = (id: string) => {
     setActiveSolutionId(id);
@@ -278,70 +261,68 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
       <section className="mc-section bg-[#050505]" id="ai-solutions-section">
         <div className="mc-container">
 
-          {/* 1. Intent */}
-          <motion.header {...reveal()} className="max-w-3xl">
-            <div className="mc-eyebrow !text-emerald-400">
-              <Cpu className="h-3.5 w-3.5" />
-              <span>Pillar 04 · Production Systems</span>
-            </div>
-            <h1 className="mc-h1 mt-3 font-light">
-              AI Enterprise <span className="font-bold text-emerald-400">Solutions</span>
-            </h1>
-            <p className="mc-lead mt-4">
-              End-to-end design, build, and integration of AI-powered systems that operationalize insight into everyday business workflows — from market intelligence platforms to patient- and customer-facing AI tools.
-            </p>
-          </motion.header>
+          {/* A. What this is, what MindCraft delivers, outcomes, CTA */}
+          <PillarHero
+            tone="emerald"
+            icon={Cpu}
+            eyebrow="Pillar 04 · AI Enterprise Solutions"
+            titleLight="AI Enterprise"
+            titleBold="Solutions"
+            lead="End-to-end design, build and integration of AI-powered systems that operationalize insight into everyday business workflows, from market intelligence platforms to patient- and customer-facing AI tools."
+            outcomes={[
+              { label: 'From insight to workflow', text: 'AI built into the systems your teams already use.' },
+              { label: 'Life Sciences depth', text: 'Pharmacovigilance, regulatory and KOL solutions.' },
+              { label: 'Governed by design', text: 'Data privacy, ethics and governance throughout.' }
+            ]}
+            ctaLabel="Deploy Solution Architecture"
+            onCta={onOpenIntake}
+            exploreLabel="See the five solution groups"
+            exploreId="ai-capabilities"
+          />
 
-          {/* 2. Facts + outcomes */}
-          <div className="mt-10 sm:mt-12">
-            <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              {facts.map((f, i) => (
-                <motion.div
-                  key={f.label}
-                  {...reveal(i)}
-                  className="rounded-xl border border-white/[0.08] bg-[#0A0A0A] p-4"
-                >
-                  <dd className="font-mono text-xl font-bold text-white sm:text-2xl">{f.value}</dd>
-                  <dt className="mt-1 text-xs leading-snug text-[#9CA3AF]">{f.label}</dt>
-                </motion.div>
+          {/* A/B. Capability groups, then deliverables */}
+          <div id="ai-capabilities" className="mt-10 scroll-mt-24 sm:mt-14">
+            <SectionHeader
+              eyebrow="What MindCraft delivers"
+              title={<>Five solution groups, <span className="font-bold">from strategy to production</span></>}
+              className="mb-5! sm:mb-7!"
+            />
+            <ul className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 lg:grid-cols-6 lg:gap-4">
+              {GROUPS.map((g, i) => (
+                <GroupCard
+                  key={g.name}
+                  index={i}
+                  tone="emerald"
+                  icon={g.icon}
+                  name={g.name}
+                  what={g.what}
+                  why={g.why}
+                  outcome={g.outcome}
+                  included={solutionsPillar.capabilities[i]?.bulletPoints ?? []}
+                  className={i < 3 ? 'lg:col-span-2' : 'lg:col-span-3'}
+                />
               ))}
-            </dl>
-
-            {solutionsPillar.deliverables.length > 0 && (
-              <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-[#0A0A0A] p-5 sm:p-6">
-                <div className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
-                  <FileText className="h-3.5 w-3.5" />
-                  <span>What you receive</span>
-                </div>
-                <ul className="mt-4 grid gap-3 md:grid-cols-3">
-                  {solutionsPillar.deliverables.map((del, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm leading-relaxed text-[#E0E0E0]">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
-                      <span>{del}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            </ul>
+            <div className="mt-4">
+              <DeliverablesBlock tone="emerald" items={DELIVERABLES} />
+            </div>
           </div>
 
-          {/* 3. Solution catalog (explorer) */}
-          <div className="mt-12 sm:mt-16">
-            <div className="mc-eyebrow !text-emerald-400">Solution catalog</div>
-            <h2 className="mc-h2 mt-2 font-light">
-              Enterprise AI <span className="font-bold text-emerald-400">Solution Catalog</span>
-            </h2>
-            <p className="mt-2 text-sm text-[#9CA3AF]">
-              Purpose-engineered solution architectures for Life Sciences and enterprise transformation.
-            </p>
+          {/* Explorer: solution catalog */}
+          <div id="ai-catalog" className="mt-10 scroll-mt-24 sm:mt-14">
+            <SectionHeader
+              eyebrow={`Explorer · ${AI_SOLUTIONS_CATALOG.length} solution architectures`}
+              title={<>Enterprise AI <span className="font-bold text-emerald-400">Solution Catalog</span></>}
+              lead="Solution architectures for Life Sciences and enterprise transformation. Open one to see the problem, data, model, integration, review and governance."
+              className="mb-5! sm:mb-7!"
+            />
 
-            {/* Category filter rail */}
             <div
               role="group"
               aria-label="Filter solutions by category"
-              className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-              {categories.map((cat) => {
+              {CATEGORIES.map((cat) => {
                 const active = selectedCategory === cat;
                 return (
                   <button
@@ -351,6 +332,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                     onClick={() => {
                       setSelectedCategory(cat);
                       setMobileOpenId(null);
+                      setShowAll(false);
                     }}
                     className={`mc-tap shrink-0 rounded-xl border px-4 font-mono text-xs transition-colors duration-200 active:scale-[0.98] ${
                       active
@@ -365,61 +347,77 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
             </div>
 
             <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start">
-              {/* List (accordion on phones, master list on desktop) */}
-              <ul className="space-y-2">
-                {filteredSolutions.map((sol) => {
-                  const mobileOpen = mobileOpenId === sol.id;
-                  const desktopActive = activeSolution.id === sol.id;
-                  return (
-                    <li key={sol.id}>
-                      <button
-                        type="button"
-                        id={`solution-card-${sol.id}`}
-                        onClick={() => selectSolution(sol.id)}
-                        aria-expanded={mobileOpen}
-                        className={`mc-tap w-full rounded-2xl border p-4 text-left transition-colors duration-200 active:scale-[0.98] ${
-                          mobileOpen ? 'border-emerald-500/60 bg-[#0D0F17]' : 'border-white/[0.08] bg-[#0A0A0A]'
-                        } ${
-                          desktopActive
-                            ? 'lg:border-emerald-500/60 lg:bg-[#0D0F17]'
-                            : 'lg:border-white/[0.08] lg:bg-[#0A0A0A] lg:hover:border-white/20'
-                        }`}
-                      >
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="rounded-md border border-white/[0.08] bg-[#050505] px-2 py-0.5 font-mono text-[11px] text-[#9CA3AF]">
-                            {sol.category}
-                          </span>
-                          <span className={`rounded-md border px-2 py-0.5 font-mono text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
-                            {sol.status}
-                          </span>
-                        </div>
-                        <div className="mt-2 flex items-start justify-between gap-3">
-                          <h4 className="text-sm font-semibold leading-snug text-white">{sol.title}</h4>
-                          <ChevronDown
-                            className={`mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF] transition-transform duration-200 lg:hidden ${mobileOpen ? 'rotate-180' : ''}`}
-                          />
-                        </div>
-                        <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#9CA3AF]">{sol.description}</p>
-                      </button>
+              <div>
+                <ul className="space-y-2">
+                  {filteredSolutions.map((sol, idx) => {
+                    const mobileOpen = mobileOpenId === sol.id;
+                    const desktopActive = activeSolution.id === sol.id;
+                    const hideOnPhone = !showAll && idx >= COLLAPSED_COUNT;
+                    return (
+                      <li key={sol.id} className={hideOnPhone ? 'hidden lg:block' : undefined}>
+                        <button
+                          type="button"
+                          id={`solution-card-${sol.id}`}
+                          onClick={() => selectSolution(sol.id)}
+                          aria-expanded={mobileOpen}
+                          aria-controls={`solution-detail-${sol.id}`}
+                          className={`mc-tap w-full rounded-2xl border p-4 text-left transition-colors duration-200 active:scale-[0.98] ${
+                            mobileOpen ? 'border-emerald-500/60 bg-[#0D0F17]' : 'border-white/[0.08] bg-[#0A0A0A]'
+                          } ${
+                            desktopActive
+                              ? 'lg:border-emerald-500/60 lg:bg-[#0D0F17]'
+                              : 'lg:border-white/[0.08] lg:bg-[#0A0A0A] lg:hover:border-white/20'
+                          }`}
+                        >
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="hidden rounded-md border border-white/[0.08] bg-[#050505] px-2 py-0.5 font-mono text-[11px] text-[#9CA3AF] lg:inline">
+                              {/* category is shown in the filter rail and detail on phones */}
+                              {sol.category}
+                            </span>
+                            <span className={`rounded-md border px-2 py-0.5 font-mono text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
+                              {sol.status}
+                            </span>
+                          </div>
+                          <div className="mt-2 flex items-start justify-between gap-3">
+                            <h3 className="text-sm font-semibold leading-snug text-white">{sol.title}</h3>
+                            <ChevronDown
+                              className={`mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF] transition-transform duration-200 lg:hidden ${mobileOpen ? 'rotate-180' : ''}`}
+                            />
+                          </div>
+                          <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#9CA3AF]">{sol.description}</p>
+                        </button>
 
-                      <AnimatePresence initial={false}>
-                        {mobileOpen && (
-                          <motion.div
-                            key="inline"
-                            initial={{ opacity: 0, y: -4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2, ease: EASE }}
-                            className="mt-2 rounded-2xl border border-white/[0.08] bg-[#0A0A0A] p-4 lg:hidden"
-                          >
-                            <SolutionDetail sol={sol} onOpenIntake={onOpenIntake} />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </li>
-                  );
-                })}
-              </ul>
+                        <AnimatePresence initial={false}>
+                          {mobileOpen && (
+                            <motion.div
+                              key="inline"
+                              id={`solution-detail-${sol.id}`}
+                              initial={{ opacity: 0, y: -4 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.2, ease: EASE }}
+                              className="mt-2 rounded-2xl border border-white/[0.08] bg-[#0A0A0A] p-4 lg:hidden"
+                            >
+                              <SolutionDetail sol={sol} onOpenIntake={onOpenIntake} />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                {!showAll && hiddenCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAll(true)}
+                    className="mc-tap mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 font-mono text-xs text-white/80 transition-[background-color,transform] duration-150 hover:bg-white/10 active:scale-[0.98] lg:hidden"
+                  >
+                    <span>Show all {filteredSolutions.length} solutions</span>
+                    <ChevronDown className="h-4 w-4 text-emerald-400" />
+                  </button>
+                )}
+              </div>
 
               {/* Desktop detail panel */}
               <div className="hidden lg:block">
@@ -439,105 +437,76 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
             </div>
           </div>
 
-          {/* 4. How it is engineered */}
-          <div className="mt-12 sm:mt-16">
-            <div className="mc-eyebrow !text-emerald-400">Architecture blueprint · governed, secure, tenant-isolated</div>
-            <h2 className="mc-h2 mt-2 font-light">
-              Layered enterprise <span className="font-bold text-emerald-400">AI system architecture</span>
-            </h2>
-
-            <ol className="mt-6 space-y-2">
-              {ARCHITECTURE_TIERS.map((tier, i) => (
-                <ArchitectureTier key={tier.title} tier={tier} index={i} />
-              ))}
-              <motion.li
-                {...reveal(ARCHITECTURE_TIERS.length)}
-                className="flex flex-col gap-3 rounded-xl border border-indigo-500/35 bg-[#0D0F17] p-4 md:flex-row md:items-center md:justify-between"
-              >
-                <div className="flex items-start gap-3">
+          {/* C. Deep dives: architecture + lifecycle */}
+          <div className="mt-6 space-y-3">
+            <DeepDive
+              tone="emerald"
+              title="Reference architecture: six layers, one governance layer"
+              hint="Illustrative layered enterprise AI system"
+            >
+              <ol className="mt-3 space-y-2">
+                {ARCHITECTURE_TIERS.map((tier) => {
+                  const t = TIER_TONE[tier.tone];
+                  return (
+                    <li key={tier.title} className={`flex items-start gap-3 rounded-xl border bg-[#050505] p-3.5 ${t.border}`}>
+                      <span className={`mt-0.5 shrink-0 rounded-lg border p-2 ${t.icon}`}>{tier.icon}</span>
+                      <span className="min-w-0 flex-1">
+                        <span className={`block font-mono text-xs font-bold leading-snug ${t.title}`}>{tier.title}</span>
+                        <span className={`mt-0.5 block font-mono text-[11px] ${t.tag}`}>{tier.tag}</span>
+                        <span className="mt-1.5 block text-xs leading-relaxed text-[#9CA3AF]">{tier.detail}</span>
+                      </span>
+                    </li>
+                  );
+                })}
+                <li className="flex items-start gap-3 rounded-xl border border-indigo-500/35 bg-[#0D0F17] p-4">
                   <span className="shrink-0 rounded-lg border border-indigo-500/35 bg-[#050505] p-2 text-indigo-400">
                     <ShieldCheck className="h-5 w-5" />
                   </span>
-                  <div>
-                    <div className="font-mono text-xs font-bold text-white">SPANNING GOVERNANCE & RESPONSIBLE AI LAYER</div>
-                    <div className="mt-1 text-xs leading-relaxed text-[#9CA3AF]">
-                      Data Privacy Protection · Zero Consumer Model Training · Cryptographic Audit Trails · Human-in-the-Loop Sign-off
-                    </div>
-                  </div>
-                </div>
-                <span className="self-start rounded-lg border border-indigo-500/35 bg-[#050505] px-2.5 py-1 font-mono text-[11px] font-bold text-indigo-400 md:self-center">
-                  100% AUDITABLE
-                </span>
-              </motion.li>
-            </ol>
+                  <span className="min-w-0">
+                    <span className="block font-mono text-xs font-bold text-white">SPANNING GOVERNANCE & RESPONSIBLE AI LAYER</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-[#9CA3AF]">
+                      Data privacy · Ethics · Governance · Human-in-the-loop sign-off
+                    </span>
+                  </span>
+                </li>
+              </ol>
+            </DeepDive>
 
-            <div className="mt-10">
-              <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
-                Engineering lifecycle: proof of concept to governed production
-              </div>
-              <ol className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-9">
-                {lifecycleSteps.map((step, idx) => (
-                  <motion.li
-                    key={step}
-                    {...reveal(idx)}
-                    className="rounded-xl border border-white/[0.08] bg-[#0A0A0A] p-2.5 text-center"
-                  >
-                    <div className="font-mono text-[11px] font-bold text-emerald-400">0{idx + 1}</div>
-                    <div className="mt-0.5 text-xs leading-snug text-[#E0E0E0]">{step}</div>
-                  </motion.li>
+            <DeepDive
+              tone="emerald"
+              title="Engineering lifecycle: nine stages from framing to ROI"
+              hint="Proof of concept to governed production"
+            >
+              <ol className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+                {LIFECYCLE_STEPS.map((step, idx) => (
+                  <li key={step} className="flex items-start gap-2.5 rounded-xl border border-white/[0.08] bg-[#050505] p-3">
+                    <span className="font-mono text-[11px] font-bold text-emerald-400">0{idx + 1}</span>
+                    <span className="text-xs leading-snug text-[#E0E0E0]">{step}</span>
+                  </li>
                 ))}
               </ol>
-            </div>
+            </DeepDive>
           </div>
 
-          {/* 5. Single CTA + pairs with */}
-          <div className="mt-12 sm:mt-16">
-            <motion.div
-              {...reveal()}
-              className="rounded-2xl border border-indigo-500/35 bg-[#0A0A0A] p-6 sm:p-8 md:flex md:items-center md:justify-between md:gap-8"
-            >
-              <div className="max-w-xl">
-                <h2 className="text-xl font-semibold text-white sm:text-2xl">Put an AI system into production</h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#9CA3AF]">
-                  Start from a catalog architecture or a blank page. Every build is governed, secure and tenant-isolated.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={onOpenIntake}
-                className="mc-tap mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-mono text-sm font-semibold text-white transition-[background-color,transform] duration-200 hover:bg-indigo-500 active:scale-[0.98] md:mt-0 md:w-auto md:shrink-0"
-              >
-                <span>Deploy Solution Architecture</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
+          {/* One CTA, then related */}
+          <div className="mt-10 space-y-8 sm:mt-14">
+            <motion.div {...reveal}>
+              <ContextualCTA
+                title="Put an AI system into production"
+                body="Start from a catalog architecture or a blank page. Every build rests on data privacy, ethics and governance."
+                primaryLabel="Deploy Solution Architecture"
+                onPrimary={onOpenIntake}
+              />
             </motion.div>
-
-            {solutionsPillar.intersections && solutionsPillar.intersections.length > 0 && (
-              <div className="mt-4">
-                <div className="font-mono text-[11px] uppercase tracking-wider text-[#9CA3AF]">Pairs with</div>
-                <ul className="mt-2 grid gap-2 md:grid-cols-3">
-                  {solutionsPillar.intersections.map((x) => {
-                    const target = PILLAR_TABS[x.withPillar];
-                    return (
-                      <li key={x.withPillar}>
-                        <button
-                          type="button"
-                          disabled={!target}
-                          onClick={() => target && setActiveTab(target)}
-                          className="mc-tap mc-card-interactive flex h-full w-full items-start justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#0A0A0A] p-4 text-left"
-                        >
-                          <span>
-                            <span className="block font-mono text-xs font-semibold text-white">{x.withPillar}</span>
-                            <span className="mt-1 block text-xs leading-relaxed text-[#9CA3AF]">{x.integratedValue}</span>
-                          </span>
-                          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF]" />
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
+            <RelatedLinks
+              title="Pairs with"
+              items={[
+                { label: 'Market Research', desc: 'Turn periodic studies into continuous intelligence monitoring.', onClick: () => setActiveTab('market-research'), tone: 'sky' },
+                { label: 'AI Training & Literacy', desc: 'Make sure the people using the system adopt it.', onClick: () => setActiveTab('ai-training'), tone: 'amber' },
+                { label: 'Localization', desc: 'Adapt solutions to each country’s regulatory and market context.', onClick: () => setActiveTab('localization'), tone: 'emerald' },
+                { label: 'Senior expertise', desc: 'The Life Sciences experience behind these solutions.', onClick: () => setActiveTab('senior-expertise'), tone: 'indigo' }
+              ]}
+            />
           </div>
 
         </div>

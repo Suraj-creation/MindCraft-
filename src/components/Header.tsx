@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { NavTab, RoleLens } from '../types';
+import logoMark from '../assets/logo-mark.png';
 import {
   Compass,
   BarChart3,
@@ -59,6 +60,7 @@ const NAV_ITEMS: NavItem[] = [
     badge: '4 Regions',
     dropdown: [
       { id: 'africa-explorer', label: '4 Regional Clusters & 45 Jurisdictions', desc: 'East, West, Southern, North Africa intelligence & country dossiers' },
+      { id: 'localization', label: 'Market Localization', desc: 'How global strategy becomes local regulatory, commercial and partner execution' },
       { id: 'market-entry', label: '9-Step Pan-African Market Entry', desc: 'Signature framework to de-risk and accelerate expansion' },
       { id: 'africa-intelligence', label: 'Interactive Regulatory Map', desc: 'PPB, NAFDAC, SAHPRA and regional harmonization tracker' }
     ]
@@ -93,7 +95,15 @@ const NAV_ITEMS: NavItem[] = [
     ]
   },
   { id: 'responsible-ai', label: 'Responsible AI' },
-  { id: 'about', label: 'About' }
+  {
+    id: 'about',
+    label: 'About',
+    dropdown: [
+      { id: 'about', label: 'About MindCraft', desc: 'Vision, mission, values and how we engage' },
+      { id: 'senior-expertise', label: 'Senior Life Sciences Expertise', desc: 'Pharmaceutical market access, regulatory strategy and commercial excellence' },
+      { id: 'insights', label: 'Insights', desc: 'Perspectives on Life Sciences, Africa and applied AI' }
+    ]
+  }
 ];
 
 const ROLE_LABELS: { [key in RoleLens]: string } = {
@@ -190,16 +200,20 @@ export const Header: React.FC<HeaderProps> = ({
             id="brand-logo-button"
             aria-label="MindCraft home"
           >
-            <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-transform duration-200 group-active:scale-95">
-              <span className="font-mono text-sm font-bold">MC</span>
-            </div>
+            <img
+              src={logoMark}
+              alt=""
+              width={44}
+              height={28}
+              className="h-7 w-auto transition-transform duration-200 group-active:scale-95"
+            />
             <div className="flex flex-col leading-tight">
-              <span className="text-sm font-bold tracking-tight uppercase text-white group-hover:text-indigo-400 transition-colors">
-                MINDCRAFT <span className="text-indigo-400">CORE</span>
+              <span className="font-heading text-[15px] font-bold tracking-tight uppercase text-white group-hover:text-indigo-300 transition-colors">
+                MindCraft
               </span>
-              <span className="hidden sm:flex 2xl:hidden min-[1800px]:flex items-center gap-1.5 text-[11px] text-white/50 font-mono uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Pan-Africa Strategy // Nairobi
+              <span className="hidden sm:flex items-center gap-1.5 text-[11px] text-white/50 font-mono uppercase tracking-wider">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                Consultancy · Nairobi
               </span>
             </div>
           </button>

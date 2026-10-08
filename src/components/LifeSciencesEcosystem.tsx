@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { LIFE_SCIENCES_SECTORS, DIVERSIFIED_INDUSTRIES } from '../data/mindcraftData';
 import { NavTab, RoleLens } from '../types';
+import { ContextualCTA, DeepDive, EASE, RelatedLinks, TONES, reveal } from './ui/primitives';
 import {
   Dna,
   Pill,
@@ -10,13 +11,8 @@ import {
   Building2,
   Scissors,
   FlaskConical,
-  Sparkles,
   ArrowRight,
-  CheckCircle2,
-  Search,
-  Cpu,
-  HelpCircle,
-  ChevronDown
+  CheckCircle2
 } from 'lucide-react';
 
 interface LifeSciencesEcosystemProps {
@@ -25,474 +21,406 @@ interface LifeSciencesEcosystemProps {
   roleLens?: RoleLens;
 }
 
-type Tone = 'indigo' | 'emerald' | 'amber';
+type Icon = React.ComponentType<{ className?: string }>;
 
-const EASE = [0.16, 1, 0.3, 1] as const;
-
-const TONE_TEXT: Record<Tone, string> = {
-  indigo: 'text-indigo-400',
-  emerald: 'text-emerald-400',
-  amber: 'text-amber-400'
+const SECTOR_ICONS: Record<string, Icon> = {
+  pharma: Pill,
+  'med-devices': Stethoscope,
+  diagnostics: FlaskConical,
+  equipment: Activity,
+  consumables: Scissors,
+  hospitals: Building2
 };
 
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches
-  );
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const handler = () => setMatches(mq.matches);
-    handler();
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, [query]);
-  return matches;
+const PHARMA_MODULES = [
+  {
+    id: 'market-access',
+    title: 'Market Access & Pricing',
+    desc: 'Pan-African reimbursement landscape, out-of-pocket price elasticity, and tender listing strategies.',
+    points: [
+      'National health scheme formulary inclusion (e.g. Kenya SHA, Ghana NHIS, SA NHI)',
+      'Tiered dual-brand pricing modeling to navigate out-of-pocket constraints',
+      'Private hospital group procurement and patient-assistance co-pay structuring'
+    ]
+  },
+  {
+    id: 'competitive-intel',
+    title: 'Competitive Intelligence & Pipelines',
+    desc: 'Granular tracking of clinical trial pipelines, generic market entry, and import manifests.',
+    points: [
+      'Therapeutic area market sizing and 5-year patient epidemiology forecasting',
+      'Patent cliff defense and authorized generic positioning strategies',
+      'Customs manifest import tracking across major regional ports'
+    ]
+  },
+  {
+    id: 'regulatory-intel',
+    title: 'Regulatory Intelligence & Filings',
+    desc: 'Navigating national medicines regulatory authorities across 54 African countries.',
+    points: [
+      'Real-time tracking of PPB, NAFDAC, SAHPRA, EDA, EFDA, and TMDA guidelines',
+      'EAC, ECOWAS, and ZAZIBONA regional joint-assessment acceleration',
+      'African Medicines Agency (AMA) policy evolution and harmonization advisory'
+    ]
+  },
+  {
+    id: 'pharmacovigilance',
+    title: 'Pharmacovigilance Support',
+    desc: 'Adverse event screening, signal detection, and regulatory safety compliance.',
+    points: [
+      'AI-assisted biomedical literature screening and spontaneous report triage',
+      'Standard E2B(R3) safety reporting compliance workflows',
+      'Post-authorization safety study (PASS) design and monitoring'
+    ]
+  },
+  {
+    id: 'kol-mapping',
+    title: 'KOL & Commercial Effectiveness',
+    desc: 'Scientific leadership mapping, advisory boards, and territory sales intelligence.',
+    points: [
+      'Key Opinion Leader (KOL) network mapping across therapeutic centers',
+      'Sales representative territory optimization and detailing effectiveness',
+      'Mobile AI pre-call briefing assistants for field medical science liaisons'
+    ]
+  }
+];
+
+/* ------------------------------------------------------------------ */
+/** Accessible tablist with roving tabindex + arrow-key support. */
+interface TabItem {
+  id: string;
+  label: string;
+  icon?: Icon;
 }
 
-/** Accordion on phones, always-open card from md up. */
-const Disclosure: React.FC<{
-  title: string;
-  icon: React.ReactNode;
-  tone: Tone;
-  meta?: string;
-  defaultOpen?: boolean;
-  isWide: boolean;
-  children: React.ReactNode;
-}> = ({ title, icon, tone, meta, defaultOpen = false, isWide, children }) => {
-  const [open, setOpen] = useState(defaultOpen);
-  const expanded = isWide || open;
+const TabList: React.FC<{
+  items: TabItem[];
+  value: string;
+  onChange: (id: string) => void;
+  label: string;
+  idPrefix: string;
+  className: string;
+  tabClass: (active: boolean) => string;
+  iconClass?: (active: boolean) => string;
+}> = ({ items, value, onChange, label, idPrefix, className, tabClass, iconClass }) => {
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const i = items.findIndex((t) => t.id === value);
+    let next = -1;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % items.length;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (i - 1 + items.length) % items.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = items.length - 1;
+    if (next < 0) return;
+    e.preventDefault();
+    onChange(items[next].id);
+    document.getElementById(`${idPrefix}-tab-${items[next].id}`)?.focus();
+  };
   return (
-    <div className="min-w-0 rounded-2xl bg-[#050505] border border-white/[0.08]">
-      <button
-        type="button"
-        aria-expanded={expanded}
-        tabIndex={isWide ? -1 : 0}
-        onClick={() => !isWide && setOpen(o => !o)}
-        className={`w-full mc-tap flex items-center justify-between gap-3 px-4 py-3 text-left active:scale-[0.99] transition-transform md:cursor-default md:pointer-events-none ${TONE_TEXT[tone]}`}
-      >
-        <span className="flex items-center gap-2 min-w-0 font-mono text-[11px] uppercase tracking-wider font-bold">
-          <span className="shrink-0" aria-hidden="true">{icon}</span>
-          <span className="min-w-0">{title}</span>
-        </span>
-        <span className="flex items-center gap-2 shrink-0">
-          {meta && <span className="font-mono text-[11px] text-gray-400">{meta}</span>}
-          <ChevronDown
-            aria-hidden="true"
-            className={`w-4 h-4 text-gray-400 md:hidden transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
-          />
-        </span>
-      </button>
-      {expanded && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.18, ease: EASE }}
-          className="px-4 pb-4"
-        >
-          {children}
-        </motion.div>
-      )}
+    <div role="tablist" aria-label={label} onKeyDown={onKeyDown} className={className}>
+      {items.map((t) => {
+        const active = t.id === value;
+        const I = t.icon;
+        return (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            id={`${idPrefix}-tab-${t.id}`}
+            aria-selected={active}
+            aria-controls={`${idPrefix}-panel`}
+            tabIndex={active ? 0 : -1}
+            onClick={() => onChange(t.id)}
+            className={`mc-tap active:scale-[0.98] transition-[background-color,border-color,color,transform] duration-200 ${tabClass(active)}`}
+          >
+            {I && <I className={iconClass ? iconClass(active) : 'w-4 h-4'} aria-hidden="true" />}
+            <span>{t.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 };
 
-const DOT: Record<Tone, string> = {
-  indigo: 'bg-indigo-500',
-  emerald: 'bg-emerald-500',
-  amber: 'bg-amber-500'
-};
-
-const DotList: React.FC<{ items: string[]; tone: Tone }> = ({ items, tone }) => (
+const DotList: React.FC<{ items: string[]; dot: string }> = ({ items, dot }) => (
   <ul className="space-y-2.5">
-    {items.map((it, i) => (
-      <li key={i} className="text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
-        <span className={`w-1.5 h-1.5 rounded-full mt-[0.45rem] shrink-0 ${DOT[tone]}`} />
+    {items.map((it) => (
+      <li key={it} className="text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
+        <span className={`w-1.5 h-1.5 rounded-full mt-[0.45rem] shrink-0 ${dot}`} aria-hidden="true" />
         <span className="min-w-0">{it}</span>
       </li>
     ))}
   </ul>
 );
 
-export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
-  onOpenIntake,
-  setActiveTab
-}) => {
-  const [activeSectorId, setActiveSectorId] = useState<string>('pharma');
-  const [selectedPharmaModule, setSelectedPharmaModule] = useState<string>('market-access');
-  const [showAllVerticals, setShowAllVerticals] = useState(false);
+const Chip: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <li className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs leading-snug text-[#E0E0E0]">
+    {children}
+  </li>
+);
 
-  const reduceMotion = useReducedMotion();
-  const dur = reduceMotion ? 0 : 0.2;
-  const isMd = useMediaQuery('(min-width: 768px)');
-  const isSm = useMediaQuery('(min-width: 640px)');
+type DetailId = 'challenges' | 'research' | 'ai' | 'deliverables' | 'workflow' | 'modules';
 
-  const sectorIcons: { [key: string]: React.ComponentType<{ className?: string }> } = {
-    pharma: Pill,
-    'med-devices': Stethoscope,
-    diagnostics: FlaskConical,
-    equipment: Activity,
-    consumables: Scissors,
-    hospitals: Building2
-  };
+export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ onOpenIntake, setActiveTab }) => {
+  const [sectorId, setSectorId] = useState<string>(LIFE_SCIENCES_SECTORS[0].id);
+  const [detailId, setDetailId] = useState<DetailId>('challenges');
+  const [moduleId, setModuleId] = useState<string>(PHARMA_MODULES[0].id);
+  const reduce = useReducedMotion();
+  const dur = reduce ? 0 : 0.18;
 
-  const pharmaModules = [
-    {
-      id: 'market-access',
-      title: 'Market Access & Pricing',
-      desc: 'Pan-African reimbursement landscape, out-of-pocket price elasticity, and tender listing strategies.',
-      points: [
-        'National health scheme formulary inclusion (e.g. Kenya SHA, Ghana NHIS, SA NHI)',
-        'Tiered dual-brand pricing modeling to navigate out-of-pocket constraints',
-        'Private hospital group procurement and patient-assistance co-pay structuring'
-      ]
-    },
-    {
-      id: 'competitive-intel',
-      title: 'Competitive Intelligence & Pipelines',
-      desc: 'Granular tracking of clinical trial pipelines, generic market entry, and import manifests.',
-      points: [
-        'Therapeutic area market sizing and 5-year patient epidemiology forecasting',
-        'Patent cliff defense and authorized generic positioning strategies',
-        'Customs manifest import tracking across major regional ports'
-      ]
-    },
-    {
-      id: 'regulatory-intel',
-      title: 'Regulatory Intelligence & Filings',
-      desc: 'Navigating national medicines regulatory authorities across 54 African countries.',
-      points: [
-        'Real-time tracking of PPB, NAFDAC, SAHPRA, EDA, EFDA, and TMDA guidelines',
-        'EAC, ECOWAS, and ZAZIBONA regional joint-assessment acceleration',
-        'African Medicines Agency (AMA) policy evolution and harmonization advisory'
-      ]
-    },
-    {
-      id: 'pharmacovigilance',
-      title: 'Pharmacovigilance Support',
-      desc: 'Adverse event screening, signal detection, and regulatory safety compliance.',
-      points: [
-        'AI-assisted biomedical literature screening and spontaneous report triage',
-        'Standard E2B(R3) safety reporting compliance workflows',
-        'Post-authorization safety study (PASS) design and monitoring'
-      ]
-    },
-    {
-      id: 'kol-mapping',
-      title: 'KOL & Commercial Effectiveness',
-      desc: 'Scientific leadership mapping, advisory boards, and territory sales intelligence.',
-      points: [
-        'Double-blind Key Opinion Leader (KOL) network mapping across therapeutic centers',
-        'Sales representative territory optimization and detailing effectiveness',
-        'Mobile AI pre-call briefing assistants for field medical science liaisons'
-      ]
-    }
+  const sector = LIFE_SCIENCES_SECTORS.find((s) => s.id === sectorId) ?? LIFE_SCIENCES_SECTORS[0];
+  const SectorIcon = SECTOR_ICONS[sector.id] ?? Pill;
+  const isPharma = sector.id === 'pharma';
+  const activeModule = PHARMA_MODULES.find((m) => m.id === moduleId) ?? PHARMA_MODULES[0];
+
+  const detailTabs: TabItem[] = [
+    { id: 'challenges', label: 'Challenges' },
+    { id: 'research', label: 'Research methods' },
+    { id: 'ai', label: 'AI opportunities' },
+    { id: 'deliverables', label: 'Deliverables' },
+    { id: 'workflow', label: 'Example workflow' },
+    ...(isPharma ? [{ id: 'modules', label: 'Pharma modules' }] : [])
   ];
+  const effectiveDetail: DetailId = detailTabs.some((t) => t.id === detailId) ? detailId : 'challenges';
 
-  const currentSector = LIFE_SCIENCES_SECTORS.find(s => s.id === activeSectorId) || LIFE_SCIENCES_SECTORS[0];
-  const SectorIcon = sectorIcons[currentSector.id] || Pill;
-  const activeMod = pharmaModules.find(m => m.id === selectedPharmaModule) || pharmaModules[0];
-
-  const verticalLimit = isSm ? 8 : 4;
-  const visibleVerticals = showAllVerticals ? DIVERSIFIED_INDUSTRIES : DIVERSIFIED_INDUSTRIES.slice(0, verticalLimit);
-
-  const stats = [
-    { value: String(LIFE_SCIENCES_SECTORS.length), label: 'Life Sciences sectors' },
-    { value: String(pharmaModules.length), label: 'Pharma capability modules' },
-    { value: String(DIVERSIFIED_INDUSTRIES.length), label: 'Additional verticals' }
-  ];
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 8 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: '-10%' },
-    transition: { duration: dur, ease: EASE }
-  } as const;
-
+  const wf = sector.workflowExample;
   const workflow = [
-    { n: '01. Question', color: 'text-gray-400', text: `"${currentSector.workflowExample.question}"`, cls: 'text-white italic font-medium', border: 'border-white/[0.08]' },
-    { n: '02. Method', color: 'text-indigo-400', text: currentSector.workflowExample.method, cls: 'text-[#E0E0E0]', border: 'border-white/[0.08]' },
-    { n: '03. Intelligence', color: 'text-indigo-400', text: currentSector.workflowExample.intelligence, cls: 'text-[#E0E0E0]', border: 'border-white/[0.08]' },
-    { n: '04. Decision', color: 'text-teal-400', text: currentSector.workflowExample.decision, cls: 'text-[#E0E0E0] font-medium', border: 'border-white/[0.08]' },
-    { n: '05. AI Solution', color: 'text-emerald-400', text: currentSector.workflowExample.aiSolution, cls: 'text-[#E0E0E0]', border: 'border-white/[0.08]' },
-    { n: '06. Measured ROI', color: 'text-emerald-400', text: currentSector.workflowExample.outcome, cls: 'text-emerald-400 font-semibold', border: 'border-emerald-500/30' }
+    { n: '01 Question', text: `"${wf.question}"`, cls: 'text-white italic' },
+    { n: '02 Method', text: wf.method, cls: 'text-[#E0E0E0]' },
+    { n: '03 Intelligence', text: wf.intelligence, cls: 'text-[#E0E0E0]' },
+    { n: '04 Decision', text: wf.decision, cls: 'text-[#E0E0E0]' },
+    { n: '05 AI solution', text: wf.aiSolution, cls: 'text-[#E0E0E0]' },
+    { n: '06 Outcome', text: wf.outcome, cls: 'text-emerald-400' }
   ];
+
+  const sectorItems: TabItem[] = LIFE_SCIENCES_SECTORS.map((s) => ({
+    id: s.id,
+    label: s.name,
+    icon: SECTOR_ICONS[s.id] ?? Pill
+  }));
 
   return (
-    <section
-      id="lifesciences-section"
-      className="mc-section bg-[#050505] text-white overflow-x-clip"
-      aria-labelledby="lifesciences-title"
-    >
-      <div className="mc-container space-y-10 md:space-y-12">
-        {/* Intent + proof */}
-        <motion.header {...fadeIn} className="space-y-4 max-w-3xl">
+    <section id="lifesciences-section" className="mc-section bg-[#050505] text-white overflow-x-clip" aria-labelledby="lifesciences-title">
+      <div className="mc-container space-y-8 md:space-y-10">
+        {/* A. Intent + CTA */}
+        <motion.header {...reveal} className="max-w-3xl">
           <p className="mc-eyebrow">
             <Dna className="w-3.5 h-3.5" aria-hidden="true" />
-            Founding Specialization
+            Founding expertise · {LIFE_SCIENCES_SECTORS.length} sub-sectors
           </p>
-          <h2 id="lifesciences-title" className="mc-h2 font-light">
-            Life Sciences <span className="font-bold text-indigo-400">Ecosystem</span>
-          </h2>
-          <p className="mc-lead">
-            Unlike generalist consultancies, MindCraft’s heritage is deeply rooted in Life Sciences. We bring clinical fluency, regulatory mastery, and health economics into every pharmaceutical, device, diagnostic, and hospital engagement.
+          <h1 id="lifesciences-title" className="mc-h1 mt-3 font-light">
+            Life Sciences, <span className="font-bold text-indigo-400">our core expertise</span>
+          </h1>
+          <p className="mc-lead mt-4">
+            MindCraft was founded in Life Sciences. We bring regulatory fluency, clinical and commercial context and sector benchmarks to
+            pharmaceutical, device, diagnostic and hospital work across Africa, Europe and the United States.
           </p>
-          <dl className="grid grid-cols-3 gap-2 sm:gap-3 pt-2">
-            {stats.map(s => (
-              <div key={s.label} className="rounded-xl bg-[#0A0A0A] border border-white/[0.08] px-3 sm:px-4 py-3">
-                <dt className="sr-only">{s.label}</dt>
-                <dd className="font-mono text-2xl sm:text-3xl font-semibold text-white leading-none">{s.value}</dd>
-                <p className="mt-1.5 text-[11px] font-mono uppercase tracking-wider text-gray-400" aria-hidden="true">{s.label}</p>
-              </div>
-            ))}
-          </dl>
+          <div className="mt-5 flex flex-col sm:flex-row gap-3">
+            <button
+              type="button"
+              onClick={onOpenIntake}
+              className="mc-tap px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white text-sm font-semibold flex items-center justify-center gap-2 transition-[background-color,transform] duration-150"
+            >
+              <span>Discuss a Life Sciences engagement</span>
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('senior-expertise')}
+              className="mc-tap px-5 rounded-xl border border-white/10 hover:border-white/20 bg-white/5 active:scale-[0.98] text-white/90 text-sm transition-[background-color,border-color,transform] duration-150"
+            >
+              Senior Life Sciences expertise
+            </button>
+          </div>
         </motion.header>
 
-        {/* Sector tabs: swipe rail on phones, 6-up grid on desktop */}
+        {/* A. Sector matrix */}
         <div>
-          <div
-            role="tablist"
-            aria-label="Life Sciences sectors"
-            className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-6 lg:overflow-visible lg:snap-none lg:pb-0"
-          >
-            {LIFE_SCIENCES_SECTORS.map((sector) => {
-              const isSelected = activeSectorId === sector.id;
-              const Icon = sectorIcons[sector.id] || Pill;
-              return (
-                <button
-                  key={sector.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isSelected}
-                  onClick={() => setActiveSectorId(sector.id)}
-                  id={`sector-tab-${sector.id}`}
-                  className={`mc-tap snap-start shrink-0 w-[10.5rem] lg:w-auto p-3 rounded-2xl border text-left transition-colors duration-200 active:scale-[0.98] flex flex-col gap-2 ${
-                    isSelected
-                      ? 'bg-[#0D0F17] border-indigo-500/35 text-white'
-                      : 'bg-[#0A0A0A] border-white/[0.08] text-gray-400 hover:border-white/20 hover:text-white'
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 ${isSelected ? 'text-indigo-400' : 'text-gray-400'}`} aria-hidden="true" />
-                  <span className="text-[13px] font-bold leading-snug">{sector.name}</span>
-                  <span className="text-[11px] text-gray-400 capitalize font-mono">
-                    {sector.category.replace('-', ' ')}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+          <TabList
+            items={sectorItems}
+            value={sector.id}
+            onChange={setSectorId}
+            label="Life Sciences sub-sectors"
+            idPrefix="sector"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2"
+            tabClass={(a) =>
+              `px-3 py-2.5 rounded-xl border text-left flex items-center gap-2.5 text-[13px] font-semibold leading-snug ${
+                a ? 'bg-[#0D0F17] border-indigo-500/35 text-white' : 'bg-[#0A0A0A] border-white/10 text-white/60 hover:border-white/20 hover:text-white'
+              }`
+            }
+            iconClass={(a) => `w-4 h-4 shrink-0 ${a ? 'text-indigo-400' : 'text-white/40'}`}
+          />
 
-        {/* Active sector */}
-        <div className="rounded-2xl bg-[#0A0A0A] border border-white/[0.08] p-4 sm:p-6 lg:p-8 space-y-6">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={currentSector.id}
-              role="tabpanel"
-              aria-labelledby={`sector-tab-${currentSector.id}`}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: dur * 0.75, ease: EASE }}
-              className="space-y-6"
-            >
-              {/* Sector header */}
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-6 border-b border-white/[0.08] gap-5">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="w-12 h-12 rounded-xl bg-[#0D0F17] border border-indigo-500/35 flex items-center justify-center text-indigo-400 shrink-0">
-                    <SectorIcon className="w-6 h-6" />
-                  </div>
+          <div
+            id="sector-panel"
+            role="tabpanel"
+            aria-labelledby={`sector-tab-${sector.id}`}
+            className="mt-3 rounded-2xl bg-[#0A0A0A] border border-white/10 p-4 sm:p-6"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={sector.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: dur, ease: EASE }}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="w-11 h-11 rounded-xl bg-[#0D0F17] border border-indigo-500/35 flex items-center justify-center text-indigo-400 shrink-0">
+                    <SectorIcon className="w-5 h-5" aria-hidden="true" />
+                  </span>
                   <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#0D0F17] border border-indigo-500/35 text-indigo-400 font-bold uppercase">
-                        {currentSector.category.replace('-', ' ')}
-                      </span>
-                      <span className="text-[11px] text-gray-400 font-mono">Life Sciences Vertical</span>
-                    </div>
-                    <h3 className="text-2xl sm:text-3xl font-light text-white mt-1.5">{currentSector.name}</h3>
-                    <p className="text-[13px] sm:text-sm text-indigo-400 font-mono mt-1">{currentSector.tagline}</p>
+                    <h2 className="font-heading text-xl sm:text-2xl font-light text-white">{sector.name}</h2>
+                    <p className="mt-1 text-sm text-indigo-300 leading-snug">{sector.tagline}</p>
                   </div>
+                </div>
+                <p className="mt-3 text-sm text-white/70 leading-relaxed max-w-3xl">{sector.description}</p>
+
+                <div className="mt-4">
+                  <div className="mc-eyebrow !text-white/50">Focus areas</div>
+                  <ul className="mt-2.5 flex flex-wrap gap-2" aria-label={`${sector.name} focus areas`}>
+                    {sector.focusAreas.map((f) => (
+                      <Chip key={f}>{f}</Chip>
+                    ))}
+                  </ul>
                 </div>
 
                 <button
                   type="button"
                   onClick={onOpenIntake}
-                  className="mc-tap w-full lg:w-auto px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] sm:text-sm font-mono shrink-0 transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
+                  className="mc-tap mt-5 text-sm font-medium text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-2 transition-colors"
                 >
-                  <span>Consult on {currentSector.name}</span>
-                  <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  Consult on {sector.name}
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </button>
-              </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
 
-              {/* Pharmaceuticals: deep capability modules */}
-              {currentSector.id === 'pharma' && (
-                <div className="rounded-xl bg-[#050505] border border-white/[0.08] p-4 sm:p-5 space-y-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="text-[11px] font-mono uppercase tracking-wider font-bold text-indigo-400 flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-                      <span>Pharmaceutical Deep Capability Modules</span>
-                    </div>
-                    <span className="text-[11px] text-gray-400 font-mono">Select module to inspect</span>
-                  </div>
-
-                  <div
-                    role="tablist"
-                    aria-label="Pharmaceutical capability modules"
-                    className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-5 md:overflow-visible md:snap-none md:pb-0"
-                  >
-                    {pharmaModules.map((mod) => {
-                      const active = selectedPharmaModule === mod.id;
-                      return (
-                        <button
-                          key={mod.id}
-                          type="button"
-                          role="tab"
-                          aria-selected={active}
-                          onClick={() => setSelectedPharmaModule(mod.id)}
-                          className={`mc-tap snap-start shrink-0 w-[11rem] md:w-auto px-3 py-2.5 rounded-xl border text-left text-[13px] font-mono leading-snug transition-colors duration-200 active:scale-[0.98] ${
-                            active
-                              ? 'bg-[#0D0F17] border-indigo-500/35 text-indigo-400'
-                              : 'bg-[#0A0A0A] border-white/[0.08] text-gray-400 hover:border-white/20 hover:text-white'
-                          }`}
-                        >
-                          {mod.title}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <motion.div
-                    key={activeMod.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: reduceMotion ? 0 : 0.15, ease: EASE }}
-                    className="p-4 rounded-xl bg-[#0A0A0A] border border-white/[0.08]"
-                  >
-                    <h4 className="text-sm font-bold text-white font-mono">{activeMod.title}</h4>
-                    <p className="text-[13px] sm:text-sm text-gray-400 mt-1.5 leading-relaxed">{activeMod.desc}</p>
-                    <ul className="mt-3 space-y-2.5">
-                      {activeMod.points.map((pt, i) => (
-                        <li key={i} className="text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
-                          <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" aria-hidden="true" />
-                          <span className="min-w-0">{pt}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                </div>
-              )}
-
-              {/* Challenges, research, AI */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 items-start">
-                <Disclosure
-                  title="Sector Strategic Challenges"
-                  icon={<HelpCircle className="w-3.5 h-3.5" />}
-                  tone="amber"
-                  meta={String(currentSector.strategicChallenges.length)}
-                  defaultOpen
-                  isWide={isMd}
-                >
-                  <DotList items={currentSector.strategicChallenges} tone="amber" />
-                </Disclosure>
-
-                <Disclosure
-                  title="MindCraft Research Methods"
-                  icon={<Search className="w-3.5 h-3.5" />}
-                  tone="indigo"
-                  meta={String(currentSector.researchMethods.length)}
-                  isWide={isMd}
-                >
-                  <DotList items={currentSector.researchMethods} tone="indigo" />
-                </Disclosure>
-
-                <Disclosure
-                  title="AI & Automation Opportunities"
-                  icon={<Cpu className="w-3.5 h-3.5" />}
-                  tone="emerald"
-                  meta={String(currentSector.aiOpportunities.length)}
-                  isWide={isMd}
-                >
-                  <DotList items={currentSector.aiOpportunities} tone="emerald" />
-                </Disclosure>
-              </div>
-
-              {/* End-to-end workflow */}
-              <div className="rounded-2xl bg-[#050505] border border-white/[0.08] p-4 sm:p-5 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-[11px] font-mono uppercase tracking-wider font-bold text-indigo-400 flex items-center gap-2">
-                    <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>Illustrative End-to-End Transformation Workflow</span>
-                  </div>
-                  <span className="text-[11px] px-2 py-0.5 rounded bg-[#0D0F17] text-indigo-400 border border-indigo-500/35 font-mono">
-                    Question → Outcome
-                  </span>
-                </div>
-
-                <ol className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-3">
-                  {workflow.map((step) => (
-                    <li key={step.n} className={`p-3.5 rounded-xl bg-[#0A0A0A] border ${step.border}`}>
-                      <div className={`text-[11px] font-mono uppercase font-bold tracking-wider ${step.color}`}>{step.n}</div>
-                      <p className={`text-[13px] leading-relaxed mt-1.5 ${step.cls}`}>{step.text}</p>
+        {/* C. Sector deep dive */}
+        <DeepDive
+          title={`${sector.name}: challenges, methods, AI and deliverables`}
+          hint="Open for research methods, AI opportunities, example workflow and deliverables"
+        >
+          <TabList
+            items={detailTabs}
+            value={effectiveDetail}
+            onChange={(id) => setDetailId(id as DetailId)}
+            label={`${sector.name} detail`}
+            idPrefix="detail"
+            className="flex flex-wrap gap-2 pt-3"
+            tabClass={(a) =>
+              `px-3 rounded-full border text-xs font-mono ${
+                a ? 'bg-[#0D0F17] border-indigo-500/35 text-indigo-200' : 'border-white/10 text-white/60 hover:text-white hover:border-white/20'
+              }`
+            }
+          />
+          <div id="detail-panel" role="tabpanel" aria-labelledby={`detail-tab-${effectiveDetail}`} className="mt-4">
+            {effectiveDetail === 'challenges' && <DotList items={sector.strategicChallenges} dot={`bg-amber-500`} />}
+            {effectiveDetail === 'research' && <DotList items={sector.researchMethods} dot="bg-indigo-500" />}
+            {effectiveDetail === 'ai' && <DotList items={sector.aiOpportunities} dot="bg-emerald-500" />}
+            {effectiveDetail === 'deliverables' && <DotList items={sector.exampleDeliverables} dot="bg-teal-500" />}
+            {effectiveDetail === 'workflow' && (
+              <div>
+                <p className="text-xs text-white/50 mb-3">Illustrative end-to-end workflow, from question to outcome.</p>
+                <ol className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {workflow.map((s) => (
+                    <li key={s.n} className="rounded-xl border border-white/10 bg-[#050505] p-3">
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-white/50">{s.n}</div>
+                      <p className={`mt-1 text-[13px] leading-relaxed ${s.cls}`}>{s.text}</p>
                     </li>
                   ))}
                 </ol>
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Additional verticals */}
-        <div className="space-y-6">
-          <motion.div {...fadeIn} className="max-w-2xl space-y-2">
-            <h3 className="text-2xl font-light text-white">
-              Additional <span className="font-bold text-indigo-400">Industry Verticals</span> Served
-            </h3>
-            <p className="text-gray-400 text-[13px] sm:text-sm font-mono leading-relaxed">
-              Applying the same rigorous, evidence-based methodology to diversified sectors across Africa.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {visibleVerticals.map((ind, i) => (
-              <motion.div
-                key={ind.id}
-                initial={{ opacity: 0, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-10%' }}
-                transition={{ duration: dur, ease: EASE, delay: reduceMotion ? 0 : Math.min(i % 4, 3) * 0.04 }}
-                className="mc-card-interactive min-w-0 p-5 rounded-2xl bg-[#0A0A0A] border border-white/[0.08] flex flex-col justify-between"
-              >
-                <div>
-                  <div className="text-[13px] font-bold text-indigo-400 uppercase font-mono mb-1">{ind.name}</div>
-                  <div className="text-[13px] font-semibold text-white mb-2 font-mono">{ind.tagline}</div>
-                  <p className="text-[13px] text-gray-400 leading-relaxed mb-3">{ind.description}</p>
-                  <div className="space-y-1.5">
-                    <div className="text-[11px] font-mono uppercase text-gray-400 font-semibold tracking-wider">Focus Areas</div>
-                    {ind.focusAreas.slice(0, 3).map((fa, j) => (
-                      <div key={j} className="text-[13px] text-[#E0E0E0] flex items-start gap-1.5">
-                        <span className="text-indigo-400 shrink-0">•</span>
-                        <span className="min-w-0">{fa}</span>
-                      </div>
+            )}
+            {effectiveDetail === 'modules' && (
+              <div>
+                <TabList
+                  items={PHARMA_MODULES.map((m) => ({ id: m.id, label: m.title }))}
+                  value={activeModule.id}
+                  onChange={setModuleId}
+                  label="Pharmaceutical capability modules"
+                  idPrefix="module"
+                  className="flex flex-wrap gap-2"
+                  tabClass={(a) =>
+                    `px-3 py-2 rounded-xl border text-left text-xs leading-snug ${
+                      a ? 'bg-[#0D0F17] border-indigo-500/35 text-indigo-200' : 'border-white/10 text-white/60 hover:text-white hover:border-white/20'
+                    }`
+                  }
+                />
+                <div id="module-panel" role="tabpanel" aria-labelledby={`module-tab-${activeModule.id}`} className="mt-4 rounded-xl border border-white/10 bg-[#050505] p-4">
+                  <h3 className="text-sm font-semibold text-white">{activeModule.title}</h3>
+                  <p className="mt-1.5 text-[13px] text-white/60 leading-relaxed">{activeModule.desc}</p>
+                  <ul className="mt-3 space-y-2.5">
+                    {activeModule.points.map((pt) => (
+                      <li key={pt} className="text-[13px] text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" aria-hidden="true" />
+                        <span className="min-w-0">{pt}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
-
-                <div className="mt-4 pt-3 border-t border-white/[0.08] text-[11px] text-gray-400 font-mono italic">
-                  Method: {ind.methodology}
-                </div>
-              </motion.div>
-            ))}
+              </div>
+            )}
           </div>
+        </DeepDive>
 
-          {DIVERSIFIED_INDUSTRIES.length > verticalLimit && (
-            <button
-              type="button"
-              onClick={() => setShowAllVerticals(v => !v)}
-              className="mc-tap w-full sm:w-auto px-6 rounded-xl border border-white/[0.08] bg-[#0A0A0A] text-[13px] font-medium text-[#E0E0E0] hover:border-white/20 active:scale-[0.98] transition"
-            >
-              {showAllVerticals ? 'Show fewer verticals' : `Show all ${DIVERSIFIED_INDUSTRIES.length} verticals`}
-            </button>
-          )}
-        </div>
+        {/* B. Additional verticals */}
+        <motion.div {...reveal} className="space-y-4">
+          <div className="max-w-2xl">
+            <h2 className="font-heading text-xl sm:text-2xl font-light text-white">
+              Beyond Life Sciences: <span className="font-bold text-indigo-400">same rigor, more sectors</span>
+            </h2>
+            <p className="mt-2 text-sm text-white/65 leading-relaxed">
+              The same evidence-based methodology applied to diversified industries across Africa.
+            </p>
+          </div>
+          <ul className="flex flex-wrap gap-2" aria-label="Additional industry verticals">
+            {DIVERSIFIED_INDUSTRIES.map((v) => (
+              <li key={v.id} className={`rounded-full border px-3.5 py-2 text-xs font-medium ${TONES.indigo.chip}`}>
+                {v.name}
+              </li>
+            ))}
+          </ul>
+          <DeepDive title={`Vertical detail (${DIVERSIFIED_INDUSTRIES.length})`} hint="Focus areas and method for each additional vertical">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3">
+              {DIVERSIFIED_INDUSTRIES.map((v) => (
+                <article key={v.id} className="min-w-0 rounded-xl border border-white/10 bg-[#050505] p-4">
+                  <h3 className="text-sm font-semibold text-white">{v.name}</h3>
+                  <p className="mt-1 text-[13px] text-white leading-snug">{v.tagline}</p>
+                  <p className="mt-2 text-[13px] text-white/60 leading-relaxed">{v.description}</p>
+                  <ul className="mt-3 space-y-1.5">
+                    {v.focusAreas.map((fa) => (
+                      <li key={fa} className="text-[13px] text-[#E0E0E0] flex items-start gap-2">
+                        <span className="w-1 h-1 rounded-full bg-indigo-400 mt-2 shrink-0" aria-hidden="true" />
+                        <span className="min-w-0">{fa}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 pt-3 border-t border-white/10 text-xs text-white/50 italic">Method: {v.methodology}</p>
+                </article>
+              ))}
+            </div>
+          </DeepDive>
+        </motion.div>
+
+        {/* Next steps */}
+        <RelatedLinks
+          title="Continue"
+          items={[
+            { label: 'Senior Life Sciences expertise', desc: 'The senior experience behind this work', onClick: () => setActiveTab('senior-expertise') },
+            { label: 'Industries we serve', desc: 'All verticals and focus areas', onClick: () => setActiveTab('industries') },
+            { label: 'Localization', desc: 'From global strategy to local result', onClick: () => setActiveTab('localization'), tone: 'emerald' },
+            { label: 'Market entry', desc: 'Nine-step entry across African markets', onClick: () => setActiveTab('market-entry'), tone: 'emerald' }
+          ]}
+        />
+
+        <ContextualCTA
+          title="Bring us the Life Sciences decision"
+          body="Pharma, devices, diagnostics, equipment, consumables or hospitals: we scope the research, strategy or AI work around it."
+          primaryLabel="Talk to MindCraft"
+          onPrimary={onOpenIntake}
+        />
       </div>
     </section>
   );
