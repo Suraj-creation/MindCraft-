@@ -1,21 +1,6 @@
-import React, { useState } from 'react';
-import { 
-  Globe2, 
-  MapPin, 
-  CheckCircle2, 
-  ArrowRight, 
-  Compass, 
-  Search, 
-  Layers, 
-  Sparkles, 
-  GraduationCap, 
-  BarChart3, 
-  ShieldCheck, 
-  FileText, 
-  TrendingUp,
-  Building2,
-  Workflow
-} from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MotionConfig, motion } from 'motion/react';
+import { ArrowRight, ArrowLeft, MapPin, Building2, FileText, Check } from 'lucide-react';
 import { MARKET_ENTRY_9STEPS, UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { NavTab } from '../types';
 
@@ -25,7 +10,29 @@ interface Props {
   onSelectIndustryForEngagement?: (industry: string) => void;
 }
 
-export const MarketEntryFrameworkView: React.FC<Props> = ({ 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const handler = () => setMatches(mq.matches);
+    handler();
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [query]);
+  return matches;
+}
+
+const primaryBtn =
+  'mc-tap inline-flex items-center justify-center gap-2 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition-[background-color,transform] duration-200 active:scale-[0.98] w-full sm:w-auto shrink-0';
+const ghostBtn =
+  'mc-tap inline-flex items-center justify-center gap-2 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-sm font-medium text-white disabled:opacity-30 disabled:pointer-events-none transition-[background-color,transform] duration-200 active:scale-[0.98]';
+const monoLabel = 'text-[11px] font-mono uppercase tracking-wider text-gray-400';
+
+export const MarketEntryFrameworkView: React.FC<Props> = ({
   onNavigate,
   onSelectCountryForEngagement,
   onSelectIndustryForEngagement
@@ -33,6 +40,12 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
   const [selectedCountry, setSelectedCountry] = useState('Kenya');
   const [selectedIndustry, setSelectedIndustry] = useState('Pharmaceuticals');
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const scrollOnChange = useRef(false);
+
+  const total = MARKET_ENTRY_9STEPS.length;
+  const jurisdictionCount = AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0);
 
   const handleLaunchEngagement = () => {
     if (onSelectCountryForEngagement) onSelectCountryForEngagement(selectedCountry);
@@ -40,197 +53,309 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
     onNavigate('engagement-builder');
   };
 
-  const currentStep = MARKET_ENTRY_9STEPS[activeStepIndex];
+  const goToStep = (idx: number) => {
+    scrollOnChange.current = true;
+    setActiveStepIndex(Math.max(0, Math.min(total - 1, idx)));
+  };
 
-  return (
-    <div className="w-full min-h-screen bg-[#050505] text-white p-4 md:p-8 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-white/10">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 text-xs font-mono tracking-wider uppercase rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              Signature 9-Step Interactive Framework
-            </span>
-            <span className="text-xs text-neutral-400 font-mono">
-              Pan-African Market Entry & De-risking Blueprint
-            </span>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
-            Entering an African Market?
-          </h1>
-          <p className="text-neutral-400 text-sm md:text-base mt-1 max-w-3xl">
-            From initial addressable market sizing and competitor price teardowns to regulatory licensing, distributor due diligence, AI copilots, and ongoing governance.
+  // On phones, keep the newly opened timeline step in view after the previous one collapses
+  useEffect(() => {
+    if (!scrollOnChange.current) return;
+    scrollOnChange.current = false;
+    if (isDesktop) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    itemRefs.current[activeStepIndex]?.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  }, [activeStepIndex, isDesktop]);
+
+  const facts = [
+    { value: String(total), label: 'Steps, one pathway' },
+    { value: String(total), label: 'Deliverables' },
+    { value: String(jurisdictionCount), label: 'Jurisdictions' },
+    { value: String(UNIVERSAL_INDUSTRIES.length), label: 'Industries' }
+  ];
+
+  const renderDetail = (idx: number) => {
+    const step = MARKET_ENTRY_9STEPS[idx];
+    return (
+      <motion.div
+        key={step.stepNumber}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: EASE }}
+        className="space-y-4"
+      >
+        <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1.5">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">Core Strategic Question</div>
+          <p className="text-base text-white font-medium italic leading-relaxed">"{step.question}"</p>
+        </div>
+
+        <div className="space-y-2">
+          <div className={monoLabel}>MindCraft Field Scope &amp; Methodology</div>
+          <p className="text-sm text-[#E0E0E0] leading-relaxed p-4 rounded-xl bg-[#050505] border border-white/[0.08]">
+            {step.mindcraftScope}
           </p>
         </div>
 
-        {/* Global Action */}
-        <button
-          onClick={handleLaunchEngagement}
-          className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-all shadow-[0_0_15px_rgba(99,102,241,0.3)] shrink-0 flex items-center gap-2"
-        >
-          Build a Market Entry Engagement <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Target Market Configuration Card */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
-          <div>
-            <h2 className="text-lg font-semibold text-white">Contextualize the 9-Step Pathway</h2>
-            <p className="text-xs text-neutral-400 mt-0.5">
-              Select your target country and industry to adapt questions, investigations, and deliverables.
-            </p>
+        <div className="p-4 rounded-xl bg-[#0D0F17] border border-indigo-500/35 flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <div className={monoLabel}>Key Deliverable</div>
+            <div className="text-sm font-semibold text-white mt-1">{step.deliverable}</div>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 bg-[#050505] border border-white/10 rounded-xl px-3 py-1.5">
-              <MapPin className="w-4 h-4 text-emerald-400" />
-              <select
-                value={selectedCountry}
-                onChange={(e) => setSelectedCountry(e.target.value)}
-                className="bg-transparent text-xs text-white focus:outline-none"
-              >
-                {AFRICA_REGIONS_DATA.flatMap(r => r.countries).map(c => (
-                  <option key={c} value={c} className="bg-[#0a0a0a] text-white">{c}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex items-center gap-2 bg-[#050505] border border-white/10 rounded-xl px-3 py-1.5">
-              <Building2 className="w-4 h-4 text-indigo-400" />
-              <select
-                value={selectedIndustry}
-                onChange={(e) => setSelectedIndustry(e.target.value)}
-                className="bg-transparent text-xs text-white focus:outline-none"
-              >
-                {UNIVERSAL_INDUSTRIES.map(i => (
-                  <option key={i.id} value={i.name} className="bg-[#0a0a0a] text-white">{i.name}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <FileText className="w-6 h-6 text-indigo-400 shrink-0" />
         </div>
 
-        {/* 9-Step Progression Navigator */}
-        <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2 pt-2">
-          {MARKET_ENTRY_9STEPS.map((step, idx) => {
-            const isActive = activeStepIndex === idx;
-            return (
-              <button
-                key={step.stepNumber}
-                onClick={() => setActiveStepIndex(idx)}
-                className={`p-2.5 rounded-xl border text-center transition-all ${
-                  isActive
-                    ? 'bg-indigo-600 text-white border-indigo-400 shadow-[0_0_12px_rgba(99,102,241,0.3)]'
-                    : 'bg-[#050505] border-white/5 text-neutral-400 hover:text-white hover:border-white/20'
-                }`}
-              >
-                <div className="text-[10px] font-mono font-bold">{step.stepNumber}</div>
-                <div className="text-[11px] font-medium truncate mt-0.5">{step.title.split(' ')[0]}</div>
+        <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/[0.08]">
+          <button onClick={() => goToStep(idx - 1)} disabled={idx === 0} className={ghostBtn}>
+            <ArrowLeft className="w-4 h-4" /> Previous Step
+          </button>
+          <div className="text-[12px] font-mono text-gray-400 hidden sm:block">
+            {idx + 1} of {total}
+          </div>
+          <button
+            onClick={() => goToStep(idx + 1)}
+            disabled={idx === total - 1}
+            className="mc-tap inline-flex items-center justify-center gap-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white disabled:opacity-30 disabled:pointer-events-none transition-[background-color,transform] duration-200 active:scale-[0.98]"
+          >
+            Next Step <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </motion.div>
+    );
+  };
+
+  const currentStep = MARKET_ENTRY_9STEPS[activeStepIndex];
+
+  return (
+    <MotionConfig reducedMotion="user">
+      <section className="mc-section w-full bg-[#050505] text-white">
+        <div className="mc-container space-y-8">
+          {/* Intent + facts + primary CTA */}
+          <header className="space-y-6">
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+              <div className="space-y-3 max-w-3xl">
+                <span className="mc-eyebrow !text-emerald-400">Signature 9-Step Interactive Framework</span>
+                <h1 className="mc-h2">Entering an African Market?</h1>
+                <p className="mc-lead">
+                  From initial addressable market sizing and competitor price teardowns to regulatory licensing, distributor due diligence, AI copilots, and ongoing governance.
+                </p>
+                <p className="text-[12px] font-mono text-gray-400">Pan-African Market Entry &amp; De-risking Blueprint</p>
+              </div>
+              <button onClick={handleLaunchEngagement} className={primaryBtn}>
+                Build a Market Entry Engagement <ArrowRight className="w-4 h-4" />
               </button>
-            );
-          })}
-        </div>
-      </div>
+            </div>
 
-      {/* Active Step Deep-Dive Bento Card */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Step Details (8 cols) */}
-        <div className="lg:col-span-8 bg-[#0a0a0a] border border-indigo-500/40 rounded-2xl p-6 md:p-8 space-y-6 shadow-[0_0_20px_rgba(99,102,241,0.15)]">
-          <div className="flex items-center justify-between pb-4 border-b border-white/10">
-            <div className="flex items-center gap-3">
-              <span className="p-3 rounded-2xl bg-indigo-600 text-white font-mono font-bold text-lg">
-                {currentStep.stepNumber}
-              </span>
-              <div>
-                <span className="text-xs font-mono uppercase text-indigo-400">Step {currentStep.stepNumber} of 09</span>
-                <h3 className="text-xl md:text-2xl font-bold text-white mt-0.5">{currentStep.title}</h3>
+            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/[0.08] border border-white/[0.08] rounded-2xl overflow-hidden">
+              {facts.map(f => (
+                <div key={f.label} className="bg-[#0a0a0a] px-4 py-4">
+                  <dd className="text-2xl font-semibold text-white leading-none">{f.value}</dd>
+                  <dt className="text-[11px] font-mono uppercase tracking-wider text-gray-400 mt-2">{f.label}</dt>
+                </div>
+              ))}
+            </dl>
+          </header>
+
+          {/* Context selectors */}
+          <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-4 sm:p-6 space-y-5">
+            <div>
+              <h2 className="text-lg font-semibold text-white">Contextualize the 9-Step Pathway</h2>
+              <p className="text-sm text-gray-400 mt-1">
+                Select your target country and industry to adapt questions, investigations, and deliverables.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label className="flex items-center gap-3 bg-[#050505] border border-white/[0.08] rounded-xl px-4 mc-tap focus-within:border-indigo-500">
+                <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span className="sr-only">Target country</span>
+                <select
+                  value={selectedCountry}
+                  onChange={e => setSelectedCountry(e.target.value)}
+                  className="w-full min-w-0 bg-transparent text-base sm:text-sm text-white focus:outline-none py-2"
+                >
+                  {AFRICA_REGIONS_DATA.map(r => (
+                    <optgroup key={r.name} label={r.name} className="bg-[#0a0a0a] text-white">
+                      {r.countries.map(c => (
+                        <option key={`${r.name}-${c}`} value={c} className="bg-[#0a0a0a] text-white">
+                          {c}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </label>
+
+              <label className="flex items-center gap-3 bg-[#050505] border border-white/[0.08] rounded-xl px-4 mc-tap focus-within:border-indigo-500">
+                <Building2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                <span className="sr-only">Target industry</span>
+                <select
+                  value={selectedIndustry}
+                  onChange={e => setSelectedIndustry(e.target.value)}
+                  className="w-full min-w-0 bg-transparent text-base sm:text-sm text-white focus:outline-none py-2"
+                >
+                  {UNIVERSAL_INDUSTRIES.map(i => (
+                    <option key={i.id} value={i.name} className="bg-[#0a0a0a] text-white">
+                      {i.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
+
+          {/* ============ DESKTOP: horizontal stepper + detail ============ */}
+          {isDesktop ? (
+            <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-8 space-y-8">
+              <nav aria-label="9-step roadmap">
+                <ol className="relative grid grid-cols-9">
+                  {/* rail + progress (transform only) */}
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-5 h-px bg-white/[0.08]"
+                    style={{ left: 'calc(100% / 18)', right: 'calc(100% / 18)' }}
+                  />
+                  <motion.span
+                    aria-hidden="true"
+                    className="absolute top-5 h-px bg-indigo-500 origin-left"
+                    style={{ left: 'calc(100% / 18)', width: 'calc(100% * 8 / 9)' }}
+                    animate={{ scaleX: activeStepIndex / (total - 1) }}
+                    transition={{ duration: 0.25, ease: EASE }}
+                  />
+                  {MARKET_ENTRY_9STEPS.map((step, idx) => {
+                    const isActive = activeStepIndex === idx;
+                    const isDone = idx < activeStepIndex;
+                    return (
+                      <li key={step.stepNumber} className="relative">
+                        <button
+                          onClick={() => goToStep(idx)}
+                          aria-current={isActive ? 'step' : undefined}
+                          className="group w-full flex flex-col items-center gap-3 px-1 text-center"
+                        >
+                          <span
+                            className={`relative w-10 h-10 rounded-full border flex items-center justify-center font-mono text-sm font-bold transition-[background-color,border-color,color,transform] duration-200 group-active:scale-[0.96] ${
+                              isActive
+                                ? 'bg-indigo-600 border-indigo-400 text-white'
+                                : isDone
+                                  ? 'bg-[#0D0F17] border-indigo-500 text-indigo-400'
+                                  : 'bg-[#050505] border-white/[0.08] text-gray-400 group-hover:text-white group-hover:border-white/30'
+                            }`}
+                          >
+                            {isDone ? <Check className="w-4 h-4" /> : step.stepNumber}
+                          </span>
+                          <span
+                            className={`text-[12px] leading-snug font-medium line-clamp-3 ${
+                              isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                            }`}
+                          >
+                            {step.title}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </nav>
+
+              <div className="rounded-2xl border border-indigo-500/35 p-8 space-y-6">
+                <div className="flex items-center justify-between gap-4 pb-5 border-b border-white/[0.08]">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <span className="w-12 h-12 rounded-2xl bg-indigo-600 text-white font-mono font-bold text-lg flex items-center justify-center shrink-0">
+                      {currentStep.stepNumber}
+                    </span>
+                    <div className="min-w-0">
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">
+                        Step {currentStep.stepNumber} of {String(total).padStart(2, '0')}
+                      </span>
+                      <h3 className="text-2xl font-bold text-white mt-0.5">{currentStep.title}</h3>
+                    </div>
+                  </div>
+                  <span className="text-[12px] font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/30 shrink-0">
+                    {selectedCountry} • {selectedIndustry}
+                  </span>
+                </div>
+                {renderDetail(activeStepIndex)}
+              </div>
+
+              <div className="flex justify-center">
+                <button onClick={handleLaunchEngagement} className={primaryBtn}>
+                  Build Engagement Blueprint <ArrowRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
-            <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-              {selectedCountry} • {selectedIndustry}
-            </span>
-          </div>
+          ) : (
+            /* ============ MOBILE / TABLET: vertical timeline ============ */
+            <div className="space-y-6">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-lg font-semibold text-white">Complete 9-Step Roadmap</h2>
+                <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30 truncate max-w-[60%]">
+                  {selectedCountry} • {selectedIndustry}
+                </span>
+              </div>
 
-          <div className="p-4 rounded-xl bg-[#050505] border border-white/5 space-y-1">
-            <div className="text-xs font-mono text-indigo-400 uppercase">Core Strategic Question:</div>
-            <p className="text-sm md:text-base text-white font-medium italic">
-              "{currentStep.question}"
-            </p>
-          </div>
+              <ol className="relative max-w-3xl">
+                {MARKET_ENTRY_9STEPS.map((step, idx) => {
+                  const isActive = activeStepIndex === idx;
+                  const isDone = idx < activeStepIndex;
+                  const isLast = idx === total - 1;
+                  return (
+                    <li
+                      key={step.stepNumber}
+                      ref={el => {
+                        itemRefs.current[idx] = el;
+                      }}
+                      className="relative pl-14 scroll-mt-24"
+                    >
+                      {!isLast && (
+                        <span
+                          aria-hidden="true"
+                          className={`absolute left-5 top-10 bottom-0 w-px ${isDone ? 'bg-indigo-500' : 'bg-white/[0.08]'}`}
+                        />
+                      )}
+                      <span
+                        aria-hidden="true"
+                        className={`absolute left-0 top-0.5 w-10 h-10 rounded-full border flex items-center justify-center font-mono text-sm font-bold transition-[background-color,border-color,color] duration-200 ${
+                          isActive
+                            ? 'bg-indigo-600 border-indigo-400 text-white'
+                            : isDone
+                              ? 'bg-[#0D0F17] border-indigo-500 text-indigo-400'
+                              : 'bg-[#050505] border-white/[0.08] text-gray-400'
+                        }`}
+                      >
+                        {isDone ? <Check className="w-4 h-4" /> : step.stepNumber}
+                      </span>
 
-          <div className="space-y-2">
-            <div className="text-xs font-mono text-neutral-400 uppercase">MindCraft Field Scope & Methodology:</div>
-            <p className="text-sm text-neutral-300 leading-relaxed p-4 rounded-xl bg-[#050505] border border-white/5">
-              {currentStep.mindcraftScope}
-            </p>
-          </div>
+                      <button
+                        onClick={() => goToStep(idx)}
+                        aria-expanded={isActive}
+                        aria-current={isActive ? 'step' : undefined}
+                        className="mc-tap w-full text-left py-2.5 active:scale-[0.99] transition-transform duration-200"
+                      >
+                        <span className="block text-[11px] font-mono uppercase tracking-wider text-gray-400">
+                          Step {step.stepNumber}
+                        </span>
+                        <span className={`block text-base font-semibold leading-snug ${isActive ? 'text-white' : 'text-[#E0E0E0]'}`}>
+                          {step.title}
+                        </span>
+                      </button>
 
-          <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-950/40 to-[#050505] border border-indigo-500/30 flex items-center justify-between gap-4">
-            <div>
-              <div className="text-xs font-mono text-neutral-400 uppercase">Key Deliverable:</div>
-              <div className="text-sm font-semibold text-white">{currentStep.deliverable}</div>
-            </div>
-            <FileText className="w-6 h-6 text-indigo-400 shrink-0" />
-          </div>
+                      <div className={isLast ? 'pb-0' : 'pb-4'}>
+                        {isActive && (
+                          <div className="mt-1 mb-2 p-4 rounded-2xl bg-[#0a0a0a] border border-indigo-500/35">
+                            {renderDetail(idx)}
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
 
-          {/* Previous / Next Controls */}
-          <div className="flex items-center justify-between pt-4 border-t border-white/10">
-            <button
-              onClick={() => setActiveStepIndex(Math.max(0, activeStepIndex - 1))}
-              disabled={activeStepIndex === 0}
-              className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-white disabled:opacity-30 transition-all"
-            >
-              Previous Step
-            </button>
-            <div className="text-xs font-mono text-neutral-500">
-              {activeStepIndex + 1} of 9
-            </div>
-            <button
-              onClick={() => setActiveStepIndex(Math.min(MARKET_ENTRY_9STEPS.length - 1, activeStepIndex + 1))}
-              disabled={activeStepIndex === MARKET_ENTRY_9STEPS.length - 1}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white disabled:opacity-30 transition-all"
-            >
-              Next Step
-            </button>
-          </div>
-        </div>
-
-        {/* Right Sidebar: All 9 Steps Overview (4 cols) */}
-        <div className="lg:col-span-4 bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 space-y-4">
-          <div className="text-sm font-semibold text-white flex items-center gap-2">
-            <Workflow className="w-4 h-4 text-indigo-400" />
-            Complete 9-Step Roadmap
-          </div>
-          <div className="space-y-2 text-xs">
-            {MARKET_ENTRY_9STEPS.map((step, idx) => (
-              <button
-                key={step.stepNumber}
-                onClick={() => setActiveStepIndex(idx)}
-                className={`w-full text-left p-3 rounded-xl border transition-all flex items-center justify-between ${
-                  activeStepIndex === idx
-                    ? 'bg-indigo-950/60 border-indigo-500/60 text-white font-medium'
-                    : 'bg-[#050505] border-white/5 text-neutral-400 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="font-mono text-[10px] text-indigo-400">{step.stepNumber}</span>
-                  <span className="truncate">{step.title}</span>
-                </div>
-                {activeStepIndex === idx && <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />}
+              <button onClick={handleLaunchEngagement} className={primaryBtn}>
+                Build Engagement Blueprint <ArrowRight className="w-4 h-4" />
               </button>
-            ))}
-          </div>
-
-          <div className="pt-4 border-t border-white/10 space-y-3">
-            <button
-              onClick={handleLaunchEngagement}
-              className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-all shadow-[0_0_15px_rgba(99,102,241,0.3)] flex items-center justify-center gap-2"
-            >
-              Build Engagement Blueprint <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+      </section>
+    </MotionConfig>
   );
 };

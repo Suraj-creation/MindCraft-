@@ -1,24 +1,19 @@
-import React, { useState, useMemo } from 'react';
-import { 
-  Globe2, 
-  Compass, 
-  MapPin, 
-  Building2, 
-  Search, 
-  Layers, 
-  Sparkles, 
-  CheckCircle2, 
-  ArrowRight, 
-  FileText, 
-  TrendingUp, 
-  ShieldCheck, 
-  Workflow, 
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
+import {
+  Globe2,
+  Compass,
+  MapPin,
+  Building2,
+  Search,
+  CheckCircle2,
+  ArrowRight,
   HelpCircle,
-  Network,
   Cpu,
-  GraduationCap
+  ChevronDown,
+  X
 } from 'lucide-react';
-import { AFRICA_REGIONS_DATA, UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
+import { AFRICA_REGIONS_DATA, UNIVERSAL_INDUSTRIES, MARKET_ENTRY_9STEPS } from '../data/industryAndAfricaData';
 import { AFRICAN_COUNTRIES } from '../data/mindcraftData';
 import { AfricaRegionName, NavTab } from '../types';
 
@@ -28,7 +23,83 @@ interface Props {
   onSelectIndustryForEngagement?: (industryName: string) => void;
 }
 
-export const AfricaIntelligenceExplorer: React.FC<Props> = ({ 
+type ViewTab = 'regional' | 'country' | 'crossover' | 'global-connector';
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const VIEW_TABS: { id: ViewTab; label: string }[] = [
+  { id: 'regional', label: 'Regional Clusters' },
+  { id: 'country', label: 'Country Dossiers' },
+  { id: 'crossover', label: 'Africa × Industry Crossover' },
+  { id: 'global-connector', label: 'Africa as a Connector' }
+];
+
+const ALL_JURISDICTIONS = AFRICA_REGIONS_DATA.flatMap(r =>
+  r.countries.map(name => ({ name, region: r.name }))
+);
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const handler = () => setMatches(mq.matches);
+    handler();
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [query]);
+  return matches;
+}
+
+const primaryBtn =
+  'mc-tap inline-flex items-center justify-center gap-2 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition-[background-color,transform] duration-200 active:scale-[0.98] w-full sm:w-auto shrink-0';
+
+const panel = 'bg-[#0a0a0a] border border-white/[0.08] rounded-2xl';
+const inset = 'bg-[#050505] border border-white/[0.08] rounded-xl';
+const monoLabel = 'text-[11px] font-mono uppercase tracking-wider text-gray-400';
+
+/** Collapsible block: open by default on desktop, collapsed on phones (progressive disclosure). */
+const Disclosure: React.FC<{
+  title: React.ReactNode;
+  count?: number;
+  defaultOpen: boolean;
+  children: React.ReactNode;
+}> = ({ title, count, defaultOpen, children }) => {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className={`${inset} overflow-hidden`}>
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen(o => !o)}
+        className="mc-tap w-full flex items-center justify-between gap-3 px-4 py-2 text-left"
+      >
+        <span className="text-sm font-semibold flex items-center gap-2 min-w-0">{title}</span>
+        <span className="flex items-center gap-2 shrink-0">
+          {typeof count === 'number' && (
+            <span className="text-[11px] font-mono text-gray-400">{count}</span>
+          )}
+          <ChevronDown
+            className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          />
+        </span>
+      </button>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: EASE }}
+          className="px-4 pb-4"
+        >
+          {children}
+        </motion.div>
+      )}
+    </div>
+  );
+};
+
+export const AfricaIntelligenceExplorer: React.FC<Props> = ({
   onNavigate,
   onSelectCountryForEngagement,
   onSelectIndustryForEngagement
@@ -36,7 +107,11 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
   const [selectedRegionName, setSelectedRegionName] = useState<AfricaRegionName>('East Africa');
   const [selectedCountryName, setSelectedCountryName] = useState<string>('Kenya');
   const [crossoverIndustryId, setCrossoverIndustryId] = useState<string>('pharmaceuticals');
-  const [activeTab, setActiveTab] = useState<'regional' | 'country' | 'crossover' | 'global-connector'>('regional');
+  const [activeTab, setActiveTab] = useState<ViewTab>('regional');
+  const [search, setSearch] = useState('');
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const selectedRegion = useMemo(() => {
     return AFRICA_REGIONS_DATA.find(r => r.name === selectedRegionName) || AFRICA_REGIONS_DATA[0];
@@ -77,528 +152,636 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
     return UNIVERSAL_INDUSTRIES.find(ind => ind.id === crossoverIndustryId) || UNIVERSAL_INDUSTRIES[0];
   }, [crossoverIndustryId]);
 
+  const query = search.trim().toLowerCase();
+  const listedCountries = useMemo(() => {
+    if (query) return ALL_JURISDICTIONS.filter(c => c.name.toLowerCase().includes(query));
+    return selectedRegion.countries.map(name => ({ name, region: selectedRegion.name }));
+  }, [query, selectedRegion]);
+
   const handleStartEngagement = (countryName: string, industryName?: string) => {
     if (onSelectCountryForEngagement) onSelectCountryForEngagement(countryName);
     if (industryName && onSelectIndustryForEngagement) onSelectIndustryForEngagement(industryName);
     onNavigate('engagement-builder');
   };
 
-  return (
-    <div className="w-full min-h-screen bg-[#050505] text-white p-4 md:p-8 space-y-8">
-      {/* Header & Main Views */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-white/10">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 text-xs font-mono tracking-wider uppercase rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              Pan-African Intelligence Footprint
-            </span>
-            <span className="text-xs text-neutral-400 font-mono">
-              4 Regional Clusters • 45 Jurisdictions • Nairobi Global HQ
-            </span>
+  const pickCountry = (name: string, region?: AfricaRegionName) => {
+    setSelectedCountryName(name);
+    if (region) setSelectedRegionName(region);
+    if (!isDesktop) setSheetOpen(true);
+  };
+
+  const sheetVisible = sheetOpen && !isDesktop && activeTab === 'country';
+
+  // Bottom sheet: lock scroll, Escape to close, focus the close button
+  useEffect(() => {
+    if (!sheetVisible) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSheetOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    closeRef.current?.focus();
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [sheetVisible]);
+
+  const facts = [
+    { value: String(AFRICA_REGIONS_DATA.length), label: 'Regional clusters' },
+    { value: String(ALL_JURISDICTIONS.length), label: 'Jurisdictions' },
+    { value: 'Nairobi', label: 'Global HQ' },
+    { value: String(MARKET_ENTRY_9STEPS.length), label: 'Step entry framework' }
+  ];
+
+  const dossierBody = (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-5 border-b border-white/[0.08]">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-emerald-400 mb-1">
+            <MapPin className="w-4 h-4" /> {selectedCountryDossier.region}
           </div>
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
-            Africa Intelligence Explorer
-          </h1>
-          <p className="text-neutral-400 text-sm md:text-base mt-1 max-w-3xl">
-            In-depth on-the-ground intelligence, regulatory tracking, healthcare systems, and commercial execution frameworks across East, West, Southern, and North Africa.
+          <h2 className="mc-h2">{selectedCountryDossier.name} Market Dossier</h2>
+          <p className="text-[12px] text-gray-400 mt-2 font-mono leading-relaxed">
+            Capital: {selectedCountryDossier.capital} • Currency: {selectedCountryDossier.currency}
           </p>
         </div>
+        <button
+          onClick={() => handleStartEngagement(selectedCountryDossier.name)}
+          className={primaryBtn}
+        >
+          Discuss {selectedCountryDossier.name} Market <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
 
-        {/* Sub-view switcher */}
-        <div className="flex items-center gap-1.5 p-1 bg-[#0a0a0a] border border-white/10 rounded-xl overflow-x-auto">
-          <button
-            onClick={() => setActiveTab('regional')}
-            className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === 'regional'
-                ? 'bg-indigo-600 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)]'
-                : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            Regional Clusters
-          </button>
-          <button
-            onClick={() => setActiveTab('country')}
-            className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === 'country'
-                ? 'bg-indigo-600 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)]'
-                : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            Country Dossiers
-          </button>
-          <button
-            onClick={() => setActiveTab('crossover')}
-            className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === 'crossover'
-                ? 'bg-indigo-600 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)]'
-                : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            Africa × Industry Crossover
-          </button>
-          <button
-            onClick={() => setActiveTab('global-connector')}
-            className={`px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === 'global-connector'
-                ? 'bg-indigo-600 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)]'
-                : 'text-neutral-400 hover:text-white'
-            }`}
-          >
-            Africa as a Connector
-          </button>
+      <div className="space-y-3">
+        <div className={monoLabel}>Market Highlights &amp; Growth Drivers</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {selectedCountryDossier.marketHighlights.map((hl, idx) => (
+            <div key={idx} className={`p-3.5 ${inset} text-sm text-[#E0E0E0] leading-relaxed`}>
+              {hl}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 4 REGIONAL CLUSTERS SELECTOR BAR */}
-      {/* ========================================================================= */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {AFRICA_REGIONS_DATA.map((reg) => {
-          const isSelected = selectedRegionName === reg.name;
-          return (
-            <button
-              key={reg.name}
-              onClick={() => {
-                setSelectedRegionName(reg.name);
-                setSelectedCountryName(reg.countries[0]);
-              }}
-              className={`p-4 rounded-2xl border text-left transition-all relative overflow-hidden ${
-                isSelected
-                  ? 'bg-gradient-to-br from-indigo-950/60 to-[#0a0a0a] border-indigo-500/60 shadow-[0_0_15px_rgba(99,102,241,0.25)]'
-                  : 'bg-[#0a0a0a] border-white/5 hover:border-white/20 hover:bg-white/[0.02]'
-              }`}
-            >
-              <div className="flex items-center justify-between gap-1 mb-1">
-                <span className="font-semibold text-sm text-white">{reg.name}</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-neutral-400 border border-white/10">
-                  {reg.countries.length} Jurisdictions
-                </span>
-              </div>
-              <p className="text-xs text-neutral-400 line-clamp-1">
-                {reg.countries.slice(0, 4).join(', ')}...
-              </p>
-            </button>
-          );
-        })}
+      <div className="space-y-3 pt-5 border-t border-white/[0.08]">
+        <div className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">
+          MindCraft In-Country Execution Capabilities
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {[
+            ['Primary Market Research', selectedCountryDossier.capabilityCoverage.marketResearch],
+            ['Regulatory Intelligence', selectedCountryDossier.capabilityCoverage.regulatoryIntelligence],
+            ['Distributor & Channel Vetting', selectedCountryDossier.capabilityCoverage.marketEntrySupport],
+            ['Local Associate Network', selectedCountryDossier.capabilityCoverage.localAssociateNetwork],
+            ['Training Delivery', selectedCountryDossier.capabilityCoverage.trainingDelivery]
+          ].map(([label, text]) => (
+            <div key={label} className={`p-3.5 ${inset} space-y-1`}>
+              <div className="text-xs font-semibold text-gray-400">{label}</div>
+              <p className="text-sm text-[#E0E0E0] leading-relaxed">{text}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* VIEW: REGIONAL LANDING */}
-      {/* ========================================================================= */}
-      {activeTab === 'regional' && (
-        <div className="space-y-6">
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 relative overflow-hidden">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/10">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 mb-1">
-                  <Globe2 className="w-4 h-4" /> REGIONAL CLUSTER PROFILE
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">
-                  {selectedRegion.name}
-                </h2>
-                <p className="text-sm text-indigo-300 font-medium mt-1">
-                  {selectedRegion.headline}
-                </p>
-              </div>
-              <button
-                onClick={() => onNavigate('market-entry')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-all shadow-[0_0_15px_rgba(99,102,241,0.3)] shrink-0 flex items-center gap-2"
-              >
-                Launch 9-Step Market Entry Framework <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
-              {/* Left: Context & Country Roster (5 cols) */}
-              <div className="lg:col-span-5 space-y-4">
-                <div className="p-4 rounded-xl bg-[#050505] border border-white/5 space-y-2">
-                  <div className="text-xs font-mono text-neutral-400 uppercase">Regional Context</div>
-                  <p className="text-xs text-neutral-300 leading-relaxed">
-                    {selectedRegion.regionalContext}
-                  </p>
-                </div>
-
-                <div className="bg-[#050505] border border-white/5 rounded-xl p-4 space-y-3">
-                  <div className="text-xs font-mono text-neutral-400 uppercase flex items-center justify-between">
-                    <span>Member Jurisdictions ({selectedRegion.countries.length})</span>
-                    <span className="text-[10px] text-indigo-400">Click to Inspect</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedRegion.countries.map((cName) => (
-                      <button
-                        key={cName}
-                        onClick={() => {
-                          setSelectedCountryName(cName);
-                          setActiveTab('country');
-                        }}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                          selectedCountryName === cName
-                            ? 'bg-indigo-600 text-white shadow-[0_0_10px_rgba(99,102,241,0.3)]'
-                            : 'bg-[#0a0a0a] text-neutral-300 border border-white/10 hover:border-white/30'
-                        }`}
-                      >
-                        {cName}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Key Opportunities & Questions (7 cols) */}
-              <div className="lg:col-span-7 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Research Capabilities */}
-                  <div className="p-4 rounded-xl bg-[#050505] border border-white/5 space-y-2">
-                    <div className="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
-                      <Search className="w-4 h-4" /> Primary Research Capabilities
-                    </div>
-                    <ul className="text-xs text-neutral-300 space-y-1.5">
-                      {selectedRegion.researchCapability.map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-sky-400 shrink-0 mt-0.5" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* High-Growth Industry Verticals */}
-                  <div className="p-4 rounded-xl bg-[#050505] border border-white/5 space-y-2">
-                    <div className="text-xs font-semibold text-indigo-400 flex items-center gap-1.5">
-                      <Building2 className="w-4 h-4" /> High-Opportunity Sectors
-                    </div>
-                    <ul className="text-xs text-neutral-300 space-y-1.5">
-                      {selectedRegion.industryOpportunity.map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Key Regional Strategic Questions */}
-                <div className="p-4 rounded-xl bg-[#050505] border border-white/5 space-y-2">
-                  <div className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
-                    <HelpCircle className="w-4 h-4" /> Core Strategic & Regulatory Questions
-                  </div>
-                  <div className="space-y-2">
-                    {selectedRegion.strategicQuestions.map((q, idx) => (
-                      <div key={idx} className="text-xs text-neutral-300 flex items-start gap-2">
-                        <span className="font-mono text-amber-400">Q{idx + 1}:</span>
-                        <span>{q}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className={`p-4 ${inset} space-y-3`}>
+        <div className="text-sm font-semibold text-amber-400 flex items-center gap-2">
+          <HelpCircle className="w-4 h-4 shrink-0" /> Priority Investigation Questions in {selectedCountryDossier.name}
         </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* VIEW: COUNTRY DOSSIER */}
-      {/* ========================================================================= */}
-      {activeTab === 'country' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Country Selection Column (4 cols) */}
-          <div className="lg:col-span-4 space-y-4">
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-4 space-y-3">
-              <div className="text-xs font-mono text-neutral-400 uppercase tracking-wider">
-                {selectedRegionName} Jurisdictions ({selectedRegion.countries.length})
-              </div>
-              <div className="space-y-1.5 max-h-[600px] overflow-y-auto pr-1">
-                {selectedRegion.countries.map((cName) => {
-                  const isSelected = selectedCountryName === cName;
-                  return (
-                    <button
-                      key={cName}
-                      onClick={() => setSelectedCountryName(cName)}
-                      className={`w-full text-left p-3 rounded-xl border transition-all flex items-center justify-between ${
-                        isSelected
-                          ? 'bg-indigo-950/60 border-indigo-500/60 text-white shadow-[0_0_12px_rgba(99,102,241,0.25)]'
-                          : 'bg-[#050505] border-white/5 text-neutral-300 hover:border-white/20'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <MapPin className={`w-4 h-4 ${isSelected ? 'text-indigo-400' : 'text-neutral-500'}`} />
-                        <span className="text-xs font-medium">{cName}</span>
-                      </div>
-                      {cName === 'Kenya' && (
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                          HQ
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+        <div className="space-y-2.5 text-sm text-[#E0E0E0]">
+          {selectedCountryDossier.typicalQuestions.map((q, idx) => (
+            <div key={idx} className="flex items-start gap-2">
+              <span className="font-mono text-indigo-400 shrink-0">Q{idx + 1}:</span>
+              <span>{q}</span>
             </div>
-          </div>
-
-          {/* Detailed Country Dossier (8 cols) */}
-          <div className="lg:col-span-8 space-y-6">
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6">
-              {/* Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 mb-1">
-                    <MapPin className="w-4 h-4" /> {selectedCountryDossier.region}
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-white">
-                    {selectedCountryDossier.name} Market Dossier
-                  </h2>
-                  <p className="text-xs text-neutral-400 mt-1 font-mono">
-                    Capital: {selectedCountryDossier.capital} • Currency: {selectedCountryDossier.currency}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleStartEngagement(selectedCountryDossier.name)}
-                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-all shadow-[0_0_15px_rgba(99,102,241,0.3)] shrink-0 flex items-center gap-2"
-                >
-                  Discuss {selectedCountryDossier.name} Market <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Market Highlights */}
-              <div className="space-y-3">
-                <div className="text-xs font-mono text-neutral-400 uppercase tracking-wider">
-                  Market Highlights & Growth Drivers
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {selectedCountryDossier.marketHighlights.map((hl, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl bg-[#050505] border border-white/5 text-xs text-neutral-300 leading-relaxed">
-                      {hl}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* MindCraft Capability Coverage in Country */}
-              <div className="space-y-3 pt-2 border-t border-white/5">
-                <div className="text-xs font-mono text-indigo-400 uppercase tracking-wider">
-                  MindCraft In-Country Execution Capabilities
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-xl bg-[#050505] border border-white/5 space-y-1">
-                    <span className="text-neutral-400 font-medium">Primary Market Research:</span>
-                    <p className="text-neutral-200">{selectedCountryDossier.capabilityCoverage.marketResearch}</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-[#050505] border border-white/5 space-y-1">
-                    <span className="text-neutral-400 font-medium">Regulatory Intelligence:</span>
-                    <p className="text-neutral-200">{selectedCountryDossier.capabilityCoverage.regulatoryIntelligence}</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-[#050505] border border-white/5 space-y-1">
-                    <span className="text-neutral-400 font-medium">Distributor & Channel Vetting:</span>
-                    <p className="text-neutral-200">{selectedCountryDossier.capabilityCoverage.marketEntrySupport}</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-[#050505] border border-white/5 space-y-1">
-                    <span className="text-neutral-400 font-medium">Associate Network & Training:</span>
-                    <p className="text-neutral-200">{selectedCountryDossier.capabilityCoverage.localAssociateNetwork}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Strategic Questions for this Country */}
-              <div className="p-4 rounded-xl bg-[#050505] border border-white/5 space-y-2">
-                <div className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
-                  <HelpCircle className="w-4 h-4" /> Priority Investigation Questions in {selectedCountryDossier.name}
-                </div>
-                <div className="space-y-2 text-xs text-neutral-300">
-                  {selectedCountryDossier.typicalQuestions.map((q, idx) => (
-                    <div key={idx} className="flex items-start gap-2">
-                      <span className="font-mono text-indigo-400">Q{idx + 1}:</span>
-                      <span>{q}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* VIEW: AFRICA + INDUSTRY CROSSOVER ENGINE */}
-      {/* ========================================================================= */}
-      {activeTab === 'crossover' && (
-        <div className="space-y-6">
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6">
-            <div className="pb-4 border-b border-white/10">
-              <span className="text-xs font-mono uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
-                Interactive Cross-Matrix Engine
-              </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
-                Africa Region + Industry Crossover Engine
-              </h2>
-              <p className="text-sm text-neutral-400 mt-1">
-                Select an African Region (or Country) and an Industry Vertical to synthesize a tailored market-intelligence pathway.
-              </p>
-            </div>
-
-            {/* Selectors */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-400 uppercase">Target African Geography</label>
-                <select
-                  value={selectedRegionName}
-                  onChange={(e) => setSelectedRegionName(e.target.value as AfricaRegionName)}
-                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
-                >
-                  {AFRICA_REGIONS_DATA.map(r => (
-                    <option key={r.name} value={r.name}>{r.name} ({r.countries.length} Jurisdictions)</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-400 uppercase">Target Industry Sector</label>
-                <select
-                  value={crossoverIndustryId}
-                  onChange={(e) => setCrossoverIndustryId(e.target.value)}
-                  className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
-                >
-                  {UNIVERSAL_INDUSTRIES.map(ind => (
-                    <option key={ind.id} value={ind.id}>
-                      {ind.name} ({ind.category === 'core-lifesciences' ? 'Life Sciences' : 'Diversified'})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Synthesized Pathway Dossier */}
-            <div className="p-6 rounded-2xl bg-[#050505] border border-indigo-500/30 space-y-6 shadow-[0_0_20px_rgba(99,102,241,0.1)]">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
-                <div>
-                  <div className="text-xs font-mono text-indigo-400 uppercase">Synthesized Pathway</div>
-                  <h3 className="text-xl font-bold text-white mt-1">
-                    {crossoverIndustry.name} Strategy across {selectedRegion.name}
-                  </h3>
-                </div>
-                <button
-                  onClick={() => handleStartEngagement(selectedRegion.name, crossoverIndustry.name)}
-                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-all shadow-[0_0_15px_rgba(99,102,241,0.3)] shrink-0 flex items-center gap-2"
-                >
-                  Configure Engagement <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 rounded-xl bg-[#0a0a0a] border border-white/5 space-y-2">
-                  <div className="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
-                    <Search className="w-4 h-4" /> Primary Field Investigation
-                  </div>
-                  <p className="text-xs text-neutral-300 leading-relaxed">
-                    Deploying structured key opinion leader audits, distributor vetting, and customer pricing elasticity across {selectedRegion.countries.slice(0, 3).join(', ')}.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#0a0a0a] border border-white/5 space-y-2">
-                  <div className="text-xs font-semibold text-indigo-400 flex items-center gap-1.5">
-                    <Compass className="w-4 h-4" /> Strategic Commercial Decision
-                  </div>
-                  <p className="text-xs text-neutral-300 leading-relaxed">
-                    {crossoverIndustry.consultingAndStrategy[0] || 'Optimizing go-to-market structure and local regulatory compliance.'}
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#0a0a0a] border border-white/5 space-y-2">
-                  <div className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                    <Cpu className="w-4 h-4" /> Enterprise AI Layer
-                  </div>
-                  <p className="text-xs text-neutral-300 leading-relaxed">
-                    {crossoverIndustry.enterpriseSolutions[0] || 'Continuous competitive intelligence and tender tracking platform.'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* VIEW: AFRICA AS A CONNECTOR (GLOBAL FOOTPRINT) */}
-      {/* ========================================================================= */}
-      {activeTab === 'global-connector' && (
-        <div className="space-y-6">
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 space-y-8">
-            <div className="max-w-3xl space-y-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
-                Global Footprint & Strategic Topology
-              </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white">
-                Africa as a Global Connector
-              </h2>
-              <p className="text-sm text-neutral-400 leading-relaxed">
-                MindCraft serves as the bi-directional bridge connecting international innovation hubs (North America, Europe, Asia) with dynamic African commercial ecosystems.
-              </p>
-            </div>
-
-            {/* Tri-Hub Global Node Graphic */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Node 1: North America */}
-              <div className="p-6 rounded-2xl bg-[#050505] border border-white/10 space-y-3 relative overflow-hidden">
-                <div className="text-xs font-mono text-sky-400 uppercase">Originating Hub</div>
-                <h3 className="text-lg font-bold text-white">United States & Canada</h3>
-                <p className="text-xs text-neutral-400 leading-relaxed">
-                  Supporting global pharma innovators, medical device OEMs, technology enterprises, and investors seeking validated African market entry and regulatory navigation.
-                </p>
-                <div className="text-[11px] font-mono text-neutral-500 pt-2 border-t border-white/5">
-                  Flow: Capital, IP, Advanced Technology
-                </div>
-              </div>
-
-              {/* Node 2: Africa HQ Nairobi */}
-              <div className="p-6 rounded-2xl bg-gradient-to-b from-indigo-950/60 to-[#050505] border border-indigo-500/60 space-y-3 relative overflow-hidden shadow-[0_0_20px_rgba(99,102,241,0.2)]">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-indigo-400 uppercase">Operational Hub</span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
-                    Nairobi HQ
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-white">MindCraft Continental Core</h3>
-                <p className="text-xs text-neutral-300 leading-relaxed">
-                  Central coordination hub orchestrating primary research, strategic consulting, role-based AI training cohorts, and enterprise AI software builds across 4 African regions.
-                </p>
-                <div className="text-[11px] font-mono text-indigo-300 pt-2 border-t border-indigo-500/20">
-                  Network: 500+ KOLs • Field Force • Regulatory Experts
-                </div>
-              </div>
-
-              {/* Node 3: Europe & Global */}
-              <div className="p-6 rounded-2xl bg-[#050505] border border-white/10 space-y-3 relative overflow-hidden">
-                <div className="text-xs font-mono text-amber-400 uppercase">International Node</div>
-                <h3 className="text-lg font-bold text-white">Europe & International Hubs</h3>
-                <p className="text-xs text-neutral-400 leading-relaxed">
-                  Partnering with European pharmaceutical manufacturers, development finance institutions, and multinational FMCG brand owners on sustainable commercial expansion.
-                </p>
-                <div className="text-[11px] font-mono text-neutral-500 pt-2 border-t border-white/5">
-                  Flow: HEOR Research, Public-Private Partnerships
-                </div>
-              </div>
-            </div>
-
-            {/* Continuous Intelligence Flow Banner */}
-            <div className="p-6 rounded-xl bg-[#050505] border border-white/5 space-y-3">
-              <div className="text-xs font-mono text-neutral-400 uppercase">Continuous Intelligence Lifecycle</div>
-              <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-300">
-                <span className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] border border-white/10">01. One-Time Study</span>
-                <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
-                <span className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] border border-white/10">02. Recurring Research Cadence</span>
-                <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
-                <span className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] border border-white/10">03. Continuous Intelligence</span>
-                <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
-                <span className="px-3 py-1.5 rounded-lg bg-indigo-950/60 text-indigo-300 border border-indigo-500/40">04. AI-Assisted Monitoring</span>
-                <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
-                <span className="px-3 py-1.5 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-500/40">05. Enterprise Workflow</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
+  );
+
+  return (
+    <MotionConfig reducedMotion="user">
+      <section className="mc-section w-full bg-[#050505] text-white">
+        <div className="mc-container space-y-8">
+          {/* Intent + key facts */}
+          <header className="space-y-6">
+            <div className="space-y-3">
+              <span className="mc-eyebrow">Pan-African Intelligence Footprint</span>
+              <h1 className="mc-h2">Africa Intelligence Explorer</h1>
+              <p className="mc-lead">
+                In-depth on-the-ground intelligence, regulatory tracking, healthcare systems, and commercial execution frameworks across East, West, Southern, and North Africa.
+              </p>
+            </div>
+            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/[0.08] border border-white/[0.08] rounded-2xl overflow-hidden">
+              {facts.map(f => (
+                <div key={f.label} className="bg-[#0a0a0a] px-4 py-4">
+                  <dd className="text-2xl font-semibold text-white leading-none">{f.value}</dd>
+                  <dt className="text-[11px] font-mono uppercase tracking-wider text-gray-400 mt-2">{f.label}</dt>
+                </div>
+              ))}
+            </dl>
+          </header>
+
+          {/* View switcher */}
+          <div
+            role="tablist"
+            aria-label="Explorer views"
+            className="flex gap-1.5 p-1 bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {VIEW_TABS.map(t => (
+              <button
+                key={t.id}
+                role="tab"
+                aria-selected={activeTab === t.id}
+                onClick={() => {
+                  setActiveTab(t.id);
+                  setSheetOpen(false);
+                }}
+                className={`mc-tap px-4 rounded-xl text-sm font-medium whitespace-nowrap transition-[background-color,color,transform] duration-200 active:scale-[0.98] ${
+                  activeTab === t.id ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Region selector (shared by regional + country + crossover) */}
+          {(activeTab === 'regional' || activeTab === 'country') && (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3" role="group" aria-label="Regional clusters">
+              {AFRICA_REGIONS_DATA.map(reg => {
+                const isSelected = selectedRegionName === reg.name;
+                return (
+                  <button
+                    key={reg.name}
+                    aria-pressed={isSelected}
+                    onClick={() => {
+                      setSelectedRegionName(reg.name);
+                      setSelectedCountryName(reg.countries[0]);
+                      setSearch('');
+                      setSheetOpen(false);
+                    }}
+                    className={`mc-card-interactive mc-tap p-3 sm:p-4 rounded-2xl border text-left ${
+                      isSelected
+                        ? 'bg-[#0D0F17] border-indigo-500/35'
+                        : 'bg-[#0a0a0a] border-white/[0.08]'
+                    }`}
+                  >
+                    <span className="block font-semibold text-sm text-white">{reg.name}</span>
+                    <span className="block text-[11px] font-mono text-gray-400 mt-1">
+                      {reg.countries.length} Jurisdictions
+                    </span>
+                    <span className="hidden sm:block text-xs text-gray-400 mt-2 line-clamp-1">
+                      {reg.countries.slice(0, 4).join(', ')}...
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, ease: EASE }}
+          >
+            {/* ===================== REGIONAL ===================== */}
+            {activeTab === 'regional' && (
+              <div className={`${panel} p-4 sm:p-6 lg:p-8`}>
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-6 border-b border-white/[0.08]">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-indigo-400 mb-2">
+                      <Globe2 className="w-4 h-4" /> Regional Cluster Profile
+                    </div>
+                    <h2 className="mc-h2">{selectedRegion.name}</h2>
+                    <p className="text-sm text-indigo-400 font-medium mt-2">{selectedRegion.headline}</p>
+                  </div>
+                  <button onClick={() => onNavigate('market-entry')} className={primaryBtn}>
+                    Launch 9-Step Market Entry Framework <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 mt-6">
+                  <div className="lg:col-span-5 space-y-4">
+                    <div className={`p-4 ${inset} space-y-2`}>
+                      <div className={monoLabel}>Regional Context</div>
+                      <p className="text-sm text-[#E0E0E0] leading-relaxed">{selectedRegion.regionalContext}</p>
+                    </div>
+
+                    <div className={`p-4 ${inset} space-y-3`}>
+                      <div className={`${monoLabel} flex items-center justify-between gap-2`}>
+                        <span>Member Jurisdictions ({selectedRegion.countries.length})</span>
+                        <span className="text-indigo-400 normal-case tracking-normal">Tap to inspect</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedRegion.countries.map(cName => (
+                          <button
+                            key={cName}
+                            onClick={() => {
+                              setSelectedCountryName(cName);
+                              setActiveTab('country');
+                              if (!isDesktop) setSheetOpen(true);
+                            }}
+                            className={`mc-tap px-3.5 rounded-xl text-sm font-medium transition-[background-color,border-color,transform] duration-200 active:scale-[0.98] ${
+                              selectedCountryName === cName
+                                ? 'bg-indigo-600 text-white'
+                                : 'bg-[#0a0a0a] text-[#E0E0E0] border border-white/[0.08] hover:border-white/30'
+                            }`}
+                          >
+                            {cName}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-7 space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+                      <Disclosure
+                        key={`rc-${selectedRegion.name}`}
+                        defaultOpen={isDesktop}
+                        count={selectedRegion.researchCapability.length}
+                        title={
+                          <span className="flex items-center gap-2 text-sky-400">
+                            <Search className="w-4 h-4 shrink-0" /> Primary Research Capabilities
+                          </span>
+                        }
+                      >
+                        <ul className="text-sm text-[#E0E0E0] space-y-2">
+                          {selectedRegion.researchCapability.map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </Disclosure>
+
+                      <Disclosure
+                        key={`io-${selectedRegion.name}`}
+                        defaultOpen={isDesktop}
+                        count={selectedRegion.industryOpportunity.length}
+                        title={
+                          <span className="flex items-center gap-2 text-indigo-400">
+                            <Building2 className="w-4 h-4 shrink-0" /> High-Opportunity Sectors
+                          </span>
+                        }
+                      >
+                        <ul className="text-sm text-[#E0E0E0] space-y-2">
+                          {selectedRegion.industryOpportunity.map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2 shrink-0" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </Disclosure>
+                    </div>
+
+                    <Disclosure
+                      key={`sq-${selectedRegion.name}`}
+                      defaultOpen={isDesktop}
+                      count={selectedRegion.strategicQuestions.length}
+                      title={
+                        <span className="flex items-center gap-2 text-amber-400">
+                          <HelpCircle className="w-4 h-4 shrink-0" /> Core Strategic &amp; Regulatory Questions
+                        </span>
+                      }
+                    >
+                      <div className="space-y-2.5">
+                        {selectedRegion.strategicQuestions.map((q, idx) => (
+                          <div key={idx} className="text-sm text-[#E0E0E0] flex items-start gap-2">
+                            <span className="font-mono text-amber-400 shrink-0">Q{idx + 1}:</span>
+                            <span>{q}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </Disclosure>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ===================== COUNTRY DOSSIERS ===================== */}
+            {activeTab === 'country' && (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+                <div className="lg:col-span-4">
+                  <div className={`${panel} p-4 space-y-3 lg:sticky lg:top-24`}>
+                    <div className="relative">
+                      <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="search"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        placeholder={`Search all ${ALL_JURISDICTIONS.length} jurisdictions`}
+                        aria-label="Search jurisdictions"
+                        className="w-full mc-tap pl-10 pr-3 rounded-xl bg-[#050505] border border-white/[0.08] text-base sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+                    <div className={monoLabel}>
+                      {query
+                        ? `${listedCountries.length} match${listedCountries.length === 1 ? '' : 'es'} across all regions`
+                        : `${selectedRegionName} Jurisdictions (${selectedRegion.countries.length})`}
+                    </div>
+                    {listedCountries.length === 0 ? (
+                      <p className="text-sm text-gray-400 py-3">No jurisdictions match &ldquo;{search}&rdquo;.</p>
+                    ) : (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 lg:max-h-[32rem] lg:overflow-y-auto lg:pr-1">
+                        {listedCountries.map(c => {
+                          const isSelected = selectedCountryName === c.name;
+                          return (
+                            <button
+                              key={c.name}
+                              onClick={() => pickCountry(c.name, c.region)}
+                              aria-pressed={isSelected}
+                              className={`mc-tap w-full text-left px-3 rounded-xl border flex items-center justify-between gap-2 transition-[background-color,border-color,transform] duration-200 active:scale-[0.98] ${
+                                isSelected && isDesktop
+                                  ? 'bg-[#0D0F17] border-indigo-500/35 text-white'
+                                  : 'bg-[#050505] border-white/[0.08] text-[#E0E0E0] hover:border-white/20'
+                              }`}
+                            >
+                              <span className="flex items-center gap-2 min-w-0">
+                                <MapPin
+                                  className={`w-4 h-4 shrink-0 ${isSelected && isDesktop ? 'text-indigo-400' : 'text-gray-400'}`}
+                                />
+                                <span className="text-sm font-medium truncate">{c.name}</span>
+                              </span>
+                              {c.name === 'Kenya' ? (
+                                <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                                  HQ
+                                </span>
+                              ) : query ? (
+                                <span className="hidden sm:inline text-[11px] font-mono text-gray-400 shrink-0 truncate max-w-[6rem]">
+                                  {c.region.replace(' Africa', '')}
+                                </span>
+                              ) : null}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {!isDesktop && (
+                      <p className="text-[11px] font-mono text-gray-400">Tap a jurisdiction to open its dossier.</p>
+                    )}
+                  </div>
+                </div>
+
+                {isDesktop && (
+                  <div className={`lg:col-span-8 ${panel} p-8`}>
+                    <motion.div
+                      key={selectedCountryDossier.name}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2, ease: EASE }}
+                    >
+                      {dossierBody}
+                    </motion.div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ===================== CROSSOVER ===================== */}
+            {activeTab === 'crossover' && (
+              <div className={`${panel} p-4 sm:p-6 lg:p-8 space-y-6`}>
+                <div className="pb-5 border-b border-white/[0.08] space-y-3">
+                  <span className="mc-eyebrow">Interactive Cross-Matrix Engine</span>
+                  <h2 className="mc-h2">Africa Region + Industry Crossover Engine</h2>
+                  <p className="text-sm text-gray-400 max-w-2xl">
+                    Select an African Region (or Country) and an Industry Vertical to synthesize a tailored market-intelligence pathway.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="xo-geo" className={monoLabel}>Target African Geography</label>
+                    <select
+                      id="xo-geo"
+                      value={selectedRegionName}
+                      onChange={e => setSelectedRegionName(e.target.value as AfricaRegionName)}
+                      className="w-full mc-tap bg-[#050505] border border-white/[0.08] rounded-xl px-4 text-base sm:text-sm text-white focus:outline-none focus:border-indigo-500"
+                    >
+                      {AFRICA_REGIONS_DATA.map(r => (
+                        <option key={r.name} value={r.name}>{r.name} ({r.countries.length} Jurisdictions)</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="xo-ind" className={monoLabel}>Target Industry Sector</label>
+                    <select
+                      id="xo-ind"
+                      value={crossoverIndustryId}
+                      onChange={e => setCrossoverIndustryId(e.target.value)}
+                      className="w-full mc-tap bg-[#050505] border border-white/[0.08] rounded-xl px-4 text-base sm:text-sm text-white focus:outline-none focus:border-indigo-500"
+                    >
+                      {UNIVERSAL_INDUSTRIES.map(ind => (
+                        <option key={ind.id} value={ind.id}>
+                          {ind.name} ({ind.category === 'core-lifesciences' ? 'Life Sciences' : 'Diversified'})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="p-4 sm:p-6 rounded-2xl bg-[#050505] border border-indigo-500/35 space-y-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/[0.08]">
+                    <div className="min-w-0">
+                      <div className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">Synthesized Pathway</div>
+                      <h3 className="text-xl font-bold text-white mt-1">
+                        {crossoverIndustry.name} Strategy across {selectedRegion.name}
+                      </h3>
+                    </div>
+                    <button
+                      onClick={() => handleStartEngagement(selectedRegion.name, crossoverIndustry.name)}
+                      className={primaryBtn}
+                    >
+                      Configure Engagement <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {[
+                      {
+                        icon: Search,
+                        color: 'text-sky-400',
+                        title: 'Primary Field Investigation',
+                        body: `Deploying structured key opinion leader audits, distributor vetting, and customer pricing elasticity across ${selectedRegion.countries.slice(0, 3).join(', ')}.`
+                      },
+                      {
+                        icon: Compass,
+                        color: 'text-indigo-400',
+                        title: 'Strategic Commercial Decision',
+                        body:
+                          crossoverIndustry.consultingAndStrategy[0] ||
+                          'Optimizing go-to-market structure and local regulatory compliance.'
+                      },
+                      {
+                        icon: Cpu,
+                        color: 'text-emerald-400',
+                        title: 'Enterprise AI Layer',
+                        body:
+                          crossoverIndustry.enterpriseSolutions[0] ||
+                          'Continuous competitive intelligence and tender tracking platform.'
+                      }
+                    ].map((c, i) => (
+                      <motion.div
+                        key={c.title}
+                        initial={{ opacity: 0, y: 8 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-10%' }}
+                        transition={{ duration: 0.22, ease: EASE, delay: i * 0.06 }}
+                        className={`p-4 bg-[#0a0a0a] border border-white/[0.08] rounded-xl space-y-2`}
+                      >
+                        <div className={`text-sm font-semibold ${c.color} flex items-center gap-2`}>
+                          <c.icon className="w-4 h-4 shrink-0" /> {c.title}
+                        </div>
+                        <p className="text-sm text-[#E0E0E0] leading-relaxed">{c.body}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ===================== CONNECTOR ===================== */}
+            {activeTab === 'global-connector' && (
+              <div className={`${panel} p-4 sm:p-6 lg:p-8 space-y-8`}>
+                <div className="max-w-3xl space-y-3">
+                  <span className="mc-eyebrow">Global Footprint &amp; Strategic Topology</span>
+                  <h2 className="mc-h2">Africa as a Global Connector</h2>
+                  <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+                    MindCraft serves as the bi-directional bridge connecting international innovation hubs (North America, Europe, Asia) with dynamic African commercial ecosystems.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className={`p-5 ${inset} space-y-3`}>
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-sky-400">Originating Hub</div>
+                    <h3 className="text-lg font-bold text-white">United States &amp; Canada</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed">
+                      Supporting global pharma innovators, medical device OEMs, technology enterprises, and investors seeking validated African market entry and regulatory navigation.
+                    </p>
+                    <div className="text-[12px] font-mono text-gray-400 pt-3 border-t border-white/[0.08]">
+                      Flow: Capital, IP, Advanced Technology
+                    </div>
+                  </div>
+
+                  <div className="p-5 rounded-xl bg-[#0D0F17] border border-indigo-500/35 space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">Operational Hub</span>
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                        Nairobi HQ
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white">MindCraft Continental Core</h3>
+                    <p className="text-sm text-[#E0E0E0] leading-relaxed">
+                      Central coordination hub orchestrating primary research, strategic consulting, role-based AI training cohorts, and enterprise AI software builds across 4 African regions.
+                    </p>
+                    <div className="text-[12px] font-mono text-indigo-400 pt-3 border-t border-indigo-500/35">
+                      Network: 500+ KOLs • Field Force • Regulatory Experts
+                    </div>
+                  </div>
+
+                  <div className={`p-5 ${inset} space-y-3`}>
+                    <div className="text-[11px] font-mono uppercase tracking-wider text-amber-400">International Node</div>
+                    <h3 className="text-lg font-bold text-white">Europe &amp; International Hubs</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed">
+                      Partnering with European pharmaceutical manufacturers, development finance institutions, and multinational FMCG brand owners on sustainable commercial expansion.
+                    </p>
+                    <div className="text-[12px] font-mono text-gray-400 pt-3 border-t border-white/[0.08]">
+                      Flow: HEOR Research, Public-Private Partnerships
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`p-4 sm:p-6 ${inset} space-y-4`}>
+                  <div className={monoLabel}>Continuous Intelligence Lifecycle</div>
+                  <ol className="flex flex-col md:flex-row md:flex-wrap md:items-center gap-2 md:gap-3 text-sm text-[#E0E0E0]">
+                    {[
+                      '01. One-Time Study',
+                      '02. Recurring Research Cadence',
+                      '03. Continuous Intelligence',
+                      '04. AI-Assisted Monitoring',
+                      '05. Enterprise Workflow'
+                    ].map((label, i, arr) => {
+                      const tone =
+                        i === 3
+                          ? 'bg-[#0D0F17] text-indigo-400 border-indigo-500/35'
+                          : i === 4
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                            : 'bg-[#0a0a0a] border-white/[0.08]';
+                      return (
+                        <React.Fragment key={label}>
+                          <li className={`px-4 py-2.5 rounded-xl border ${tone}`}>{label}</li>
+                          {i < arr.length - 1 && (
+                            <ArrowRight
+                              aria-hidden="true"
+                              className="w-4 h-4 text-gray-400 shrink-0 rotate-90 md:rotate-0 self-center"
+                            />
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                  </ol>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* Mobile bottom sheet: country dossier */}
+        <AnimatePresence>
+          {sheetVisible && (
+            <motion.div
+              className="fixed inset-0 z-[100] flex items-end"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: EASE }}
+            >
+              <button
+                type="button"
+                aria-label="Close dossier"
+                tabIndex={-1}
+                onClick={() => setSheetOpen(false)}
+                className="absolute inset-0 bg-black/70"
+              />
+              <motion.div
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${selectedCountryDossier.name} Market Dossier`}
+                className="relative w-full max-h-[90dvh] overflow-y-auto overscroll-contain rounded-t-3xl bg-[#0a0a0a] border-t border-white/[0.08]"
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ duration: 0.25, ease: EASE }}
+              >
+                <div className="sticky top-0 z-10 flex items-center justify-between gap-3 px-4 pt-3 pb-2 bg-[#0a0a0a] border-b border-white/[0.08]">
+                  <span className="mx-auto absolute left-1/2 -translate-x-1/2 top-1.5 w-10 h-1 rounded-full bg-white/20" aria-hidden="true" />
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400 pt-2">
+                    Country Dossier
+                  </span>
+                  <button
+                    ref={closeRef}
+                    type="button"
+                    onClick={() => setSheetOpen(false)}
+                    aria-label="Close dossier"
+                    className="mc-tap inline-flex items-center justify-center rounded-xl text-gray-400 hover:text-white active:scale-[0.98] transition-transform"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="p-4 mc-safe-bottom">{dossierBody}</div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+    </MotionConfig>
   );
 };

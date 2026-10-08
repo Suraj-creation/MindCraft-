@@ -1,32 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { NavTab, RoleLens, EngagementBlueprint } from './types';
 import { Header } from './components/Header';
 import { HeroOperatingSystem } from './components/HeroOperatingSystem';
-import { IntegratedModelSection } from './components/IntegratedModelSection';
-import { LifeSciencesEcosystem } from './components/LifeSciencesEcosystem';
-import { AfricaIntelligenceMap } from './components/AfricaIntelligenceMap';
-import { BusinessConsultingPillar } from './components/BusinessConsultingPillar';
-import { MarketResearchWorkspace } from './components/MarketResearchWorkspace';
-import { AITrainingSimulation } from './components/AITrainingSimulation';
-import { AIEnterpriseSolutionsView } from './components/AIEnterpriseSolutionsView';
-import { MindCraftMethod } from './components/MindCraftMethod';
-import { QuestionToOutcomeEngine } from './components/QuestionToOutcomeEngine';
-import { EngagementBuilder } from './components/EngagementBuilder';
-import { CapabilityGraphView } from './components/CapabilityGraphView';
-import { AboutLeadership } from './components/AboutLeadership';
-import { EngagementIntakeModal } from './components/EngagementIntakeModal';
 import { Footer } from './components/Footer';
+import { OperatingChainSection, PathwaysSection, LifeSciencesBand, WhyMindCraftSection } from './components/LandingSections';
 
 // New Advanced Bento Components
-import { IndustryIntelligenceExplorer } from './components/IndustryIntelligenceExplorer';
-import { AfricaIntelligenceExplorer } from './components/AfricaIntelligenceExplorer';
-import { ProblemCrossSectionView } from './components/ProblemCrossSectionView';
-import { MarketEntryFrameworkView } from './components/MarketEntryFrameworkView';
-import { Matrix3DView } from './components/Matrix3DView';
-import { MindCraftUniverseOrbital } from './components/MindCraftUniverseOrbital';
-import { GlobalCommandSearchModal } from './components/GlobalCommandSearchModal';
 
 import { ArrowUp } from 'lucide-react';
+
+// Inner pages load on demand so the landing page ships a much smaller bundle
+const IntegratedModelSection = lazy(() => import('./components/IntegratedModelSection').then(m => ({ default: m.IntegratedModelSection })));
+const LifeSciencesEcosystem = lazy(() => import('./components/LifeSciencesEcosystem').then(m => ({ default: m.LifeSciencesEcosystem })));
+const AfricaIntelligenceMap = lazy(() => import('./components/AfricaIntelligenceMap').then(m => ({ default: m.AfricaIntelligenceMap })));
+const BusinessConsultingPillar = lazy(() => import('./components/BusinessConsultingPillar').then(m => ({ default: m.BusinessConsultingPillar })));
+const MarketResearchWorkspace = lazy(() => import('./components/MarketResearchWorkspace').then(m => ({ default: m.MarketResearchWorkspace })));
+const AITrainingSimulation = lazy(() => import('./components/AITrainingSimulation').then(m => ({ default: m.AITrainingSimulation })));
+const AIEnterpriseSolutionsView = lazy(() => import('./components/AIEnterpriseSolutionsView').then(m => ({ default: m.AIEnterpriseSolutionsView })));
+const MindCraftMethod = lazy(() => import('./components/MindCraftMethod').then(m => ({ default: m.MindCraftMethod })));
+const EngagementBuilder = lazy(() => import('./components/EngagementBuilder').then(m => ({ default: m.EngagementBuilder })));
+const AboutLeadership = lazy(() => import('./components/AboutLeadership').then(m => ({ default: m.AboutLeadership })));
+const EngagementIntakeModal = lazy(() => import('./components/EngagementIntakeModal').then(m => ({ default: m.EngagementIntakeModal })));
+const IndustryIntelligenceExplorer = lazy(() => import('./components/IndustryIntelligenceExplorer').then(m => ({ default: m.IndustryIntelligenceExplorer })));
+const AfricaIntelligenceExplorer = lazy(() => import('./components/AfricaIntelligenceExplorer').then(m => ({ default: m.AfricaIntelligenceExplorer })));
+const ProblemCrossSectionView = lazy(() => import('./components/ProblemCrossSectionView').then(m => ({ default: m.ProblemCrossSectionView })));
+const MarketEntryFrameworkView = lazy(() => import('./components/MarketEntryFrameworkView').then(m => ({ default: m.MarketEntryFrameworkView })));
+const Matrix3DView = lazy(() => import('./components/Matrix3DView').then(m => ({ default: m.Matrix3DView })));
+const MindCraftUniverseOrbital = lazy(() => import('./components/MindCraftUniverseOrbital').then(m => ({ default: m.MindCraftUniverseOrbital })));
+const GlobalCommandSearchModal = lazy(() => import('./components/GlobalCommandSearchModal').then(m => ({ default: m.GlobalCommandSearchModal })));
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('home');
@@ -47,9 +48,25 @@ export default function App() {
         setShowBackToTop(false);
       }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Every navigation starts at the top of the new view
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [activeTab]);
+
+  // Nav targets that share content with an existing view
+  const VIEW_ALIASES: Partial<Record<NavTab, NavTab>> = {
+    method: 'operating-model',
+    'maturity-model': 'consulting',
+    'responsible-ai': 'ai-solutions',
+    scenarios: 'question-to-outcome',
+    insights: 'about',
+    contact: 'about'
+  };
+  const view: NavTab = VIEW_ALIASES[activeTab] ?? activeTab;
 
   // Global keydown listener for Cmd+K / Ctrl+K
   useEffect(() => {
@@ -144,10 +161,13 @@ export default function App() {
         onOpenSearch={() => setIsSearchOpen(true)}
       />
 
-      {/* Role Lens Active Notice Banner (if filtered) */}
+      {/* Main View Router */}
+      <main className="pt-16">
+        <Suspense fallback={<div className="min-h-[60dvh]" aria-busy="true" />}>
+        {/* Role Lens Active Notice Banner (if filtered) */}
       {activeRole !== 'all' && (
-        <div className="bg-[#0a0a0a] border-b border-indigo-500/20 px-4 py-2.5 mt-16">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div className="bg-[#0a0a0a] border-b border-indigo-500/20 py-2.5">
+          <div className="mc-container flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
               <span className="font-mono text-[11px] tracking-wider uppercase font-bold text-indigo-300">
@@ -157,7 +177,7 @@ export default function App() {
             </div>
             <button
               onClick={() => setActiveRole('all')}
-              className="text-indigo-400 hover:text-white font-mono text-[10px] tracking-wider uppercase border border-indigo-500/30 px-2 py-0.5 rounded bg-indigo-950/40 hover:bg-indigo-900/60 transition-colors self-start sm:self-auto"
+              className="text-indigo-400 hover:text-white font-mono text-[11px] tracking-wider uppercase border border-indigo-500/30 px-3 min-h-9 rounded bg-indigo-950/40 hover:bg-indigo-900/60 transition-colors self-start sm:self-auto"
             >
               Reset to Full Overview
             </button>
@@ -165,47 +185,23 @@ export default function App() {
         </div>
       )}
 
-      {/* Main View Router */}
-      <main className="pt-16">
         {/* 1. Overview / Home */}
-        {(activeTab === 'home' || activeTab === 'overview') && (
+        {(view === 'home' || view === 'overview') && (
           <div>
-            <HeroOperatingSystem 
+            <HeroOperatingSystem
               onOpenIntake={handleOpenIntakeGeneric}
               setActiveTab={setActiveTab}
               roleLens={activeRole}
             />
-            <IntegratedModelSection 
-              setActiveTab={setActiveTab}
-              onOpenIntake={handleOpenIntakeGeneric}
-            />
-            <IndustryIntelligenceExplorer
-              onNavigate={setActiveTab}
-              onSelectIndustryForEngagement={(ind) => setPreselectedIndustry(ind)}
-            />
-            <AfricaIntelligenceExplorer
-              onNavigate={setActiveTab}
-            />
-            <ProblemCrossSectionView
-              onNavigate={setActiveTab}
-            />
-            <LifeSciencesEcosystem 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
-              roleLens={activeRole}
-            />
-            <EngagementBuilder 
-              onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint}
-            />
-            <AboutLeadership 
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
-            />
+            <OperatingChainSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <PathwaysSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <LifeSciencesBand setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <WhyMindCraftSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
           </div>
         )}
 
         {/* 2. 24 Industry Verticals Explorer */}
-        {activeTab === 'industries' && (
+        {view === 'industries' && (
           <div>
             <IndustryIntelligenceExplorer
               onNavigate={setActiveTab}
@@ -215,7 +211,7 @@ export default function App() {
         )}
 
         {/* 3. Africa Regional Clusters & 45 Jurisdictions Hub */}
-        {activeTab === 'africa-explorer' && (
+        {view === 'africa-explorer' && (
           <div>
             <AfricaIntelligenceExplorer
               onNavigate={setActiveTab}
@@ -224,7 +220,7 @@ export default function App() {
         )}
 
         {/* 4. Problem-Led Cross-Sections ("What Are You Trying to Solve?") */}
-        {(activeTab === 'question-to-outcome' || activeTab === 'problem-cross-sections') && (
+        {(view === 'question-to-outcome') && (
           <div>
             <ProblemCrossSectionView
               onNavigate={setActiveTab}
@@ -233,7 +229,7 @@ export default function App() {
         )}
 
         {/* 5. 9-Step Signature Market Entry Framework */}
-        {activeTab === 'market-entry' && (
+        {view === 'market-entry' && (
           <div>
             <MarketEntryFrameworkView
               onNavigate={setActiveTab}
@@ -242,7 +238,7 @@ export default function App() {
         )}
 
         {/* 6. 3D Matrix Configuration Engine (24 Ind × 5 Geo × 4 Cap) */}
-        {activeTab === 'matrix-3d' && (
+        {view === 'matrix-3d' && (
           <div>
             <Matrix3DView
               onNavigate={setActiveTab}
@@ -251,7 +247,7 @@ export default function App() {
         )}
 
         {/* 7. MindCraft Universe Orbital Graph */}
-        {activeTab === 'capability-graph' && (
+        {view === 'capability-graph' && (
           <div>
             <MindCraftUniverseOrbital
               onNavigate={setActiveTab}
@@ -261,7 +257,7 @@ export default function App() {
         )}
 
         {/* 8. Core Service Pillars */}
-        {activeTab === 'consulting' && (
+        {view === 'consulting' && (
           <div>
             <BusinessConsultingPillar 
               onOpenIntake={handleOpenIntakeGeneric}
@@ -272,7 +268,7 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'market-research' && (
+        {view === 'market-research' && (
           <div>
             <MarketResearchWorkspace 
               onOpenIntake={handleOpenIntakeGeneric}
@@ -282,7 +278,7 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'ai-training' && (
+        {view === 'ai-training' && (
           <div>
             <AITrainingSimulation 
               onOpenIntake={handleOpenIntakeGeneric}
@@ -292,7 +288,7 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'ai-solutions' && (
+        {view === 'ai-solutions' && (
           <div>
             <AIEnterpriseSolutionsView 
               onOpenIntake={handleOpenIntakeGeneric}
@@ -303,7 +299,7 @@ export default function App() {
         )}
 
         {/* 9. Life Sciences Heritage Hub */}
-        {activeTab === 'life-sciences' && (
+        {view === 'life-sciences' && (
           <div>
             <LifeSciencesEcosystem 
               onOpenIntake={handleOpenIntakeGeneric}
@@ -318,7 +314,7 @@ export default function App() {
         )}
 
         {/* 10. Africa Intelligence Map */}
-        {activeTab === 'africa-intelligence' && (
+        {view === 'africa-intelligence' && (
           <div>
             <AfricaIntelligenceMap 
               onOpenIntake={handleOpenIntakeGeneric}
@@ -332,7 +328,7 @@ export default function App() {
         )}
 
         {/* 11. Operating Model & MindCraft Method */}
-        {activeTab === 'operating-model' && (
+        {view === 'operating-model' && (
           <div>
             <IntegratedModelSection 
               setActiveTab={setActiveTab}
@@ -344,14 +340,14 @@ export default function App() {
         )}
 
         {/* 12. Engagement Builder */}
-        {(activeTab === 'engagement-builder' || activeTab === 'builder') && (
+        {(view === 'engagement-builder' || view === 'builder') && (
           <div>
             <EngagementBuilder onOpenIntakeWithBlueprint={handleOpenIntakeWithBlueprint} />
           </div>
         )}
 
         {/* 13. About / Leadership */}
-        {activeTab === 'about' && (
+        {view === 'about' && (
           <div>
             <AboutLeadership 
               onOpenIntake={handleOpenIntakeGeneric}
@@ -359,8 +355,10 @@ export default function App() {
             />
           </div>
         )}
+        </Suspense>
       </main>
 
+      <Suspense fallback={null}>
       {/* Global Interactive Intake Wizard Modal */}
       <EngagementIntakeModal
         isOpen={isIntakeOpen}
@@ -375,6 +373,7 @@ export default function App() {
         onNavigate={setActiveTab}
         onSelectIndustry={(indId) => setPreselectedIndustry(indId)}
       />
+      </Suspense>
 
       {/* Global Footer */}
       <Footer 
@@ -387,7 +386,7 @@ export default function App() {
         <button
           onClick={scrollToTop}
           id="back-to-top-btn"
-          className="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-xl shadow-indigo-950 transition-all animate-in fade-in zoom-in-75 duration-200"
+          className="fixed right-4 sm:right-6 bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 z-40 w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white shadow-xl shadow-indigo-950 transition-[background-color,transform] duration-150"
           aria-label="Back to Top"
         >
           <ArrowUp className="w-5 h-5" />

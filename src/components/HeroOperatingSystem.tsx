@@ -1,23 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { NavTab, RoleLens } from '../types';
-import { 
-  ArrowRight, 
-  Sparkles, 
-  Globe2, 
-  Dna, 
-  Compass, 
-  BarChart3, 
-  GraduationCap, 
-  Cpu, 
-  CheckCircle2, 
-  ShieldCheck, 
-  ChevronRight,
-  TrendingUp,
-  Workflow,
-  Search,
-  Activity,
-  Layers
+import {
+  ArrowRight,
+  Compass,
+  BarChart3,
+  GraduationCap,
+  Cpu,
+  ChevronRight
 } from 'lucide-react';
+import { UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA, PROBLEM_CROSS_SECTIONS } from '../data/industryAndAfricaData';
 
 interface HeroOperatingSystemProps {
   setActiveTab: (tab: NavTab) => void;
@@ -25,491 +17,159 @@ interface HeroOperatingSystemProps {
   onOpenIntake: () => void;
 }
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const PILLARS: {
+  tab: NavTab;
+  name: string;
+  line: string;
+  icon: React.ComponentType<{ className?: string }>;
+  tone: string;
+  ring: string;
+}[] = [
+  { tab: 'consulting', name: 'Business Consulting', line: 'Strategy, operating models, SOPs & governance', icon: Compass, tone: 'text-teal-400', ring: 'border-teal-500/30 bg-teal-500/10' },
+  { tab: 'market-research', name: 'Market Research', line: 'Primary surveys, physician panels & regulatory scans', icon: BarChart3, tone: 'text-sky-400', ring: 'border-sky-500/30 bg-sky-500/10' },
+  { tab: 'ai-training', name: 'AI Training', line: 'Executive briefings, prompting & AI champions', icon: GraduationCap, tone: 'text-amber-400', ring: 'border-amber-500/30 bg-amber-500/10' },
+  { tab: 'ai-solutions', name: 'AI Enterprise Solutions', line: 'Governed production systems & copilots', icon: Cpu, tone: 'text-emerald-400', ring: 'border-emerald-500/30 bg-emerald-500/10' }
+];
+
 export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({
   setActiveTab,
-  roleLens,
   onOpenIntake
 }) => {
-  const [selectedStage, setSelectedStage] = useState<number>(0);
-
-  const operatingStages = [
-    {
-      id: 'market-intel',
-      step: '01',
-      title: 'Market Intelligence',
-      sub: 'Primary Surveys & Pan-African Scans',
-      pillar: 'Market Research',
-      color: 'text-indigo-400',
-      badgeBorder: 'border-indigo-400/30 text-indigo-400',
-      details: 'Unvarnished primary physician/patient surveys, regulatory scans across 20+ African agencies, KOL mapping, and competitive pipeline intelligence.',
-      keyOutput: 'Decision-Ready Intelligence & Sizing Models'
-    },
-    {
-      id: 'strategy',
-      step: '02',
-      title: 'Strategic Advisory',
-      sub: 'Roadmaps, SOPs & Market Entry',
-      pillar: 'Business Consulting',
-      color: 'text-emerald-400',
-      badgeBorder: 'border-emerald-400/30 text-emerald-400',
-      details: 'Life Sciences market entry blueprints, portfolio prioritization, operating model redesign, and AI-readiness diagnostics.',
-      keyOutput: 'Board-Ready Strategic Roadmap'
-    },
-    {
-      id: 'capability',
-      step: '03',
-      title: 'AI Capability',
-      sub: 'Executive & Workforce Enablement',
-      pillar: 'AI Training',
-      color: 'text-amber-400',
-      badgeBorder: 'border-amber-400/30 text-amber-400',
-      details: 'Applied executive literacy, function-specific prompt engineering (commercial, regulatory, clinical), and certified internal AI champion cohorts.',
-      keyOutput: 'Certified Internal AI Champions'
-    },
-    {
-      id: 'systems',
-      step: '04',
-      title: 'AI Deployment',
-      sub: 'Production Tenant-Isolated RAG',
-      pillar: 'AI Enterprise Solutions',
-      color: 'text-indigo-400',
-      badgeBorder: 'border-indigo-400/30 text-indigo-400',
-      details: 'Governed regulatory monitoring agents, automated pharmacovigilance screening, KOL influence graphs, and field sales AI copilots.',
-      keyOutput: 'Production AI Infrastructure'
-    },
-    {
-      id: 'impact',
-      step: '05',
-      title: 'Continuous Value',
-      sub: 'Governed Clinical & Commercial ROI',
-      pillar: 'Continuous Value',
-      color: 'text-rose-400',
-      badgeBorder: 'border-rose-400/30 text-rose-400',
-      details: 'Accelerated market entry, compliance audit certainty, reduced clinical trial friction, and sustained commercial revenue growth.',
-      keyOutput: 'Verified Commercial & Clinical ROI'
-    }
+  const jurisdictions = AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0);
+  const stats = [
+    { value: UNIVERSAL_INDUSTRIES.length, label: 'Industry verticals', tab: 'industries' as NavTab },
+    { value: jurisdictions, label: 'African jurisdictions', tab: 'africa-explorer' as NavTab },
+    { value: PROBLEM_CROSS_SECTIONS.length, label: 'Business challenges', tab: 'question-to-outcome' as NavTab },
+    { value: PILLARS.length, label: 'Integrated pillars', tab: 'operating-model' as NavTab }
   ];
 
   return (
-    <section className="relative pt-24 pb-16 overflow-hidden bg-[#050505] bg-grid-pattern border-b border-white/10">
-      {/* Ambient background glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-radial-glow pointer-events-none opacity-90" />
+    <section className="relative overflow-hidden bg-[#050505] border-b border-white/10">
+      <div className="absolute inset-x-0 top-0 h-[28rem] bg-radial-glow pointer-events-none" aria-hidden />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Main Bento Grid Header Stage */}
-        <div className="grid grid-cols-12 gap-4 mb-6">
-          
-          {/* Bento Cell 1: Master Hero Display (Span 8) */}
-          <div className="col-span-12 lg:col-span-8 bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between group">
-            <div className="flex justify-between items-start mb-6">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-indigo-400 border border-indigo-400/30 px-2.5 py-0.5 rounded bg-indigo-950/40">
-                  MindCraft Core OS // v2026
-                </span>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 border border-white/10 px-2.5 py-0.5 rounded">
-                  Nairobi HQ · Pan-Africa
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest hidden sm:inline">Active Link</span>
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              </div>
+      <div className="mc-container relative z-10 pt-10 sm:pt-16 lg:pt-20 pb-10 sm:pb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+          {/* Promise */}
+          <motion.div
+            className="lg:col-span-7"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: EASE }}
+          >
+            <div className="flex flex-wrap items-center gap-2 mb-5">
+              <span className="text-[11px] font-mono uppercase tracking-widest text-indigo-400 border border-indigo-400/30 px-2.5 py-1 rounded-full bg-indigo-950/40">
+                MindCraft Core OS // 2026
+              </span>
+              <span className="text-[11px] font-mono uppercase tracking-widest text-white/50 border border-white/10 px-2.5 py-1 rounded-full">
+                Nairobi HQ · Pan-Africa
+              </span>
             </div>
 
-            <div>
-              <h1 className="text-3xl sm:text-5xl font-light tracking-tight text-white leading-[1.15] mb-5">
-                AI-Powered Growth <br />
-                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-teal-300 to-emerald-300">
-                  Grounded in African Context.
-                </span>
-              </h1>
+            <h1 className="mc-h1 font-light">
+              AI-powered growth,
+              <br />
+              <span className="font-bold text-indigo-400">
+                grounded in African context.
+              </span>
+            </h1>
 
-              <p className="text-sm sm:text-base text-white/70 leading-relaxed font-normal mb-8 max-w-2xl">
-                MindCraft bridges <span className="text-white font-medium">Business Consulting</span>, <span className="text-white font-medium">Primary Market Intelligence</span>, <span className="text-white font-medium">AI Workforce Training</span>, and <span className="text-white font-medium">Production AI Software</span> across Pan-African healthcare, pharmaceuticals, diagnostics, and diversified enterprise markets.
-              </p>
-            </div>
+            <p className="mc-lead mt-5">
+              One partner for <span className="text-white font-medium">business consulting</span>,{' '}
+              <span className="text-white font-medium">primary market intelligence</span>,{' '}
+              <span className="text-white font-medium">AI workforce training</span> and{' '}
+              <span className="text-white font-medium">production AI software</span> across Pan-African healthcare, pharmaceuticals, diagnostics and diversified enterprise markets.
+            </p>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="mt-7 flex flex-col sm:flex-row gap-3">
               <button
                 onClick={onOpenIntake}
                 id="hero-primary-cta"
-                className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs sm:text-sm shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all flex items-center space-x-2"
+                className="mc-tap px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-semibold text-sm shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-[background-color,transform] duration-150 flex items-center justify-center gap-2"
               >
                 <span>Start Engagement</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-
               <button
                 onClick={() => setActiveTab('operating-model')}
                 id="hero-secondary-cta"
-                className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white/90 text-xs sm:text-sm font-mono uppercase tracking-wider border border-white/10 hover:border-white/20 transition-all flex items-center space-x-2"
+                className="mc-tap px-5 rounded-xl bg-white/5 hover:bg-white/10 active:scale-[0.98] text-white/90 text-sm border border-white/10 hover:border-white/20 transition-[background-color,border-color,transform] duration-150 flex items-center justify-center gap-1.5"
               >
-                <span>Explore Method</span>
-                <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />
-              </button>
-
-              <button
-                onClick={() => setActiveTab('industries')}
-                className="px-4 py-3 rounded-xl bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 text-xs sm:text-sm font-mono border border-indigo-500/30 transition-colors flex items-center space-x-2"
-              >
-                <Layers className="w-3.5 h-3.5 text-indigo-400" />
-                <span>24 Industries</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('africa-explorer')}
-                className="px-4 py-3 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 text-xs sm:text-sm font-mono border border-emerald-500/30 transition-colors flex items-center space-x-2"
-              >
-                <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Africa Hub</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('question-to-outcome')}
-                className="px-4 py-3 rounded-xl bg-transparent hover:bg-white/5 text-white/60 hover:text-white text-xs sm:text-sm font-mono border border-white/10 transition-colors flex items-center space-x-2"
-              >
-                <Workflow className="w-3.5 h-3.5 text-amber-400" />
-                <span>Problem-Led</span>
+                <span>See how it works</span>
+                <ChevronRight className="w-4 h-4 text-indigo-400" />
               </button>
             </div>
-          </div>
 
-          {/* Bento Cell 2: Live Telemetry & Allocation (Span 4) */}
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
-            
-            {/* Telemetry Metric Block 1 */}
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-5 flex flex-col justify-between flex-1">
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
-                  Intelligence Accuracy
+            <p className="mt-4 text-xs text-white/50 font-mono">
+              Core expertise in Life Sciences · Serving Africa, Europe &amp; the United States
+            </p>
+          </motion.div>
+
+          {/* What we do, at a glance */}
+          <motion.div
+            className="lg:col-span-5"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.08, ease: EASE }}
+          >
+            <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-3 sm:p-4 shadow-2xl">
+              <div className="flex items-center justify-between px-2 pt-1 pb-3">
+                <span className="mc-eyebrow">Four integrated capabilities</span>
+                <span className="relative flex w-2 h-2" aria-hidden>
+                  <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-500/60 animate-ping" />
+                  <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
                 </span>
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
               </div>
-              <div className="my-3">
-                <div className="text-3xl sm:text-4xl font-light text-white mb-1">
-                  98.4<span className="text-lg text-white/30 font-mono">%</span>
-                </div>
-                <div className="text-[11px] text-white/40 font-mono uppercase tracking-wider">
-                  Harmonized Dossier Precision · 12 African Nations
-                </div>
-              </div>
-              <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                <div className="w-[98.4%] h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
-              </div>
+              <ul className="space-y-2">
+                {PILLARS.map((p) => {
+                  const Icon = p.icon;
+                  return (
+                    <li key={p.tab}>
+                      <button
+                        onClick={() => setActiveTab(p.tab)}
+                        className="mc-card-interactive w-full text-left p-3 rounded-xl bg-[#050505] border border-white/10 flex items-center gap-3 group"
+                      >
+                        <span className={`shrink-0 p-2.5 rounded-xl border ${p.ring} ${p.tone}`}>
+                          <Icon className="w-5 h-5" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-semibold text-white">{p.name}</span>
+                          <span className="block text-xs text-white/50 leading-snug mt-0.5">{p.line}</span>
+                        </span>
+                        <ArrowRight className="w-4 h-4 shrink-0 text-white/30 group-hover:text-white group-hover:translate-x-0.5 transition-[color,transform] duration-200" />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-
-            {/* Telemetry Metric Block 2 */}
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-5 flex flex-col justify-between flex-1">
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
-                  Active Corridors
-                </span>
-                <span className="text-xs font-mono text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded bg-indigo-950/30">
-                  HQ NAIROBI
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-2 my-2 text-center font-mono">
-                <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-                  <div className="text-[10px] text-white/40 uppercase">EAC</div>
-                  <div className="text-base font-medium text-white">4 Markets</div>
-                </div>
-                <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-                  <div className="text-[10px] text-white/40 uppercase">ECOWAS</div>
-                  <div className="text-base font-medium text-white">3 Markets</div>
-                </div>
-                <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-                  <div className="text-[10px] text-white/40 uppercase">SADC</div>
-                  <div className="text-base font-medium text-white">5 Markets</div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center text-[10px] font-mono text-white/40 pt-1">
-                <span>PPB · NAFDAC · SAHPRA</span>
-                <span className="text-emerald-400">SYNCED</span>
-              </div>
-            </div>
-
-          </div>
-
+          </motion.div>
         </div>
 
-        {/* Interactive Operating System Value Chain Bento Grid */}
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 sm:p-7 shadow-2xl mb-6">
-          
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-5 border-b border-white/10 gap-3">
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-indigo-400 border border-indigo-400/30 px-2 py-0.5 rounded">
-                  Operating Model Value Chain
-                </span>
-                <span className="text-[10px] font-mono uppercase text-white/40">
-                  Interactive Stages
-                </span>
-              </div>
-              <h2 className="text-lg font-normal text-white mt-1">
-                From Raw Market Complexity to Scalable Production Value
-              </h2>
-            </div>
-
-            <div className="text-[11px] font-mono text-white/40">
-              [Click any stage below to inspect]
-            </div>
-          </div>
-
-          {/* Value Chain Stages Bento Cells */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-5">
-            {operatingStages.map((stage, idx) => {
-              const isSelected = selectedStage === idx;
-              return (
-                <button
-                  key={stage.id}
-                  onClick={() => setSelectedStage(idx)}
-                  id={`hero-stage-${stage.id}`}
-                  className={`text-left p-4 rounded-xl border transition-all relative overflow-hidden group ${
-                    isSelected 
-                      ? 'bg-indigo-950/30 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.2)]' 
-                      : 'bg-[#050505] border-white/10 hover:border-white/20 hover:bg-white/5'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono font-bold text-white/40">
-                      {stage.step}
-                    </span>
-                    <span className={`text-[9px] font-mono uppercase px-2 py-0.5 rounded border ${stage.badgeBorder}`}>
-                      {stage.pillar}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xs font-bold text-white mb-1">
-                    {stage.title}
-                  </h3>
-
-                  <p className="text-[11px] text-white/50 leading-snug">
-                    {stage.sub}
-                  </p>
-
-                  {/* Active Indicator Bar */}
-                  {isSelected && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Active Stage Deep-Dive Bento Panel */}
-          <div className="rounded-xl bg-[#050505] border border-white/10 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1 max-w-3xl">
-              <div className="flex items-center space-x-2 text-xs font-mono">
-                <span className="font-semibold text-indigo-400">
-                  STAGE {operatingStages[selectedStage].step}: {operatingStages[selectedStage].title}
-                </span>
-                <span className="text-white/20">|</span>
-                <span className="text-white/50 text-[11px]">
-                  Delivered by {operatingStages[selectedStage].pillar}
-                </span>
-              </div>
-              <p className="text-xs text-white/70 leading-relaxed">
-                {operatingStages[selectedStage].details}
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
-              <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-right font-mono">
-                <div className="text-[9px] uppercase text-white/40">
-                  Deliverable Artifact
-                </div>
-                <div className="text-xs font-medium text-emerald-400">
-                  {operatingStages[selectedStage].keyOutput}
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  if (selectedStage === 0) setActiveTab('market-research');
-                  else if (selectedStage === 1) setActiveTab('consulting');
-                  else if (selectedStage === 2) setActiveTab('ai-training');
-                  else if (selectedStage === 3) setActiveTab('ai-solutions');
-                  else setActiveTab('question-to-outcome');
-                }}
-                className="px-3.5 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 text-xs font-mono flex items-center space-x-1.5 transition-colors"
-              >
-                <span>Deep Dive Pillar</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Global Exploration Gateways Bento Row */}
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 sm:p-7 shadow-2xl mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-5 border-b border-white/10 gap-2">
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-indigo-400 border border-indigo-400/30 px-2.5 py-0.5 rounded bg-indigo-950/40">
-                Where Do You Want to Explore?
-              </span>
-              <h2 className="text-lg font-semibold text-white mt-1.5">
-                Three Distinct Pathways Into MindCraft Intelligence
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-neutral-400">
-              Universal Coverage
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Pathway 1: By Industry */}
+        {/* Proof strip: real counts from the data layer */}
+        <motion.dl
+          className="mt-10 sm:mt-14 grid grid-cols-2 lg:grid-cols-4 gap-px rounded-2xl overflow-hidden bg-white/10 border border-white/10"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-10%' }}
+          transition={{ duration: 0.3, ease: EASE }}
+        >
+          {stats.map((s) => (
             <button
-              onClick={() => setActiveTab('industries')}
-              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-indigo-500/60 hover:bg-indigo-950/20 transition-all text-left group flex flex-col justify-between"
+              key={s.label}
+              onClick={() => setActiveTab(s.tab)}
+              className="bg-[#0a0a0a] hover:bg-[#0d0f17] active:bg-[#0d0f17] transition-colors p-4 sm:p-5 text-left"
             >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                    <Layers className="w-5 h-5" />
-                  </span>
-                  <span className="text-xs font-mono text-indigo-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    Explore <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-                <h3 className="text-base font-bold text-white group-hover:text-indigo-300">
-                  By Industry Vertical
-                </h3>
-                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                  24 sectors including 6 Core Life Sciences (Pharma, Devices, Diagnostics...) and 18 Diversified Verticals (Telco, Energy, Mining, Agribusiness, Banking).
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
-                <span>24 Dossiers & Matrices</span>
-                <span className="text-indigo-400">View All →</span>
-              </div>
+              <dt className="sr-only">{s.label}</dt>
+              <dd>
+                <span className="block font-heading text-3xl sm:text-4xl font-light text-white tabular-nums">{s.value}</span>
+                <span className="block mt-1 text-[11px] sm:text-xs font-mono uppercase tracking-wider text-white/50">{s.label}</span>
+              </dd>
             </button>
-
-            {/* Pathway 2: By African Geography */}
-            <button
-              onClick={() => setActiveTab('africa-explorer')}
-              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-emerald-500/60 hover:bg-emerald-950/20 transition-all text-left group flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    <Globe2 className="w-5 h-5" />
-                  </span>
-                  <span className="text-xs font-mono text-emerald-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    Explore <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-                <h3 className="text-base font-bold text-white group-hover:text-emerald-300">
-                  By African Geography
-                </h3>
-                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                  4 Regional Clusters (East, West, Southern, North Africa) across 45 Jurisdictions with Country Dossiers and Industry Crossover Engine.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
-                <span>45 Markets & 9-Step Entry</span>
-                <span className="text-emerald-400">View Hub →</span>
-              </div>
-            </button>
-
-            {/* Pathway 3: By Business Challenge */}
-            <button
-              onClick={() => setActiveTab('question-to-outcome')}
-              className="p-5 rounded-xl bg-[#050505] border border-white/10 hover:border-amber-500/60 hover:bg-amber-950/20 transition-all text-left group flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    <Workflow className="w-5 h-5" />
-                  </span>
-                  <span className="text-xs font-mono text-amber-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    Explore <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-                <h3 className="text-base font-bold text-white group-hover:text-amber-300">
-                  By Business Challenge
-                </h3>
-                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                  10 Archetypal Problem Cross-Sections: market entry, customer understanding, competitive intelligence, AI capability, automation, and digital transformation.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-neutral-500 flex items-center justify-between">
-                <span>10 Solution Architectures</span>
-                <span className="text-amber-400">Solve Now →</span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Four Integrated Pillars Summary Bento Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <button
-            onClick={() => setActiveTab('consulting')}
-            className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center space-x-2 text-indigo-400">
-                <Compass className="w-4 h-4" />
-                <span className="text-xs font-mono uppercase font-bold text-white group-hover:text-indigo-300">
-                  Business Consulting
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-white/30">01</span>
-            </div>
-            <p className="text-[11px] text-white/50">Strategy, Operating Models, SOPs & Governance</p>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('market-research')}
-            className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center space-x-2 text-indigo-400">
-                <BarChart3 className="w-4 h-4" />
-                <span className="text-xs font-mono uppercase font-bold text-white group-hover:text-indigo-300">
-                  Market Research
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-white/30">02</span>
-            </div>
-            <p className="text-[11px] text-white/50">Primary Surveys, Physician Panels & Reg Scans</p>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('ai-training')}
-            className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center space-x-2 text-amber-400">
-                <GraduationCap className="w-4 h-4" />
-                <span className="text-xs font-mono uppercase font-bold text-white group-hover:text-amber-300">
-                  AI Training
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-white/30">03</span>
-            </div>
-            <p className="text-[11px] text-white/50">Executive Briefings, Prompting & AI Champions</p>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('ai-solutions')}
-            className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center space-x-2 text-emerald-400">
-                <Cpu className="w-4 h-4" />
-                <span className="text-xs font-mono uppercase font-bold text-white group-hover:text-emerald-300">
-                  AI Enterprise Solutions
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-white/30">04</span>
-            </div>
-            <p className="text-[11px] text-white/50">Production PV, Regulatory Monitors & Copilots</p>
-          </button>
-        </div>
-
+          ))}
+        </motion.dl>
       </div>
     </section>
   );

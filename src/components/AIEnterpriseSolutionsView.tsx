@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { SERVICE_PILLARS, AI_SOLUTIONS_CATALOG } from '../data/mindcraftData';
 import { AISolutionItem, NavTab } from '../types';
-import { 
-  Cpu, 
-  Sparkles, 
-  CheckCircle2, 
-  ArrowRight, 
-  ShieldCheck, 
-  Layers, 
-  Database, 
-  Workflow, 
-  Users, 
-  Lock, 
+import {
+  Cpu,
+  Sparkles,
+  CheckCircle2,
+  ArrowRight,
+  ChevronDown,
+  ShieldCheck,
+  Database,
+  Workflow,
+  Users,
   FileText,
-  Activity,
   Server
 } from 'lucide-react';
 
@@ -22,6 +21,220 @@ interface AIEnterpriseSolutionsViewProps {
   setActiveTab: (tab: NavTab) => void;
 }
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const reveal = (i = 0) => ({
+  initial: { opacity: 0, y: 12 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-10%' },
+  transition: { duration: 0.25, ease: EASE, delay: Math.min(i, 5) * 0.05 }
+});
+
+const PILLAR_TABS: Record<string, NavTab> = {
+  'Business Consulting': 'consulting',
+  'Market Research': 'market-research',
+  'AI Training': 'ai-training',
+  'AI Enterprise Solutions': 'ai-solutions'
+};
+
+const STATUS_STYLE: Record<string, string> = {
+  'Production Architecture Pattern': 'border-emerald-500/30 text-emerald-400',
+  'Demonstration Prototype': 'border-amber-500/30 text-amber-400',
+  'Illustrative Blueprint': 'border-indigo-500/35 text-indigo-400'
+};
+
+type Tone = 'neutral' | 'indigo' | 'emerald';
+
+const TONE: Record<Tone, { border: string; icon: string; title: string; tag: string }> = {
+  neutral: {
+    border: 'border-white/[0.08]',
+    icon: 'border-white/[0.08] bg-white/5 text-[#9CA3AF]',
+    title: 'text-white',
+    tag: 'text-[#9CA3AF]'
+  },
+  indigo: {
+    border: 'border-indigo-500/35',
+    icon: 'border-indigo-500/35 bg-[#0D0F17] text-indigo-400',
+    title: 'text-indigo-400',
+    tag: 'text-indigo-400'
+  },
+  emerald: {
+    border: 'border-emerald-500/30',
+    icon: 'border-emerald-500/30 bg-[#0D0F17] text-emerald-400',
+    title: 'text-emerald-400',
+    tag: 'text-emerald-400'
+  }
+};
+
+const ARCHITECTURE_TIERS: {
+  icon: React.ReactNode;
+  title: string;
+  detail: string;
+  tag: string;
+  tone: Tone;
+}[] = [
+  {
+    icon: <Users className="h-4 w-4" />,
+    title: 'Tier 1: Business Users & Clinical Stakeholders',
+    detail: 'Executives · Medical Science Liaisons · Regulatory Officers · Physicians · Hospital Administrators',
+    tag: 'Access Layer',
+    tone: 'neutral'
+  },
+  {
+    icon: <Sparkles className="h-4 w-4" />,
+    title: 'Tier 2: AI Experience & Interface Layer',
+    detail: 'Mobile Pre-Call Copilots · Regulatory Diff Portals · Executive Dashboards · Chatbot Hubs',
+    tag: 'UI / API',
+    tone: 'indigo'
+  },
+  {
+    icon: <Workflow className="h-4 w-4" />,
+    title: 'Tier 3: Autonomous Agents & Orchestration Layer',
+    detail: 'Adverse Event Screener · Pan-African Gazette Scraper · Tender Scoring Agent · KOL Resolution',
+    tag: 'Agentic Core',
+    tone: 'emerald'
+  },
+  {
+    icon: <Cpu className="h-4 w-4" />,
+    title: 'Tier 4: Fine-Tuned Models & Foundation LLM Layer',
+    detail: 'Medical BioBERT · Claude / Gemini / GPT Enterprise · Custom Graph Neural Networks',
+    tag: 'Model Gateway',
+    tone: 'indigo'
+  },
+  {
+    icon: <Database className="h-4 w-4" />,
+    title: 'Tier 5: Data, Vector Embeddings & Knowledge Vaults',
+    detail: 'RAG Vector Stores · Cleaned Epidemiological Data · Regulatory Guidelines · Drug Registries',
+    tag: 'Data Layer',
+    tone: 'indigo'
+  },
+  {
+    icon: <Server className="h-4 w-4" />,
+    title: 'Tier 6: Existing Enterprise Systems & Records',
+    detail: 'CRM (Veeva, Salesforce) · ERP (SAP, Oracle) · EHR (Hospital Systems) · Document Repositories',
+    tag: 'System of Record',
+    tone: 'neutral'
+  }
+];
+
+const ArchitectureTier: React.FC<{ tier: (typeof ARCHITECTURE_TIERS)[number]; index: number }> = ({ tier, index }) => {
+  const [open, setOpen] = useState(false);
+  const t = TONE[tier.tone];
+  return (
+    <motion.li
+      {...reveal(index)}
+      className={`rounded-xl border bg-[#050505] ${t.border}`}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="mc-tap flex w-full items-center gap-3 rounded-xl p-3.5 text-left md:pointer-events-none md:items-start"
+      >
+        <span className={`mt-0.5 shrink-0 rounded-lg border p-2 ${t.icon}`}>{tier.icon}</span>
+        <span className="min-w-0 flex-1">
+          <span className={`block font-mono text-xs font-bold leading-snug ${t.title}`}>{tier.title}</span>
+          <span className={`mt-0.5 block font-mono text-[11px] ${t.tag}`}>{tier.tag}</span>
+          <span className={`${open ? 'block' : 'hidden'} mt-2 text-xs leading-relaxed text-[#9CA3AF] md:block`}>
+            {tier.detail}
+          </span>
+        </span>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-[#9CA3AF] transition-transform duration-200 md:hidden ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+    </motion.li>
+  );
+};
+
+const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }> = ({ sol, onOpenIntake }) => {
+  const [techOpen, setTechOpen] = useState(false);
+  return (
+    <div className="space-y-3">
+      <div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-md border border-white/[0.08] bg-[#050505] px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">
+            {sol.category}
+          </span>
+          <span className={`rounded-md border px-2 py-1 font-mono text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
+            {sol.status}
+          </span>
+        </div>
+        <h3 className="mt-3 text-xl font-semibold leading-snug text-white sm:text-2xl">{sol.title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-[#9CA3AF]">{sol.description}</p>
+      </div>
+
+      {/* Outcome first */}
+      <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
+        <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
+          Projected operational & commercial outcome
+        </div>
+        <p className="mt-1 text-sm font-medium leading-relaxed text-white">{sol.projectedOutcome}</p>
+      </div>
+
+      <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
+        <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">01. Business problem</div>
+        <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.businessProblem}</p>
+      </div>
+
+      {/* Technical trio: collapsed on phones/tablets, open on desktop */}
+      <button
+        type="button"
+        onClick={() => setTechOpen((v) => !v)}
+        aria-expanded={techOpen}
+        className="mc-tap flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-[#050505] px-4 font-mono text-xs text-emerald-400 transition-colors hover:text-white active:scale-[0.98] lg:hidden"
+      >
+        <span>{techOpen ? 'Hide data, model & integration' : 'Show data, model & integration (3)'}</span>
+        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${techOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      <div className={`${techOpen ? 'grid' : 'hidden'} gap-3 lg:grid`}>
+        <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
+          <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-400">02. Data ingestion feeds</div>
+          <ul className="mt-2 space-y-1.5">
+            {sol.dataInputs.map((inp, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-[#E0E0E0]">
+                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-indigo-500" />
+                <span>{inp}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
+          <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">03. AI analytics / model layer</div>
+          <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.aiAnalyticsLayer}</p>
+        </div>
+        <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
+          <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-400">04. Enterprise integration</div>
+          <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.workflowIntegration}</p>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
+        <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">05. Human interaction & review</div>
+        <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.humanInteraction}</p>
+      </div>
+
+      <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
+        <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          <span>06. Governance safeguards</span>
+        </div>
+        <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.governanceSafeguards}</p>
+      </div>
+
+      <button
+        type="button"
+        onClick={onOpenIntake}
+        className="mc-tap flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-[#0D0F17] px-4 font-mono text-sm font-semibold text-emerald-400 transition-[color,transform] duration-200 hover:text-white active:scale-[0.98]"
+      >
+        <span>Discuss this architecture</span>
+        <ArrowRight className="h-4 w-4" />
+      </button>
+    </div>
+  );
+};
+
 export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps> = ({
   onOpenIntake,
   setActiveTab
@@ -29,346 +242,306 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
   const solutionsPillar = SERVICE_PILLARS.find(p => p.id === 'ai-solutions') || SERVICE_PILLARS[3];
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeSolutionId, setActiveSolutionId] = useState<string>(AI_SOLUTIONS_CATALOG[0].id);
+  const [mobileOpenId, setMobileOpenId] = useState<string | null>(null);
 
   const categories = ['All', 'Life Sciences Core', 'Intelligence Platforms', 'Process Automation', 'Conversational & Engagement'];
 
-  const filteredSolutions = AI_SOLUTIONS_CATALOG.filter(s => 
+  const filteredSolutions = AI_SOLUTIONS_CATALOG.filter(s =>
     selectedCategory === 'All' || s.category === selectedCategory
   );
 
-  const activeSolution = AI_SOLUTIONS_CATALOG.find(s => s.id === activeSolutionId) || AI_SOLUTIONS_CATALOG[0];
+  const activeSolution =
+    filteredSolutions.find(s => s.id === activeSolutionId) || filteredSolutions[0] || AI_SOLUTIONS_CATALOG[0];
+
+  const countFor = (cat: string) =>
+    cat === 'All' ? AI_SOLUTIONS_CATALOG.length : AI_SOLUTIONS_CATALOG.filter(s => s.category === cat).length;
 
   const lifecycleSteps = [
-    'Problem Framing', 'Use Case Discovery', 'Data Readiness', 'Architecture Design', 
+    'Problem Framing', 'Use Case Discovery', 'Data Readiness', 'Architecture Design',
     'Secure Build', 'Enterprise Integration', 'Governed Deployment', 'Champion Training', 'ROI Measurement'
   ];
 
+  const facts = [
+    { value: String(AI_SOLUTIONS_CATALOG.length), label: 'Solution architectures in the catalog' },
+    { value: String(categories.length - 1), label: 'Solution categories' },
+    { value: String(ARCHITECTURE_TIERS.length), label: 'Architecture tiers, one governance layer' },
+    { value: String(lifecycleSteps.length), label: 'Lifecycle stages, concept to ROI' }
+  ];
+
+  const selectSolution = (id: string) => {
+    setActiveSolutionId(id);
+    setMobileOpenId((cur) => (cur === id ? null : id));
+  };
+
   return (
-    <div className="py-20 bg-[#050505] border-b border-white/10" id="ai-solutions-section">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#0a0a0a] border border-indigo-500/30 text-indigo-400 text-xs font-mono mb-3">
-            <Cpu className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="uppercase tracking-widest text-[10px]">Pillar 04 · Production Systems</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight">
-            AI Enterprise <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-300">Solutions</span>
-          </h2>
-          <p className="text-white/60 text-sm sm:text-base mt-3 leading-relaxed">
-            End-to-end design, build, and integration of AI-powered systems that operationalize insight into everyday business workflows — from market intelligence platforms to patient- and customer-facing AI tools.
-          </p>
-        </div>
+    <MotionConfig reducedMotion="user">
+      <section className="mc-section bg-[#050505]" id="ai-solutions-section">
+        <div className="mc-container">
 
-        {/* Enterprise AI Lifecycle Strip in Bento Cells */}
-        <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-6 mb-16 shadow-xl">
-          <div className="text-xs font-mono uppercase text-indigo-400 font-bold mb-4 text-center tracking-wider">
-            The Enterprise AI Engineering Lifecycle: From Proof of Concept to Governed Production
-          </div>
-          <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2">
-            {lifecycleSteps.map((step, idx) => (
-              <div key={idx} className="p-3 rounded-xl bg-[#050505] border border-white/10 text-center">
-                <div className="text-[10px] font-mono font-bold text-indigo-400">0{idx + 1}</div>
-                <div className="text-[11px] font-mono text-white/80 mt-0.5 leading-snug">{step}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ENTERPRISE AI ARCHITECTURE DIAGRAM IN BENTO */}
-        <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-6 sm:p-8 shadow-2xl space-y-6 mb-16">
-          
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/10 gap-2">
-            <div>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 font-bold">
-                Architecture Blueprint
-              </span>
-              <h3 className="text-xl sm:text-2xl font-light text-white mt-1">
-                Layered Enterprise <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-300">AI System Architecture</span>
-              </h3>
+          {/* 1. Intent */}
+          <motion.header {...reveal()} className="max-w-3xl">
+            <div className="mc-eyebrow !text-emerald-400">
+              <Cpu className="h-3.5 w-3.5" />
+              <span>Pillar 04 · Production Systems</span>
             </div>
-            <span className="text-xs text-white/40 font-mono">[Governed · Secure · Tenant-Isolated]</span>
-          </div>
+            <h1 className="mc-h1 mt-3 font-light">
+              AI Enterprise <span className="font-bold text-emerald-400">Solutions</span>
+            </h1>
+            <p className="mc-lead mt-4">
+              End-to-end design, build, and integration of AI-powered systems that operationalize insight into everyday business workflows — from market intelligence platforms to patient- and customer-facing AI tools.
+            </p>
+          </motion.header>
 
-          {/* Layered Visual Stack */}
-          <div className="space-y-2.5 relative">
-            
-            {/* Layer 1: Business Users */}
-            <div className="p-4 rounded-2xl bg-[#050505] border border-white/10 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-white/5 text-indigo-400 border border-white/10"><Users className="w-4 h-4" /></div>
-                <div>
-                  <div className="text-xs font-bold text-white font-mono">Tier 1: Business Users & Clinical Stakeholders</div>
-                  <div className="text-[11px] text-white/50">Executives · Medical Science Liaisons · Regulatory Officers · Physicians · Hospital Administrators</div>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono text-white/40">Access Layer</span>
-            </div>
-
-            {/* Layer 2: Experience & Interaction */}
-            <div className="p-4 rounded-2xl bg-[#050505] border border-indigo-500/30 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-indigo-950/60 text-indigo-300 border border-indigo-500/30"><Sparkles className="w-4 h-4" /></div>
-                <div>
-                  <div className="text-xs font-bold text-indigo-300 font-mono">Tier 2: AI Experience & Interface Layer</div>
-                  <div className="text-[11px] text-white/50">Mobile Pre-Call Copilots · Regulatory Diff Portals · Executive Dashboards · Chatbot Hubs</div>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono text-indigo-400">UI / API</span>
-            </div>
-
-            {/* Layer 3: Agents & Intelligence */}
-            <div className="p-4 rounded-2xl bg-[#050505] border border-emerald-500/30 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-emerald-950/60 text-emerald-300 border border-emerald-500/30"><Workflow className="w-4 h-4" /></div>
-                <div>
-                  <div className="text-xs font-bold text-emerald-300 font-mono">Tier 3: Autonomous Agents & Orchestration Layer</div>
-                  <div className="text-[11px] text-white/50">Adverse Event Screener · Pan-African Gazette Scraper · Tender Scoring Agent · KOL Resolution</div>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono text-emerald-400">Agentic Core</span>
-            </div>
-
-            {/* Layer 4: Models & Analytics */}
-            <div className="p-4 rounded-2xl bg-[#050505] border border-indigo-500/30 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-indigo-950/60 text-indigo-300 border border-indigo-500/30"><Cpu className="w-4 h-4" /></div>
-                <div>
-                  <div className="text-xs font-bold text-indigo-300 font-mono">Tier 4: Fine-Tuned Models & Foundation LLM Layer</div>
-                  <div className="text-[11px] text-white/50">Medical BioBERT · Claude / Gemini / GPT Enterprise · Custom Graph Neural Networks</div>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono text-indigo-400">Model Gateway</span>
-            </div>
-
-            {/* Layer 5: Data & Knowledge */}
-            <div className="p-4 rounded-2xl bg-[#050505] border border-indigo-500/30 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-indigo-950/60 text-indigo-300 border border-indigo-500/30"><Database className="w-4 h-4" /></div>
-                <div>
-                  <div className="text-xs font-bold text-indigo-300 font-mono">Tier 5: Data, Vector Embeddings & Knowledge Vaults</div>
-                  <div className="text-[11px] text-white/50">RAG Vector Stores · Cleaned Epidemiological Data · Regulatory Guidelines · Drug Registries</div>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono text-indigo-400">Data Layer</span>
-            </div>
-
-            {/* Layer 6: Enterprise Systems */}
-            <div className="p-4 rounded-2xl bg-[#050505] border border-white/10 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-white/5 text-white/40 border border-white/10"><Server className="w-4 h-4" /></div>
-                <div>
-                  <div className="text-xs font-bold text-white/80 font-mono">Tier 6: Existing Enterprise Systems & Records</div>
-                  <div className="text-[11px] text-white/50">CRM (Veeva, Salesforce) · ERP (SAP, Oracle) · EHR (Hospital Systems) · Document Repositories</div>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono text-white/40">System of Record</span>
-            </div>
-
-            {/* Spanning Governance Layer */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-[#0a0a0a] to-emerald-950/40 border border-indigo-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-indigo-950 border border-indigo-500/50 text-indigo-300 shrink-0">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-white font-mono">SPANNING GOVERNANCE & RESPONSIBLE AI LAYER</div>
-                  <div className="text-[11px] text-white/60">
-                    Data Privacy Protection · Zero Consumer Model Training · Cryptographic Audit Trails · Human-in-the-Loop Sign-off
-                  </div>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono px-2 py-1 rounded-lg bg-[#050505] text-indigo-300 border border-indigo-500/40 font-bold shrink-0">
-                100% AUDITABLE
-              </span>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* AI SOLUTIONS CATALOG */}
-        <div className="space-y-6">
-          
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h3 className="text-2xl font-light text-white">
-                Enterprise AI <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-300">Solution Catalog</span>
-              </h3>
-              <p className="text-xs sm:text-sm text-white/50 mt-0.5 font-mono">
-                Purpose-engineered solution architectures for Life Sciences and enterprise transformation.
-              </p>
-            </div>
-
-            {/* Category Filter Chips */}
-            <div className="flex flex-wrap gap-1.5">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all ${
-                    selectedCategory === cat 
-                      ? 'bg-indigo-950/80 border border-indigo-500/60 text-indigo-300 font-semibold shadow-[0_0_10px_rgba(99,102,241,0.2)]' 
-                      : 'bg-[#0a0a0a] border border-white/10 text-white/40 hover:text-white'
-                  }`}
+          {/* 2. Facts + outcomes */}
+          <div className="mt-10 sm:mt-12">
+            <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              {facts.map((f, i) => (
+                <motion.div
+                  key={f.label}
+                  {...reveal(i)}
+                  className="rounded-xl border border-white/[0.08] bg-[#0A0A0A] p-4"
                 >
-                  {cat}
-                </button>
+                  <dd className="font-mono text-xl font-bold text-white sm:text-2xl">{f.value}</dd>
+                  <dt className="mt-1 text-xs leading-snug text-[#9CA3AF]">{f.label}</dt>
+                </motion.div>
               ))}
-            </div>
-          </div>
+            </dl>
 
-          {/* Solution Selector Cards Grid in Bento Format */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredSolutions.map((sol) => {
-              const isSelected = activeSolutionId === sol.id;
-              return (
-                <button
-                  key={sol.id}
-                  onClick={() => setActiveSolutionId(sol.id)}
-                  id={`solution-card-${sol.id}`}
-                  className={`p-6 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${
-                    isSelected 
-                      ? 'bg-[#0a0a0a] border-indigo-500/60 shadow-[0_0_15px_rgba(99,102,241,0.25)] text-white' 
-                      : 'bg-[#0a0a0a] border-white/10 text-white/70 hover:border-white/20 hover:text-white'
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#050505] text-white/40 border border-white/10">
-                        {sol.category}
-                      </span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 font-mono">
-                        {sol.status}
-                      </span>
-                    </div>
-                    <h4 className="text-sm font-bold leading-snug font-mono text-white">{sol.title}</h4>
-                    <p className="text-xs text-white/50 mt-2 line-clamp-2 leading-relaxed">
-                      {sol.description}
-                    </p>
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-indigo-400 font-mono font-medium">
-                    <span>Inspect Full Architecture</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Active Solution Detailed Architecture Card in Bento Container */}
-          <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-6 sm:p-8 shadow-2xl space-y-6">
-            
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-6 border-b border-white/10 gap-4">
-              <div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 font-bold uppercase">
-                    {activeSolution.category}
-                  </span>
-                  <span className="text-xs text-white/40 font-mono">
-                    Status: {activeSolution.status}
-                  </span>
+            {solutionsPillar.deliverables.length > 0 && (
+              <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-[#0A0A0A] p-5 sm:p-6">
+                <div className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
+                  <FileText className="h-3.5 w-3.5" />
+                  <span>What you receive</span>
                 </div>
-                <h4 className="text-2xl font-light text-white mt-1">
-                  {activeSolution.title}
-                </h4>
-                <p className="text-xs sm:text-sm text-white/60 mt-1">
-                  {activeSolution.description}
-                </p>
-              </div>
-
-              <button
-                onClick={onOpenIntake}
-                className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-semibold shrink-0 transition-colors flex items-center space-x-1.5 shadow-[0_0_12px_rgba(99,102,241,0.3)]"
-              >
-                <span>Deploy Solution Architecture</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* 6-Point Technical & Operational Architecture Breakdown */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              
-              <div className="p-5 rounded-2xl bg-[#050505] border border-white/10">
-                <div className="text-[10px] font-mono uppercase font-bold text-rose-400 mb-1">
-                  01. Business Problem
-                </div>
-                <p className="text-xs text-white/70 leading-relaxed">
-                  {activeSolution.businessProblem}
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-[#050505] border border-white/10">
-                <div className="text-[10px] font-mono uppercase font-bold text-indigo-400 mb-1">
-                  02. Data Ingestion Feeds
-                </div>
-                <ul className="space-y-1">
-                  {activeSolution.dataInputs.map((inp, i) => (
-                    <li key={i} className="text-xs text-white/70 flex items-start space-x-1.5">
-                      <span className="text-indigo-400">•</span>
-                      <span>{inp}</span>
+                <ul className="mt-4 grid gap-3 md:grid-cols-3">
+                  {solutionsPillar.deliverables.map((del, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm leading-relaxed text-[#E0E0E0]">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                      <span>{del}</span>
                     </li>
                   ))}
                 </ul>
               </div>
+            )}
+          </div>
 
-              <div className="p-5 rounded-2xl bg-[#050505] border border-white/10">
-                <div className="text-[10px] font-mono uppercase font-bold text-emerald-400 mb-1">
-                  03. AI Analytics / Model Layer
-                </div>
-                <p className="text-xs text-white/70 leading-relaxed">
-                  {activeSolution.aiAnalyticsLayer}
-                </p>
-              </div>
+          {/* 3. Solution catalog (explorer) */}
+          <div className="mt-12 sm:mt-16">
+            <div className="mc-eyebrow !text-emerald-400">Solution catalog</div>
+            <h2 className="mc-h2 mt-2 font-light">
+              Enterprise AI <span className="font-bold text-emerald-400">Solution Catalog</span>
+            </h2>
+            <p className="mt-2 text-sm text-[#9CA3AF]">
+              Purpose-engineered solution architectures for Life Sciences and enterprise transformation.
+            </p>
 
-              <div className="p-5 rounded-2xl bg-[#050505] border border-white/10">
-                <div className="text-[10px] font-mono uppercase font-bold text-indigo-300 mb-1">
-                  04. Enterprise Integration
-                </div>
-                <p className="text-xs text-white/70 leading-relaxed">
-                  {activeSolution.workflowIntegration}
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-[#050505] border border-white/10">
-                <div className="text-[10px] font-mono uppercase font-bold text-amber-400 mb-1">
-                  05. Human Interaction & Review
-                </div>
-                <p className="text-xs text-white/70 leading-relaxed">
-                  {activeSolution.humanInteraction}
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-[#050505] border border-emerald-500/30">
-                <div className="text-[10px] font-mono uppercase font-bold text-emerald-300 mb-1 flex items-center space-x-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>06. Governance Safeguards</span>
-                </div>
-                <p className="text-xs text-white/70 leading-relaxed">
-                  {activeSolution.governanceSafeguards}
-                </p>
-              </div>
-
+            {/* Category filter rail */}
+            <div
+              role="group"
+              aria-label="Filter solutions by category"
+              className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {categories.map((cat) => {
+                const active = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => {
+                      setSelectedCategory(cat);
+                      setMobileOpenId(null);
+                    }}
+                    className={`mc-tap shrink-0 rounded-xl border px-4 font-mono text-xs transition-colors duration-200 active:scale-[0.98] ${
+                      active
+                        ? 'border-emerald-500/60 bg-[#0D0F17] font-semibold text-emerald-400'
+                        : 'border-white/[0.08] bg-[#0A0A0A] text-[#9CA3AF] hover:text-white'
+                    }`}
+                  >
+                    {cat} <span className="text-[#9CA3AF]">({countFor(cat)})</span>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Projected Outcome Banner */}
-            <div className="p-5 rounded-2xl bg-[#050505] border border-indigo-500/40 flex items-center justify-between shadow-[0_0_15px_rgba(99,102,241,0.15)]">
-              <div>
-                <span className="text-[10px] font-mono uppercase text-indigo-400 font-bold">
-                  Projected Operational & Commercial Outcome
+            <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start">
+              {/* List (accordion on phones, master list on desktop) */}
+              <ul className="space-y-2">
+                {filteredSolutions.map((sol) => {
+                  const mobileOpen = mobileOpenId === sol.id;
+                  const desktopActive = activeSolution.id === sol.id;
+                  return (
+                    <li key={sol.id}>
+                      <button
+                        type="button"
+                        id={`solution-card-${sol.id}`}
+                        onClick={() => selectSolution(sol.id)}
+                        aria-expanded={mobileOpen}
+                        className={`mc-tap w-full rounded-2xl border p-4 text-left transition-colors duration-200 active:scale-[0.98] ${
+                          mobileOpen ? 'border-emerald-500/60 bg-[#0D0F17]' : 'border-white/[0.08] bg-[#0A0A0A]'
+                        } ${
+                          desktopActive
+                            ? 'lg:border-emerald-500/60 lg:bg-[#0D0F17]'
+                            : 'lg:border-white/[0.08] lg:bg-[#0A0A0A] lg:hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-md border border-white/[0.08] bg-[#050505] px-2 py-0.5 font-mono text-[11px] text-[#9CA3AF]">
+                            {sol.category}
+                          </span>
+                          <span className={`rounded-md border px-2 py-0.5 font-mono text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
+                            {sol.status}
+                          </span>
+                        </div>
+                        <div className="mt-2 flex items-start justify-between gap-3">
+                          <h4 className="text-sm font-semibold leading-snug text-white">{sol.title}</h4>
+                          <ChevronDown
+                            className={`mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF] transition-transform duration-200 lg:hidden ${mobileOpen ? 'rotate-180' : ''}`}
+                          />
+                        </div>
+                        <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#9CA3AF]">{sol.description}</p>
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {mobileOpen && (
+                          <motion.div
+                            key="inline"
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2, ease: EASE }}
+                            className="mt-2 rounded-2xl border border-white/[0.08] bg-[#0A0A0A] p-4 lg:hidden"
+                          >
+                            <SolutionDetail sol={sol} onOpenIntake={onOpenIntake} />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              {/* Desktop detail panel */}
+              <div className="hidden lg:block">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={activeSolution.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2, ease: EASE }}
+                    className="sticky top-24 rounded-2xl border border-white/[0.08] bg-[#0A0A0A] p-6"
+                  >
+                    <SolutionDetail sol={activeSolution} onOpenIntake={onOpenIntake} />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. How it is engineered */}
+          <div className="mt-12 sm:mt-16">
+            <div className="mc-eyebrow !text-emerald-400">Architecture blueprint · governed, secure, tenant-isolated</div>
+            <h2 className="mc-h2 mt-2 font-light">
+              Layered enterprise <span className="font-bold text-emerald-400">AI system architecture</span>
+            </h2>
+
+            <ol className="mt-6 space-y-2">
+              {ARCHITECTURE_TIERS.map((tier, i) => (
+                <ArchitectureTier key={tier.title} tier={tier} index={i} />
+              ))}
+              <motion.li
+                {...reveal(ARCHITECTURE_TIERS.length)}
+                className="flex flex-col gap-3 rounded-xl border border-indigo-500/35 bg-[#0D0F17] p-4 md:flex-row md:items-center md:justify-between"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="shrink-0 rounded-lg border border-indigo-500/35 bg-[#050505] p-2 text-indigo-400">
+                    <ShieldCheck className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <div className="font-mono text-xs font-bold text-white">SPANNING GOVERNANCE & RESPONSIBLE AI LAYER</div>
+                    <div className="mt-1 text-xs leading-relaxed text-[#9CA3AF]">
+                      Data Privacy Protection · Zero Consumer Model Training · Cryptographic Audit Trails · Human-in-the-Loop Sign-off
+                    </div>
+                  </div>
+                </div>
+                <span className="self-start rounded-lg border border-indigo-500/35 bg-[#050505] px-2.5 py-1 font-mono text-[11px] font-bold text-indigo-400 md:self-center">
+                  100% AUDITABLE
                 </span>
-                <p className="text-xs sm:text-sm text-white font-mono mt-0.5">
-                  {activeSolution.projectedOutcome}
+              </motion.li>
+            </ol>
+
+            <div className="mt-10">
+              <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
+                Engineering lifecycle: proof of concept to governed production
+              </div>
+              <ol className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-9">
+                {lifecycleSteps.map((step, idx) => (
+                  <motion.li
+                    key={step}
+                    {...reveal(idx)}
+                    className="rounded-xl border border-white/[0.08] bg-[#0A0A0A] p-2.5 text-center"
+                  >
+                    <div className="font-mono text-[11px] font-bold text-emerald-400">0{idx + 1}</div>
+                    <div className="mt-0.5 text-xs leading-snug text-[#E0E0E0]">{step}</div>
+                  </motion.li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          {/* 5. Single CTA + pairs with */}
+          <div className="mt-12 sm:mt-16">
+            <motion.div
+              {...reveal()}
+              className="rounded-2xl border border-indigo-500/35 bg-[#0A0A0A] p-6 sm:p-8 md:flex md:items-center md:justify-between md:gap-8"
+            >
+              <div className="max-w-xl">
+                <h2 className="text-xl font-semibold text-white sm:text-2xl">Put an AI system into production</h2>
+                <p className="mt-2 text-sm leading-relaxed text-[#9CA3AF]">
+                  Start from a catalog architecture or a blank page. Every build is governed, secure and tenant-isolated.
                 </p>
               </div>
-            </div>
+              <button
+                type="button"
+                onClick={onOpenIntake}
+                className="mc-tap mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-mono text-sm font-semibold text-white transition-[background-color,transform] duration-200 hover:bg-indigo-500 active:scale-[0.98] md:mt-0 md:w-auto md:shrink-0"
+              >
+                <span>Deploy Solution Architecture</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </motion.div>
 
+            {solutionsPillar.intersections && solutionsPillar.intersections.length > 0 && (
+              <div className="mt-4">
+                <div className="font-mono text-[11px] uppercase tracking-wider text-[#9CA3AF]">Pairs with</div>
+                <ul className="mt-2 grid gap-2 md:grid-cols-3">
+                  {solutionsPillar.intersections.map((x) => {
+                    const target = PILLAR_TABS[x.withPillar];
+                    return (
+                      <li key={x.withPillar}>
+                        <button
+                          type="button"
+                          disabled={!target}
+                          onClick={() => target && setActiveTab(target)}
+                          className="mc-tap mc-card-interactive flex h-full w-full items-start justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#0A0A0A] p-4 text-left"
+                        >
+                          <span>
+                            <span className="block font-mono text-xs font-semibold text-white">{x.withPillar}</span>
+                            <span className="mt-1 block text-xs leading-relaxed text-[#9CA3AF]">{x.integratedValue}</span>
+                          </span>
+                          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF]" />
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
           </div>
 
         </div>
-
-      </div>
-    </div>
+      </section>
+    </MotionConfig>
   );
 };
