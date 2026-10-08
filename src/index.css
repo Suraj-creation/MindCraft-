@@ -2,97 +2,81 @@
 
 @layer base {
   :root {
-    --font-serif: 'Newsreader', Georgia, serif;
-    --font-sans: 'Archivo', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
-
-    /* MindCraft Production Brand Palette */
-    --color-linen: #F4F1EA;
-    --color-linen-card: #FBFAF6;
-    --color-linen-muted: #ECE7DC;
-    --color-forest-dark: #0E2C23;
-    --color-forest: #123A2E;
-    --color-forest-soft: rgba(18, 58, 46, 0.08);
-    --color-terracotta: #C0562F;
-    --color-terracotta-soft: #D98A5F;
-    --color-ink: #16191A;
-    --color-charcoal: #3B4441;
-    --color-muted: #8A8578;
-    --color-border: rgba(20, 25, 26, 0.12);
-  }
-
-  html {
-    scroll-behavior: smooth;
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
 
   body {
-    font-family: var(--font-sans);
-    background-color: #F4F1EA;
-    color: #16191A;
+    font-family: var(--font-body);
+    background-color: #050505;
+    color: #e0e0e0;
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-serif);
-    letter-spacing: -0.015em;
-  }
-
-  ::selection {
-    background: #123A2E;
-    color: #F4F1EA;
+    font-family: var(--font-heading);
   }
 }
 
-/* Custom editorial typography utilities */
-.font-serif-display {
-  font-family: var(--font-serif);
-}
-
-.font-mono-meta {
-  font-family: var(--font-mono);
-}
-
-.font-sans-ui {
-  font-family: var(--font-sans);
-}
-
-/* Subtle editorial scrollbar */
+/* Custom subtle scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #F4F1EA;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(20, 25, 26, 0.2);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #123A2E;
+  background: rgba(99, 102, 241, 0.4);
 }
 
-/* Subtly animated entrance */
-@keyframes mcFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.font-heading {
+  font-family: var(--font-heading);
 }
 
-.animate-mc-fade {
-  animation: mcFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+.font-mono-code {
+  font-family: var(--font-mono);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
+/* Bento Grid Pattern & Radial Glow */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
 }
+
+.bg-radial-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12) 0%, rgba(16, 185, 129, 0.04) 40%, transparent 70%);
+}
+
+.bento-card {
+  background-color: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.bento-card-highlight {
+  background-color: #0d0f17;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 1rem;
+}
+
+.bento-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+

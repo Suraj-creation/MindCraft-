@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { NavTab, RoleLens } from '../types';
 import { 
+  Compass, 
+  BarChart3, 
+  GraduationCap, 
+  Cpu, 
+  Globe2, 
+  Dna, 
+  Sparkles, 
   Search, 
-  Menu, 
-  X, 
-  ChevronDown, 
+  Layers, 
+  CheckCircle2, 
+  ShieldCheck, 
+  FileText, 
   ArrowRight,
-  Compass,
-  BarChart3,
-  GraduationCap,
-  Cpu,
-  Layers,
-  Globe2,
-  Dna,
-  ShieldCheck,
-  CheckCircle2,
-  Sparkles
+  Menu,
+  X,
+  ChevronDown,
+  Building2,
+  SlidersHorizontal
 } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
-  roleLens?: RoleLens;
-  setRoleLens?: (role: RoleLens) => void;
+  roleLens: RoleLens;
+  setRoleLens: (role: RoleLens) => void;
   onOpenIntake: () => void;
   onOpenSearch: () => void;
 }
@@ -30,7 +33,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   setActiveTab,
-  roleLens = 'all',
+  roleLens,
   setRoleLens,
   onOpenIntake,
   onOpenSearch
@@ -50,91 +53,113 @@ export const Header: React.FC<HeaderProps> = ({
   const navItems = [
     { id: 'home' as NavTab, label: 'Overview' },
     { 
-      id: 'capabilities' as NavTab, 
-      label: 'Capabilities',
-      badge: '4 Pillars',
+      id: 'industries' as NavTab, 
+      label: 'Industries',
+      badge: '24 Sectors',
       dropdown: [
-        { id: 'consulting', label: 'Business Consulting', desc: 'Strategy, growth, transformation & process redesign', icon: Compass, color: 'text-[#123A2E]' },
-        { id: 'market-research', label: 'Market Research', desc: 'Primary & secondary intelligence and analytics', icon: BarChart3, color: 'text-[#123A2E]' },
-        { id: 'ai-training', label: 'AI Training & Literacy', desc: 'Applied capability-building & internal AI champions', icon: GraduationCap, color: 'text-[#C0562F]' },
-        { id: 'ai-solutions', label: 'AI Enterprise Solutions', desc: 'Governed production AI systems & automation', icon: Cpu, color: 'text-[#C0562F]' },
-      ]
-    },
-    { 
-      id: 'life-sciences' as NavTab, 
-      label: 'Life Sciences',
-      badge: 'Core Heritage',
-      dropdown: [
-        { id: 'life-sciences', label: 'Life Sciences Heritage Hub', desc: 'Deep domain across Pharma, Devices, Diagnostics & Hospitals' },
-        { id: 'industries', label: '24 Industry Verticals Explorer', desc: 'Compare 6 Life Sciences sectors and 18 diversified verticals' },
-        { id: 'matrix-3d', label: 'Industry × Capability Matrix', desc: 'Explore how 4 capabilities apply across all 24 industries' },
+        { id: 'industries', label: '24 Industry Verticals Explorer', desc: 'Comprehensive dossiers & key strategic questions across 24 sectors' },
+        { id: 'matrix-3d', label: '3D Matrix Configuration', desc: 'Intersect 24 Industries × 5 Geographies × 4 Capabilities' },
+        { id: 'life-sciences', label: 'Core Life Sciences Ecosystem', desc: 'Deep heritage across Pharma, Devices, Diagnostics, and Biotech' }
       ]
     },
     { 
       id: 'africa-explorer' as NavTab, 
-      label: 'Africa & Markets',
+      label: 'Africa Hub',
       badge: '4 Regions',
       dropdown: [
-        { id: 'africa-explorer', label: '4 Regional Clusters & 45 Markets', desc: 'East, West, Southern & North Africa intelligence dossiers' },
-        { id: 'market-entry', label: 'Signature 9-Step Market Entry', desc: 'De-risk and accelerate African market expansion' },
-        { id: 'africa-intelligence', label: 'Regional Harmonization Tracker', desc: 'Regulatory compliance (PPB, NAFDAC, SAHPRA, EAC, SADC)' },
+        { id: 'africa-explorer', label: '4 Regional Clusters & 45 Jurisdictions', desc: 'East, West, Southern, North Africa intelligence & country dossiers' },
+        { id: 'market-entry', label: '9-Step Pan-African Market Entry', desc: 'Signature framework to de-risk and accelerate expansion' },
+        { id: 'africa-intelligence', label: 'Interactive Regulatory Map', desc: 'PPB, NAFDAC, SAHPRA and regional harmonization tracker' }
       ]
     },
     { 
       id: 'question-to-outcome' as NavTab, 
-      label: 'By Challenge',
-      badge: 'Scenarios',
+      label: 'Problem-Led',
+      badge: '10 Challenges',
       dropdown: [
-        { id: 'question-to-outcome', label: 'From Question to Outcome', desc: '8 Problem-led scenarios tracing from evidence to business impact' },
-        { id: 'engagement-builder', label: 'Engagement Blueprint Builder', desc: 'Synthesize custom workstreams, deliverables & timeline' },
+        { id: 'question-to-outcome', label: 'What Are You Trying to Solve?', desc: '10 Archetypal business challenges with 5-pillar integrated solutions' },
+        { id: 'capability-graph', label: 'MindCraft Universe (Orbital)', desc: 'Concentric system topology of capabilities, sectors & geographies' },
+        { id: 'engagement-builder', label: 'Engagement Blueprint Builder', desc: 'Instant scoping and timeline generation for executive sign-off' }
       ]
     },
-    { id: 'solutions' as NavTab, label: 'AI Solutions' },
+    { 
+      id: 'consulting' as NavTab, 
+      label: 'Capabilities',
+      dropdown: [
+        { id: 'consulting', label: 'Business Consulting', icon: Compass, color: 'text-teal-400', desc: 'Corporate strategy, operating models & diagnostics' },
+        { id: 'market-research', label: 'Market Research', icon: BarChart3, color: 'text-blue-400', desc: 'Primary & secondary evidence and intelligence' },
+        { id: 'ai-training', label: 'AI Training & Literacy', icon: GraduationCap, color: 'text-amber-400', desc: 'Applied capability transformation & champion cohorts' },
+        { id: 'ai-solutions', label: 'AI Enterprise Solutions', icon: Cpu, color: 'text-emerald-400', desc: 'Governed production systems & architecture' }
+      ]
+    },
+    {
+      id: 'operating-model' as NavTab,
+      label: 'Operating System',
+      dropdown: [
+        { id: 'operating-model', label: 'The MindCraft Model', desc: 'Four integrated capabilities under one multidisciplinary partner' },
+        { id: 'maturity-model', label: 'AI Transformation Maturity', desc: 'Level 0 to Level 5 enterprise readiness ladder' },
+        { id: 'engagement-builder', label: 'Custom Engagement Builder', desc: 'Generate customized scoped engagement blueprints' }
+      ]
+    },
     { id: 'responsible-ai' as NavTab, label: 'Responsible AI' },
-    { id: 'insights' as NavTab, label: 'Insights' },
     { id: 'about' as NavTab, label: 'About' }
   ];
+
+  const roleLabels: { [key in RoleLens]: string } = {
+    all: 'All Perspectives',
+    executive: 'Executive / Board',
+    lifesciences: 'Life Sciences Lead',
+    technology: 'CIO / Tech Architect',
+    commercial: 'Commercial & Sales',
+    regulatory: 'Regulatory / PV Lead',
+    africa: 'Africa Strategist',
+    learning: 'HR & L&D Director',
+    investor: 'Private Equity / Investor',
+    hospital: 'Hospital / Healthcare Provider'
+  };
 
   return (
     <header 
       id="main-header"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-[#F4F1EA]/95 backdrop-blur-md border-b border-[rgba(20,25,26,0.12)] shadow-sm py-2.5' 
-          : 'bg-[#F4F1EA]/90 backdrop-blur-sm border-b border-[rgba(20,25,26,0.08)] py-3.5'
+          ? 'bg-[#050505]/95 backdrop-blur-md border-b border-white/10 shadow-2xl py-3' 
+          : 'bg-[#050505]/80 backdrop-blur-sm border-b border-white/10 py-3.5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between">
           
-          {/* Brand Logo / Wordmark */}
+          {/* Logo & Brand Identity */}
           <div className="flex items-center space-x-3">
             <button
               onClick={() => { setActiveTab('home'); }}
               className="flex items-center space-x-3 group text-left focus:outline-none"
               id="brand-logo-button"
             >
-              <div className="w-8 h-8 rounded-full bg-[#123A2E] relative flex items-center justify-center flex-none group-hover:scale-105 transition-transform duration-200">
-                <span className="w-3 h-3 rounded-full border-2 border-[#C0562F]"></span>
-                <span className="absolute w-6 h-6 border border-white/20 rounded-full"></span>
+              <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(99,102,241,0.4)] group-hover:scale-105 transition-transform duration-200">
+                <span className="font-mono text-sm font-bold">MC</span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center space-x-2">
-                  <span className="font-serif text-lg font-medium tracking-tight text-[#16191A] group-hover:text-[#123A2E] transition-colors">
-                    MindCraft
+                  <span className="text-sm font-bold tracking-tight uppercase text-white group-hover:text-indigo-400 transition-colors">
+                    MINDCRAFT <span className="text-indigo-400">CORE</span>
                   </span>
-                  <span className="text-[10px] font-mono tracking-wider uppercase text-[#C0562F] font-semibold">
-                    CONSULTANCY
+                  <span className="text-[10px] font-mono text-white/40 border border-white/10 px-1.5 py-0.2 rounded uppercase">
+                    v2026.1
                   </span>
                 </div>
-                <span className="text-[10px] text-[#8A8578] font-mono tracking-widest uppercase -mt-0.5">
-                  Nairobi · Africa · Global
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                  <span className="text-[10px] text-white/40 font-mono uppercase tracking-wider">
+                    Pan-Africa Strategy // Nairobi
+                  </span>
+                </div>
               </div>
             </button>
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1" id="desktop-nav">
             {navItems.map((item) => {
               const hasDropdown = !!item.dropdown;
@@ -154,32 +179,26 @@ export const Header: React.FC<HeaderProps> = ({
                         setActiveTab(item.id);
                       }
                     }}
-                    className={`px-3 py-1.5 rounded-md text-[13px] font-medium tracking-tight transition-all flex items-center space-x-1.5 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all flex items-center space-x-1.5 ${
                       isActive 
-                        ? 'text-[#C0562F] font-semibold bg-black/5' 
-                        : 'text-[#16191A]/80 hover:text-[#123A2E] hover:bg-black/5'
+                        ? 'text-indigo-400 bg-white/5 border border-white/10 shadow-sm' 
+                        : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
                     }`}
                   >
                     <span>{item.label}</span>
                     {item.badge && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#123A2E]/10 text-[#123A2E] font-mono font-medium">
-                        {{
-                          '4 Pillars': '4',
-                          'Core Heritage': 'Core',
-                          '24 Sectors': '24',
-                          '4 Regions': 'Africa',
-                          'Scenarios': 'Q→O'
-                        }[item.badge] || item.badge}
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono">
+                        {item.badge}
                       </span>
                     )}
                     {hasDropdown && (
-                      <ChevronDown className="w-3 h-3 text-[#8A8578] group-hover:text-[#123A2E] transition-transform group-hover:rotate-180" />
+                      <ChevronDown className="w-3 h-3 text-white/40 group-hover:text-indigo-300 transition-transform group-hover:rotate-180" />
                     )}
                   </button>
 
-                  {/* Dropdown Menu */}
+                  {/* Mega Dropdown in Bento Grid style */}
                   {hasDropdown && activeDropdown === item.id && (
-                    <div className="absolute top-full left-0 mt-1 w-72 rounded-xl bg-[#FBFAF6] border border-[rgba(20,25,26,0.14)] shadow-xl p-2 z-50 animate-in fade-in-50 slide-in-from-top-2 duration-150">
+                    <div className="absolute top-full left-0 mt-1.5 w-80 rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-2xl p-2 z-50 animate-in fade-in-50 slide-in-from-top-2 duration-150">
                       <div className="space-y-1">
                         {item.dropdown?.map((subItem) => (
                           <button
@@ -188,22 +207,22 @@ export const Header: React.FC<HeaderProps> = ({
                               setActiveTab(subItem.id as NavTab);
                               setActiveDropdown(null);
                             }}
-                            className={`w-full text-left p-2.5 rounded-lg transition-all flex items-start space-x-2.5 border ${
+                            className={`w-full text-left p-2.5 rounded-xl transition-all flex items-start space-x-3 group/item border ${
                               activeTab === subItem.id 
-                                ? 'bg-[#123A2E]/10 border-[#123A2E]/20 text-[#123A2E]' 
-                                : 'border-transparent hover:border-black/10 hover:bg-black/5 text-[#3B4441]'
+                                ? 'bg-indigo-950/40 border-indigo-500/40 text-white shadow-[0_0_10px_rgba(99,102,241,0.2)]' 
+                                : 'border-transparent hover:border-white/10 hover:bg-white/5 text-white/70 hover:text-white'
                             }`}
                           >
                             {'icon' in subItem && subItem.icon && (
-                              <div className={`p-1.5 rounded-md bg-white border border-black/10 ${subItem.color} mt-0.5 flex-none`}>
-                                {React.createElement(subItem.icon, { className: 'w-3.5 h-3.5' })}
+                              <div className={`p-1.5 rounded-lg bg-white/5 border border-white/10 ${subItem.color} mt-0.5`}>
+                                {React.createElement(subItem.icon, { className: 'w-4 h-4' })}
                               </div>
                             )}
                             <div>
-                              <div className="text-xs font-semibold text-[#16191A] flex items-center space-x-1.5">
+                              <div className="text-xs font-semibold text-white/90 group-hover/item:text-indigo-300 flex items-center space-x-1.5">
                                 <span>{subItem.label}</span>
                               </div>
-                              <div className="text-[11px] text-[#8A8578] mt-0.5 leading-snug">
+                              <div className="text-[11px] text-white/40 mt-0.5 leading-snug">
                                 {subItem.desc}
                               </div>
                             </div>
@@ -217,30 +236,63 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* Right Controls: Search + Primary CTA + Mobile Menu */}
+          {/* Right Actions: Role Lens + Search + Primary CTA */}
           <div className="flex items-center space-x-2.5">
             
-            {/* Quick Search Palette Trigger */}
+            {/* Quick Search */}
             <button
               onClick={onOpenSearch}
               id="global-search-btn"
-              className="px-2.5 py-1.5 rounded-lg bg-white border border-[rgba(20,25,26,0.15)] hover:border-[#123A2E] text-[#3B4441] transition-colors flex items-center space-x-1.5 text-xs font-mono"
+              className="p-2 rounded-xl bg-[#0a0a0a] hover:bg-white/5 text-white/60 hover:text-white border border-white/10 transition-colors flex items-center space-x-1.5 text-xs font-mono"
               title="Search MindCraft Platform (Cmd+K)"
             >
-              <Search className="w-3.5 h-3.5 text-[#8A8578]" />
-              <span className="hidden xl:inline text-[#8A8578]">Search</span>
-              <kbd className="hidden xl:inline px-1 py-0.2 rounded bg-[#ECE7DC] text-[9px] text-[#4C524E] font-mono">
+              <Search className="w-3.5 h-3.5 text-white/40" />
+              <span className="hidden xl:inline text-white/40">SEARCH</span>
+              <kbd className="hidden xl:inline px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-white/40 font-mono">
                 ⌘K
               </kbd>
             </button>
 
-            {/* Primary Engagement CTA */}
+            {/* Role Lens Switcher */}
+            <div className="relative group hidden sm:block">
+              <button
+                id="role-lens-button"
+                className="px-2.5 py-1.5 rounded-xl bg-[#0a0a0a] hover:bg-white/5 border border-white/10 text-white/80 hover:text-white text-xs font-mono flex items-center space-x-1.5 transition-colors"
+                title="Filter view perspective"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="hidden md:inline text-white/40">LENS:</span>
+                <span className="text-indigo-300 font-semibold">{roleLabels[roleLens]}</span>
+                <ChevronDown className="w-3 h-3 text-white/40" />
+              </button>
+              <div className="absolute right-0 top-full mt-1.5 w-60 rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-2xl p-1.5 hidden group-hover:block z-50">
+                <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/40 border-b border-white/5 mb-1">
+                  Perspective Lens
+                </div>
+                {(Object.keys(roleLabels) as RoleLens[]).map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => setRoleLens(r)}
+                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center justify-between font-mono ${
+                      roleLens === r 
+                        ? 'bg-indigo-950/60 border border-indigo-500/40 text-indigo-300 font-semibold' 
+                        : 'text-white/70 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <span>{roleLabels[r]}</span>
+                    {roleLens === r && <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Primary Engagement CTA in Bento Style */}
             <button
               onClick={onOpenIntake}
               id="header-start-engagement-btn"
-              className="px-4 py-2 rounded-lg bg-[#123A2E] hover:bg-[#C0562F] text-[#F4F1EA] text-xs font-semibold tracking-wide shadow-sm transition-all duration-150 flex items-center space-x-1.5"
+              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium tracking-wide shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all duration-150 flex items-center space-x-1.5"
             >
-              <span>Start an Engagement</span>
+              <span>Start Engagement</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
@@ -248,7 +300,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               id="mobile-menu-toggle-btn"
-              className="p-2 rounded-lg bg-white border border-[rgba(20,25,26,0.15)] lg:hidden text-[#16191A]"
+              className="p-2 rounded-xl bg-[#0a0a0a] border border-white/10 lg:hidden text-white/70 hover:text-white"
               aria-label="Toggle mobile menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -258,74 +310,74 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden mt-3 pt-3 border-t border-[rgba(20,25,26,0.1)] pb-4 space-y-2 animate-in slide-in-from-top-4 duration-200">
-            <div className="grid grid-cols-2 gap-2 mb-2">
+          <div className="lg:hidden mt-3 pt-3 border-t border-white/10 pb-4 space-y-1.5 animate-in slide-in-from-top-4 duration-200">
+            <div className="grid grid-cols-2 gap-1.5 mb-2">
               <button
                 onClick={() => { setActiveTab('home'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'home' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
               >
                 Overview
               </button>
               <button
-                onClick={() => { setActiveTab('capabilities'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'capabilities' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
-              >
-                4 Capabilities
-              </button>
-              <button
                 onClick={() => { setActiveTab('life-sciences'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'life-sciences' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-indigo-300"
               >
-                Life Sciences Core
+                Life Sciences Hub
               </button>
               <button
-                onClick={() => { setActiveTab('industries'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'industries' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
+                onClick={() => { setActiveTab('africa-intelligence'); setMobileMenuOpen(false); }}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
               >
-                24 Industries
-              </button>
-              <button
-                onClick={() => { setActiveTab('africa-explorer'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'africa-explorer' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
-              >
-                Africa Hub (45 Markets)
-              </button>
-              <button
-                onClick={() => { setActiveTab('market-entry'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'market-entry' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
-              >
-                Market Entry (9-Step)
+                Africa Intelligence
               </button>
               <button
                 onClick={() => { setActiveTab('question-to-outcome'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'question-to-outcome' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
               >
                 From Question to Outcome
               </button>
               <button
-                onClick={() => { setActiveTab('solutions'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'solutions' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
+                onClick={() => { setActiveTab('consulting'); setMobileMenuOpen(false); }}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
               >
-                Enterprise AI Solutions
+                Business Consulting
               </button>
               <button
-                onClick={() => { setActiveTab('responsible-ai'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'responsible-ai' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
+                onClick={() => { setActiveTab('market-research'); setMobileMenuOpen(false); }}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
               >
-                Responsible AI
+                Market Research
+              </button>
+              <button
+                onClick={() => { setActiveTab('ai-training'); setMobileMenuOpen(false); }}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
+              >
+                AI Training
+              </button>
+              <button
+                onClick={() => { setActiveTab('ai-solutions'); setMobileMenuOpen(false); }}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
+              >
+                AI Enterprise Solutions
               </button>
               <button
                 onClick={() => { setActiveTab('engagement-builder'); setMobileMenuOpen(false); }}
-                className={`p-3 rounded-lg border text-left text-xs font-medium ${activeTab === 'engagement-builder' ? 'bg-[#123A2E] text-white border-[#123A2E]' : 'bg-white border-[rgba(20,25,26,0.1)] text-[#16191A]'}`}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
               >
                 Engagement Builder
+              </button>
+              <button
+                onClick={() => { setActiveTab('responsible-ai'); setMobileMenuOpen(false); }}
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-left text-xs font-mono text-white/80"
+              >
+                Responsible AI
               </button>
             </div>
             <button
               onClick={() => { onOpenIntake(); setMobileMenuOpen(false); }}
-              className="w-full py-3 rounded-lg bg-[#123A2E] text-white font-semibold text-xs flex items-center justify-center space-x-1.5"
+              className="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-medium text-xs flex items-center justify-center space-x-1.5 shadow-[0_0_15px_rgba(99,102,241,0.4)]"
             >
-              <span>Start an Engagement</span>
+              <span>Start Engagement</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

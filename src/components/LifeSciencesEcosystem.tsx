@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { LIFE_SCIENCES_SECTORS } from '../data/mindcraftData';
-import { NavTab } from '../types';
+import { LIFE_SCIENCES_SECTORS, DIVERSIFIED_INDUSTRIES } from '../data/mindcraftData';
+import { LifeSciencesSector, DiversifiedIndustry, NavTab } from '../types';
 import { 
   Dna, 
   Pill, 
@@ -30,7 +30,17 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
   setActiveTab
 }) => {
   const [activeSectorId, setActiveSectorId] = useState<string>('pharma');
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('all');
   const [selectedPharmaModule, setSelectedPharmaModule] = useState<string>('market-access');
+
+  const sectorIcons: { [key: string]: any } = {
+    pharma: Pill,
+    'med-devices': Stethoscope,
+    diagnostics: FlaskConical,
+    equipment: Activity,
+    consumables: Scissors,
+    hospitals: Building2
+  };
 
   const pharmaModules = [
     {
@@ -86,96 +96,112 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
   ];
 
   const currentSector = LIFE_SCIENCES_SECTORS.find(s => s.id === activeSectorId) || LIFE_SCIENCES_SECTORS[0];
+  const SectorIcon = sectorIcons[currentSector.id] || Pill;
 
   return (
-    <div className="bg-[#F4F1EA]">
-      {/* Editorial Hero Banner */}
-      <section className="bg-[#0E2C23] text-[#EDE7D9] py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="font-mono text-[11px] tracking-widest uppercase text-[#D98A5F] mb-4">
-              Core Domain · Founding Heritage
-            </div>
-            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F4F1EA] font-normal leading-tight tracking-tight mb-6">
-              Life Sciences is where MindCraft was built.
-            </h1>
-            <p className="text-base sm:text-lg text-[rgba(237,231,217,0.76)] leading-relaxed">
-              Our consultants, researchers, and AI solution architects bring direct working knowledge of clinical, regulatory, market-access, and commercial dynamics — so onboarding is fast, inquiries are sharp, and recommendations are grounded in real industry context from day one.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Sector Tabs & Explorer */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div className="py-20 bg-[#050505] border-b border-white/10" id="lifesciences-section">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Sector Tabs */}
-        <div className="flex flex-wrap gap-2.5 mb-8">
+        {/* Main Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#0a0a0a] border border-indigo-500/30 text-indigo-400 text-xs font-mono mb-3">
+            <Dna className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="uppercase tracking-widest text-[10px]">Founding Specialization</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight">
+            Life Sciences <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-300">Ecosystem</span>
+          </h2>
+          <p className="text-white/60 text-sm sm:text-base mt-3 leading-relaxed">
+            Unlike generalist consultancies, MindCraft’s heritage is deeply rooted in Life Sciences. We bring clinical fluency, regulatory mastery, and health economics into every pharmaceutical, device, diagnostic, and hospital engagement.
+          </p>
+        </div>
+
+        {/* Sector Tabs Bar in Bento Style */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-8">
           {LIFE_SCIENCES_SECTORS.map((sector) => {
             const isSelected = activeSectorId === sector.id;
+            const Icon = sectorIcons[sector.id] || Pill;
             return (
               <button
                 key={sector.id}
                 onClick={() => setActiveSectorId(sector.id)}
-                className={`px-5 py-3 rounded-lg border text-sm font-semibold tracking-tight transition-all ${
+                id={`sector-tab-${sector.id}`}
+                className={`p-3.5 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${
                   isSelected 
-                    ? 'bg-[#123A2E] border-[#123A2E] text-[#F4F1EA] shadow-md' 
-                    : 'bg-[#FBFAF6] border-[rgba(20,25,26,0.12)] text-[#3B4441] hover:border-[#123A2E]'
+                    ? 'bg-[#0a0a0a] border-indigo-500/60 text-white shadow-[0_0_15px_rgba(99,102,241,0.25)]' 
+                    : 'bg-[#0a0a0a] border-white/10 text-white/60 hover:border-white/20 hover:text-white'
                 }`}
               >
-                {sector.name}
+                <div>
+                  <Icon className={`w-4 h-4 mb-2 ${isSelected ? 'text-indigo-400' : 'text-white/40'}`} />
+                  <div className="text-xs font-bold leading-snug">{sector.name}</div>
+                </div>
+                <div className="text-[10px] text-white/40 mt-2 capitalize font-mono truncate">
+                  {sector.category.replace('-', ' ')}
+                </div>
+                {isSelected && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                )}
               </button>
             );
           })}
         </div>
 
-        {/* Master Sector Panel */}
-        <div className="border border-[rgba(20,25,26,0.14)] rounded-2xl bg-[#FBFAF6] overflow-hidden shadow-sm space-y-8 p-6 sm:p-10 mb-12">
+        {/* Active Sector Master Explorer Bento Container */}
+        <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-6 sm:p-8 shadow-2xl space-y-8 mb-16">
           
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-[rgba(20,25,26,0.08)] gap-4">
-            <div>
-              <div className="font-mono text-[10px] tracking-widest uppercase text-[#C0562F] font-semibold mb-1">
-                Life Sciences Core Sector
+          {/* Sector Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-6 border-b border-white/10 gap-4">
+            <div className="flex items-start space-x-3">
+              <div className="w-12 h-12 rounded-xl bg-indigo-950/40 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
+                <SectorIcon className="w-6 h-6" />
               </div>
-              <h2 className="font-serif text-3xl sm:text-4xl text-[#16191A] font-normal">
-                {currentSector.name}
-              </h2>
-              <p className="text-sm sm:text-base text-[#4C524E] mt-1 font-serif italic">
-                {currentSector.tagline}
-              </p>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 font-bold uppercase">
+                    {currentSector.category.replace('-', ' ')}
+                  </span>
+                  <span className="text-xs text-white/40 font-mono">Life Sciences Vertical</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-light text-white mt-1">
+                  {currentSector.name}
+                </h3>
+                <p className="text-xs sm:text-sm text-indigo-300/80 font-mono mt-0.5">
+                  {currentSector.tagline}
+                </p>
+              </div>
             </div>
 
             <button
               onClick={onOpenIntake}
-              className="px-5 py-2.5 rounded-lg bg-[#123A2E] hover:bg-[#C0562F] text-white text-xs font-semibold tracking-wide transition-colors flex items-center space-x-2 self-start md:self-auto"
+              className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-mono shrink-0 transition-colors flex items-center space-x-1.5 shadow-[0_0_12px_rgba(99,102,241,0.3)]"
             >
               <span>Consult on {currentSector.name}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
-          {/* If Sector is Pharma: Render Dedicated Deep Capabilities */}
+          {/* If Sector is Pharmaceuticals, render the dedicated Multi-Module Matrix */}
           {currentSector.id === 'pharma' && (
-            <div className="p-6 rounded-xl bg-white border border-[rgba(20,25,26,0.1)] space-y-5">
+            <div className="rounded-xl bg-[#050505] border border-white/10 p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <div className="font-mono text-[11px] uppercase font-bold text-[#123A2E] flex items-center space-x-2">
-                  <Sparkles className="w-3.5 h-3.5 text-[#C0562F]" />
+                <div className="text-xs font-mono uppercase font-bold text-indigo-400 flex items-center space-x-2">
+                  <Sparkles className="w-3.5 h-3.5" />
                   <span>Pharmaceutical Deep Capability Modules</span>
                 </div>
-                <span className="text-[11px] text-[#8A8578] font-mono">[Select to inspect]</span>
+                <span className="text-[11px] text-white/40 font-mono">[Select module to inspect]</span>
               </div>
 
               {/* Module Buttons */}
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {pharmaModules.map((mod) => (
                   <button
                     key={mod.id}
                     onClick={() => setSelectedPharmaModule(mod.id)}
-                    className={`px-4 py-2 rounded-lg border text-xs font-mono transition-all ${
+                    className={`p-2.5 rounded-xl border text-left text-xs font-mono transition-all ${
                       selectedPharmaModule === mod.id 
-                        ? 'bg-[#123A2E] border-[#123A2E] text-white font-semibold' 
-                        : 'bg-[#FBFAF6] border-[rgba(20,25,26,0.12)] text-[#3B4441] hover:border-[#123A2E]'
+                        ? 'bg-indigo-950/60 border-indigo-500/50 text-indigo-300 shadow-[0_0_10px_rgba(99,102,241,0.2)]' 
+                        : 'bg-[#0a0a0a] border-white/10 text-white/50 hover:border-white/20 hover:text-white'
                     }`}
                   >
                     {mod.title}
@@ -183,17 +209,17 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
                 ))}
               </div>
 
-              {/* Active Module Details */}
+              {/* Active Pharma Module Details */}
               {(() => {
                 const activeMod = pharmaModules.find(m => m.id === selectedPharmaModule) || pharmaModules[0];
                 return (
-                  <div className="p-5 rounded-lg bg-[#FBFAF6] border border-[rgba(20,25,26,0.08)]">
-                    <h3 className="text-base font-bold text-[#16191A] font-serif">{activeMod.title}</h3>
-                    <p className="text-xs sm:text-sm text-[#4C524E] mt-1">{activeMod.desc}</p>
-                    <ul className="mt-4 space-y-2">
+                  <div className="p-4 rounded-xl bg-[#0a0a0a] border border-white/10 mt-3 animate-in fade-in-50 duration-150">
+                    <h4 className="text-sm font-bold text-white font-mono">{activeMod.title}</h4>
+                    <p className="text-xs text-white/60 mt-1">{activeMod.desc}</p>
+                    <ul className="mt-3 space-y-1.5">
                       {activeMod.points.map((pt, i) => (
-                        <li key={i} className="text-xs sm:text-sm text-[#3B4441] flex items-start space-x-2">
-                          <CheckCircle2 className="w-4 h-4 text-[#123A2E] shrink-0 mt-0.5" />
+                        <li key={i} className="text-xs text-white/70 flex items-start space-x-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
                           <span>{pt}</span>
                         </li>
                       ))}
@@ -205,18 +231,18 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
           )}
 
           {/* 3-Column Core Breakdown: Strategic Challenges, Research Methods, AI Opportunities */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             
             {/* Strategic Challenges */}
-            <div className="p-5 rounded-xl bg-white border border-[rgba(20,25,26,0.1)] space-y-3">
-              <div className="font-mono text-[10px] tracking-widest uppercase font-bold text-[#C0562F] flex items-center space-x-1.5">
+            <div className="p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-3">
+              <div className="text-[10px] font-mono uppercase font-bold text-rose-400 flex items-center space-x-1.5">
                 <HelpCircle className="w-3.5 h-3.5" />
-                <span>Strategic Challenges</span>
+                <span>Sector Strategic Challenges</span>
               </div>
               <ul className="space-y-2">
                 {currentSector.strategicChallenges.map((ch, i) => (
-                  <li key={i} className="text-xs sm:text-sm text-[#3B4441] flex items-start space-x-2">
-                    <span className="text-[#C0562F] font-bold">•</span>
+                  <li key={i} className="text-xs text-white/70 flex items-start space-x-2">
+                    <span className="text-rose-400 font-bold">•</span>
                     <span>{ch}</span>
                   </li>
                 ))}
@@ -224,15 +250,15 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
             </div>
 
             {/* Research Methods */}
-            <div className="p-5 rounded-xl bg-white border border-[rgba(20,25,26,0.1)] space-y-3">
-              <div className="font-mono text-[10px] tracking-widest uppercase font-bold text-[#123A2E] flex items-center space-x-1.5">
+            <div className="p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-3">
+              <div className="text-[10px] font-mono uppercase font-bold text-indigo-400 flex items-center space-x-1.5">
                 <Search className="w-3.5 h-3.5" />
-                <span>Primary & Secondary Methods</span>
+                <span>MindCraft Research Methods</span>
               </div>
               <ul className="space-y-2">
                 {currentSector.researchMethods.map((rm, i) => (
-                  <li key={i} className="text-xs sm:text-sm text-[#3B4441] flex items-start space-x-2">
-                    <span className="text-[#123A2E] font-bold">•</span>
+                  <li key={i} className="text-xs text-white/70 flex items-start space-x-2">
+                    <span className="text-indigo-400 font-bold">•</span>
                     <span>{rm}</span>
                   </li>
                 ))}
@@ -240,15 +266,15 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
             </div>
 
             {/* AI Opportunities */}
-            <div className="p-5 rounded-xl bg-white border border-[rgba(20,25,26,0.1)] space-y-3">
-              <div className="font-mono text-[10px] tracking-widest uppercase font-bold text-[#123A2E] flex items-center space-x-1.5">
+            <div className="p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-3">
+              <div className="text-[10px] font-mono uppercase font-bold text-emerald-400 flex items-center space-x-1.5">
                 <Cpu className="w-3.5 h-3.5" />
                 <span>AI & Automation Opportunities</span>
               </div>
               <ul className="space-y-2">
                 {currentSector.aiOpportunities.map((ao, i) => (
-                  <li key={i} className="text-xs sm:text-sm text-[#3B4441] flex items-start space-x-2">
-                    <span className="text-[#123A2E] font-bold">•</span>
+                  <li key={i} className="text-xs text-white/70 flex items-start space-x-2">
+                    <span className="text-emerald-400 font-bold">•</span>
                     <span>{ao}</span>
                   </li>
                 ))}
@@ -257,58 +283,58 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
 
           </div>
 
-          {/* End-to-End Workflow Transformer */}
-          <div className="rounded-xl bg-[#123A2E]/5 border border-[#123A2E]/15 p-6 space-y-4">
+          {/* End-to-End Sub-Sector Workflow Transformer Bento */}
+          <div className="rounded-2xl bg-[#050505] border border-white/10 p-5 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="font-mono text-[10px] tracking-widest uppercase font-bold text-[#123A2E] flex items-center space-x-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#C0562F]" />
-                <span>Illustrative End-to-End Delivery Workflow</span>
+              <div className="text-xs font-mono uppercase font-bold text-indigo-300 flex items-center space-x-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Illustrative End-to-End Transformation Workflow</span>
               </div>
-              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#123A2E] text-white font-mono">
+              <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-950/60 text-indigo-300 border border-indigo-500/30 font-mono">
                 Question → Outcome
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3 pt-2">
               
-              <div className="p-4 rounded-lg bg-white border border-[rgba(20,25,26,0.08)]">
-                <div className="font-mono text-[9px] uppercase text-[#8A8578] font-bold">01 · Question</div>
-                <p className="text-xs text-[#16191A] mt-1 font-serif italic leading-relaxed">
+              <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-white/10">
+                <div className="text-[9px] font-mono uppercase text-white/40 font-bold">01. Question</div>
+                <p className="text-xs text-white/90 mt-1 font-medium italic">
                   "{currentSector.workflowExample.question}"
                 </p>
               </div>
 
-              <div className="p-4 rounded-lg bg-white border border-[rgba(20,25,26,0.08)]">
-                <div className="font-mono text-[9px] uppercase text-[#123A2E] font-bold">02 · Method</div>
-                <p className="text-xs text-[#3B4441] mt-1 leading-relaxed">
+              <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-white/10">
+                <div className="text-[9px] font-mono uppercase text-indigo-400 font-bold">02. Method</div>
+                <p className="text-xs text-white/70 mt-1">
                   {currentSector.workflowExample.method}
                 </p>
               </div>
 
-              <div className="p-4 rounded-lg bg-white border border-[rgba(20,25,26,0.08)]">
-                <div className="font-mono text-[9px] uppercase text-[#123A2E] font-bold">03 · Intelligence</div>
-                <p className="text-xs text-[#3B4441] mt-1 leading-relaxed">
+              <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-white/10">
+                <div className="text-[9px] font-mono uppercase text-indigo-300 font-bold">03. Intelligence</div>
+                <p className="text-xs text-white/70 mt-1">
                   {currentSector.workflowExample.intelligence}
                 </p>
               </div>
 
-              <div className="p-4 rounded-lg bg-white border border-[rgba(20,25,26,0.08)]">
-                <div className="font-mono text-[9px] uppercase text-[#123A2E] font-bold">04 · Decision</div>
-                <p className="text-xs text-[#16191A] mt-1 font-semibold leading-relaxed">
+              <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-white/10">
+                <div className="text-[9px] font-mono uppercase text-teal-400 font-bold">04. Decision</div>
+                <p className="text-xs text-white/70 mt-1 font-medium">
                   {currentSector.workflowExample.decision}
                 </p>
               </div>
 
-              <div className="p-4 rounded-lg bg-white border border-[rgba(20,25,26,0.08)]">
-                <div className="font-mono text-[9px] uppercase text-[#C0562F] font-bold">05 · AI Solution</div>
-                <p className="text-xs text-[#3B4441] mt-1 leading-relaxed">
+              <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-white/10">
+                <div className="text-[9px] font-mono uppercase text-emerald-400 font-bold">05. AI Solution</div>
+                <p className="text-xs text-white/70 mt-1">
                   {currentSector.workflowExample.aiSolution}
                 </p>
               </div>
 
-              <div className="p-4 rounded-lg bg-[#123A2E] text-white">
-                <div className="font-mono text-[9px] uppercase text-[#D98A5F] font-bold">06 · Measured ROI</div>
-                <p className="text-xs text-[#F4F1EA] mt-1 font-semibold leading-relaxed">
+              <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-emerald-500/30">
+                <div className="text-[9px] font-mono uppercase text-emerald-300 font-bold">06. Measured ROI</div>
+                <p className="text-xs text-emerald-300 mt-1 font-semibold">
                   {currentSector.workflowExample.outcome}
                 </p>
               </div>
@@ -318,22 +344,52 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({
 
         </div>
 
-        {/* Cross-Sector Pathway Button */}
-        <div className="p-8 rounded-2xl border border-[rgba(20,25,26,0.12)] bg-[#FBFAF6] flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="font-serif text-2xl text-[#16191A] font-normal mb-1">
-              Explore Our Broader 24 Industry Verticals
+        {/* Additional Diversified Industry Verticals in Bento Grid */}
+        <div className="mt-16">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <h3 className="text-2xl font-light text-white">
+              Additional <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-300">Industry Verticals</span> Served
             </h3>
-            <p className="text-sm text-[#4C524E]">
-              See how MindCraft applies its methodology to diversified sectors (Telco, Financial Services, Energy, Agribusiness).
+            <p className="text-white/50 text-xs sm:text-sm mt-1 font-mono">
+              Applying the same rigorous, evidence-based methodology to diversified sectors across Africa.
             </p>
           </div>
-          <button
-            onClick={() => setActiveTab('industries')}
-            className="px-6 py-3 rounded-lg bg-[#123A2E] hover:bg-[#C0562F] text-white text-xs font-semibold tracking-wide transition-colors whitespace-nowrap"
-          >
-            Open 24 Industries Explorer →
-          </button>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {DIVERSIFIED_INDUSTRIES.map((ind) => (
+              <div
+                key={ind.id}
+                className="p-5 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className="text-xs font-bold text-indigo-400 uppercase font-mono mb-1">
+                    {ind.name}
+                  </div>
+                  <div className="text-xs font-semibold text-white mb-2 font-mono">
+                    {ind.tagline}
+                  </div>
+                  <p className="text-xs text-white/60 leading-relaxed mb-3">
+                    {ind.description}
+                  </p>
+                  <div className="space-y-1">
+                    <div className="text-[9px] font-mono uppercase text-white/40 font-semibold">
+                      Focus Areas:
+                    </div>
+                    {ind.focusAreas.slice(0, 3).map((fa, i) => (
+                      <div key={i} className="text-[11px] text-white/70 flex items-center space-x-1.5">
+                        <span className="text-indigo-400">•</span>
+                        <span className="truncate">{fa}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-white/5 text-[10px] text-white/40 font-mono italic">
+                  Method: {ind.methodology}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
       </div>
