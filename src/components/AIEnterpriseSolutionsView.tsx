@@ -19,7 +19,9 @@ import {
   Microscope
 } from 'lucide-react';
 import { ContextualCTA, DeepDive, EASE, RelatedLinks, SectionHeader, reveal } from './ui/primitives';
-import { DeliverablesBlock, GroupCard, PillarHero } from './PillarParts';
+import { ArtImage } from './ui/ArtImage';
+import { ArtCaption, HeroCopy, HeroSection, Scrim } from './ui/Hero';
+import { MarkList, scrollToId } from './PillarParts';
 
 interface AIEnterpriseSolutionsViewProps {
   onOpenIntake: () => void;
@@ -30,6 +32,12 @@ const STATUS_STYLE: Record<string, string> = {
   'Production Architecture Pattern': 'border-emerald-500/30 text-emerald-400',
   'Demonstration Prototype': 'border-amber-500/30 text-amber-400',
   'Illustrative Blueprint': 'border-indigo-500/35 text-indigo-400'
+};
+
+const STATUS_LABEL: Record<string, string> = {
+  'Production Architecture Pattern': 'Architecture pattern',
+  'Demonstration Prototype': 'Demonstration concept',
+  'Illustrative Blueprint': 'Illustrative blueprint'
 };
 
 type TierTone = 'neutral' | 'indigo' | 'emerald';
@@ -145,9 +153,9 @@ const GROUPS = [
 ];
 
 const DELIVERABLES = [
-  'Functional AI solutions, dashboards or tools deployed into the client’s environment.',
-  'Technical documentation, user guides and post-deployment support plans.',
-  'Measurable efficiency, accuracy or revenue impact tied to each deployed solution.'
+  'A prioritised AI use-case and solution architecture.',
+  'Data, governance and integration requirements for the agreed scope.',
+  'Implementation documentation, user guidance and adoption support where required.'
 ];
 
 const CATEGORIES = ['All', 'Life Sciences Core', 'Intelligence Platforms', 'Process Automation', 'Conversational & Engagement'];
@@ -159,11 +167,11 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
     <div className="space-y-3">
       <div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-md border border-white/[0.08] bg-[#050505] px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">
+          <span className="rounded-md border border-white/[0.08] bg-[#050505] px-2 py-1 text-xs font-semibold text-[#9CA3AF]">
             {sol.category}
           </span>
-          <span className={`rounded-md border px-2 py-1 font-mono text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
-            {sol.status}
+          <span className={`rounded-md border px-2 py-1 tabular-nums text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
+            {STATUS_LABEL[sol.status] ?? sol.status}
           </span>
         </div>
         <h3 className="mt-3 text-xl font-semibold leading-snug text-white sm:text-2xl">{sol.title}</h3>
@@ -171,12 +179,12 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
       </div>
 
       <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
-        <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">Projected operational & commercial outcome</h4>
+        <h4 className="text-xs font-semibold text-emerald-400">Illustrative potential outcome</h4>
         <p className="mt-1 text-sm font-medium leading-relaxed text-white">{sol.projectedOutcome}</p>
       </div>
 
       <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-        <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">01. Business problem</h4>
+        <h4 className="text-xs font-semibold text-amber-400">01. Business problem</h4>
         <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.businessProblem}</p>
       </div>
 
@@ -186,7 +194,7 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
         onClick={() => setTechOpen((v) => !v)}
         aria-expanded={techOpen}
         aria-controls={`tech-${sol.id}`}
-        className="mc-tap flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-[#050505] px-4 font-mono text-xs text-emerald-400 transition-colors hover:text-white active:scale-[0.98] lg:hidden"
+        className="mc-tap flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-[#050505] px-4 tabular-nums text-xs text-emerald-400 transition-colors hover:text-white active:scale-[0.98] lg:hidden"
       >
         <span>{techOpen ? 'Hide data, model & integration' : 'Show data, model & integration (3)'}</span>
         <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${techOpen ? 'rotate-180' : ''}`} />
@@ -194,7 +202,7 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
 
       <div id={`tech-${sol.id}`} className={`${techOpen ? 'grid' : 'hidden'} gap-3 lg:grid`}>
         <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-          <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-400">02. Data ingestion feeds</h4>
+          <h4 className="text-xs font-semibold text-indigo-400">02. Data ingestion feeds</h4>
           <ul className="mt-2 space-y-1.5">
             {sol.dataInputs.map((inp) => (
               <li key={inp} className="flex items-start gap-2 text-sm leading-relaxed text-[#E0E0E0]">
@@ -205,22 +213,22 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
           </ul>
         </div>
         <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-          <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">03. AI analytics / model layer</h4>
+          <h4 className="text-xs font-semibold text-emerald-400">03. AI analytics / model layer</h4>
           <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.aiAnalyticsLayer}</p>
         </div>
         <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-          <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-400">04. Enterprise integration</h4>
+          <h4 className="text-xs font-semibold text-indigo-400">04. Enterprise integration</h4>
           <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.workflowIntegration}</p>
         </div>
       </div>
 
       <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-        <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">05. Human interaction & review</h4>
+        <h4 className="text-xs font-semibold text-amber-400">05. Human interaction & review</h4>
         <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.humanInteraction}</p>
       </div>
 
       <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
-        <h4 className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">
+        <h4 className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
           <span>06. Governance safeguards</span>
         </h4>
@@ -230,7 +238,7 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
       <button
         type="button"
         onClick={onOpenIntake}
-        className="mc-tap flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-[#0D0F17] px-4 font-mono text-sm font-semibold text-emerald-400 transition-[color,transform] duration-200 hover:text-white active:scale-[0.98]"
+        className="mc-tap flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-[#0D0F17] px-4 tabular-nums text-sm font-semibold text-emerald-400 transition-[color,transform] duration-200 hover:text-white active:scale-[0.98]"
       >
         <span>Discuss this architecture</span>
         <ArrowRight className="h-4 w-4" />
@@ -258,63 +266,90 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="mc-section bg-[#050505]" id="ai-solutions-section">
-        <div className="mc-container">
-
-          {/* A. What this is, what MindCraft delivers, outcomes, CTA */}
-          <PillarHero
-            tone="emerald"
-            icon={Cpu}
-            eyebrow="Pillar 04 · AI Enterprise Solutions"
-            titleLight="AI Enterprise"
-            titleBold="Solutions"
-            lead="End-to-end design, build and integration of AI-powered systems that operationalize insight into everyday business workflows, from market intelligence platforms to patient- and customer-facing AI tools."
-            outcomes={[
-              { label: 'From insight to workflow', text: 'AI built into the systems your teams already use.' },
-              { label: 'Life Sciences depth', text: 'Pharmacovigilance, regulatory and KOL solutions.' },
-              { label: 'Governed by design', text: 'Data privacy, ethics and governance throughout.' }
-            ]}
-            ctaLabel="Deploy Solution Architecture"
-            onCta={onOpenIntake}
-            exploreLabel="See the five solution groups"
-            exploreId="ai-capabilities"
+      <HeroSection id="ai-solutions-section" labelledBy="ai-solutions-title" className="min-h-[35rem]">
+        <ArtImage
+          name="solutions-operations"
+          alt="Operations team working in a control room"
+          sizes="100vw"
+          position="object-[70%_50%] lg:object-[64%_50%]"
+          priority
+        />
+        <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.9) 47%, rgba(5,5,5,.44) 74%, rgba(5,5,5,.18) 100%)" />
+        <div className="mc-container relative z-10 flex min-h-[28rem] items-end py-14 sm:py-20 lg:min-h-[34rem] lg:py-24">
+          <HeroCopy
+            id="ai-solutions-title"
+            meta="AI enterprise solutions"
+            title={<>Applied AI, <em className="font-normal text-emerald-300">responsibly.</em></>}
+            lead="AI strategy, analytics, automation and integration grounded in data governance and how teams actually work."
+            note="Engagements can range from use-case prioritisation to solution architecture and implementation support."
+            actions={
+              <>
+                <button type="button" onClick={onOpenIntake} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 text-sm font-semibold text-[#06150f] transition-[background-color,transform] hover:bg-emerald-300 active:scale-[0.98]">
+                  Discuss an AI need <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+                <button type="button" onClick={() => scrollToId('ai-capabilities')} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-black/20 px-5 text-sm font-medium text-white transition-[background-color,transform] hover:bg-white/10 active:scale-[0.98]">
+                  Explore solution groups
+                </button>
+              </>
+            }
           />
+        </div>
+        <ArtCaption className="absolute bottom-5 right-4 z-10 sm:right-8">Operations illustration</ArtCaption>
+      </HeroSection>
 
+      <section className="mc-section">
+        <div className="mc-container">
           {/* A/B. Capability groups, then deliverables */}
-          <div id="ai-capabilities" className="mt-10 scroll-mt-24 sm:mt-14">
+          <div id="ai-capabilities">
             <SectionHeader
-              eyebrow="What MindCraft delivers"
-              title={<>Five solution groups, <span className="font-bold">from strategy to production</span></>}
-              className="mb-5! sm:mb-7!"
+              title={<>From strategy to responsible adoption.</>}
+              lead="Five connected areas for framing, building and integrating enterprise AI work."
             />
-            <ul className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 lg:grid-cols-6 lg:gap-4">
+            <ul className="border-y border-white/[0.1]">
               {GROUPS.map((g, i) => (
-                <GroupCard
+                <li
                   key={g.name}
-                  index={i}
-                  tone="emerald"
-                  icon={g.icon}
-                  name={g.name}
-                  what={g.what}
-                  why={g.why}
-                  outcome={g.outcome}
-                  included={solutionsPillar.capabilities[i]?.bulletPoints ?? []}
-                  className={i < 3 ? 'lg:col-span-2' : 'lg:col-span-3'}
-                />
+                  className="grid gap-5 border-b border-white/[0.1] py-6 last:border-b-0 md:grid-cols-[2.25rem_minmax(0,1fr)_minmax(15rem,.7fr)] md:gap-8"
+                >
+                  <span className="font-mono text-xs text-emerald-400">0{i + 1}</span>
+                  <div>
+                    <h3 className="flex items-center gap-2 text-lg font-medium text-white">
+                      <g.icon className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                      {g.name}
+                    </h3>
+                    <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">{g.what}</p>
+                  </div>
+                  <DeepDive tone="emerald" title="Engagement detail" hint={g.outcome}>
+                    <p className="text-sm leading-relaxed text-white/65">{g.why}</p>
+                    <MarkList
+                      className="mt-4 space-y-2"
+                      marker="bg-emerald-400"
+                      items={solutionsPillar.capabilities[i]?.bulletPoints ?? []}
+                    />
+                  </DeepDive>
+                </li>
               ))}
             </ul>
-            <div className="mt-4">
-              <DeliverablesBlock tone="emerald" items={DELIVERABLES} />
-            </div>
+            <aside className="mt-10 border-t border-emerald-500/30 pt-5">
+              <p className="mc-eyebrow text-emerald-300">Potential engagement outputs</p>
+              <ul className="mt-4 grid gap-4 md:grid-cols-3">
+                {DELIVERABLES.map((item) => (
+                  <li key={item} className="border-t border-white/[0.1] pt-3 text-sm leading-relaxed text-white/70">{item}</li>
+                ))}
+              </ul>
+            </aside>
           </div>
 
+        </div>
+      </section>
+
+      <section className="mc-section">
+        <div className="mc-container">
           {/* Explorer: solution catalog */}
-          <div id="ai-catalog" className="mt-10 scroll-mt-24 sm:mt-14">
+          <div id="ai-catalog">
             <SectionHeader
-              eyebrow={`Explorer · ${AI_SOLUTIONS_CATALOG.length} solution architectures`}
-              title={<>Enterprise AI <span className="font-bold text-emerald-400">Solution Catalog</span></>}
-              lead="Solution architectures for Life Sciences and enterprise transformation. Open one to see the problem, data, model, integration, review and governance."
-              className="mb-5! sm:mb-7!"
+              title={<>Illustrative AI solution patterns.</>}
+              lead="Examples of how strategy, data, integration, human review and governance can come together around a business need."
             />
 
             <div
@@ -334,7 +369,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                       setMobileOpenId(null);
                       setShowAll(false);
                     }}
-                    className={`mc-tap shrink-0 rounded-xl border px-4 font-mono text-xs transition-colors duration-200 active:scale-[0.98] ${
+                    className={`mc-tap shrink-0 rounded-xl border px-4 font-medium text-[13px] transition-colors duration-200 active:scale-[0.98] ${
                       active
                         ? 'border-emerald-500/60 bg-[#0D0F17] font-semibold text-emerald-400'
                         : 'border-white/[0.08] bg-[#0A0A0A] text-[#9CA3AF] hover:text-white'
@@ -370,12 +405,12 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                           }`}
                         >
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="hidden rounded-md border border-white/[0.08] bg-[#050505] px-2 py-0.5 font-mono text-[11px] text-[#9CA3AF] lg:inline">
+                            <span className="hidden rounded-md border border-white/[0.08] bg-[#050505] px-2 py-0.5 tabular-nums text-[11px] text-[#9CA3AF] lg:inline">
                               {/* category is shown in the filter rail and detail on phones */}
                               {sol.category}
                             </span>
-                            <span className={`rounded-md border px-2 py-0.5 font-mono text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
-                              {sol.status}
+                            <span className={`rounded-md border px-2 py-0.5 tabular-nums text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
+                              {STATUS_LABEL[sol.status] ?? sol.status}
                             </span>
                           </div>
                           <div className="mt-2 flex items-start justify-between gap-3">
@@ -411,7 +446,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                   <button
                     type="button"
                     onClick={() => setShowAll(true)}
-                    className="mc-tap mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 font-mono text-xs text-white/80 transition-[background-color,transform] duration-150 hover:bg-white/10 active:scale-[0.98] lg:hidden"
+                    className="mc-tap mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 tabular-nums text-xs text-white/80 transition-[background-color,transform] duration-150 hover:bg-white/10 active:scale-[0.98] lg:hidden"
                   >
                     <span>Show all {filteredSolutions.length} solutions</span>
                     <ChevronDown className="h-4 w-4 text-emerald-400" />
@@ -451,8 +486,8 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                     <li key={tier.title} className={`flex items-start gap-3 rounded-xl border bg-[#050505] p-3.5 ${t.border}`}>
                       <span className={`mt-0.5 shrink-0 rounded-lg border p-2 ${t.icon}`}>{tier.icon}</span>
                       <span className="min-w-0 flex-1">
-                        <span className={`block font-mono text-xs font-bold leading-snug ${t.title}`}>{tier.title}</span>
-                        <span className={`mt-0.5 block font-mono text-[11px] ${t.tag}`}>{tier.tag}</span>
+                        <span className={`block tabular-nums text-xs font-bold leading-snug ${t.title}`}>{tier.title}</span>
+                        <span className={`mt-0.5 block tabular-nums text-[11px] ${t.tag}`}>{tier.tag}</span>
                         <span className="mt-1.5 block text-xs leading-relaxed text-[#9CA3AF]">{tier.detail}</span>
                       </span>
                     </li>
@@ -463,7 +498,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                     <ShieldCheck className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-mono text-xs font-bold text-white">SPANNING GOVERNANCE & RESPONSIBLE AI LAYER</span>
+                    <span className="block text-[13px] font-semibold text-white">Governance and responsible AI layer, spanning every layer</span>
                     <span className="mt-1 block text-xs leading-relaxed text-[#9CA3AF]">
                       Data privacy · Ethics · Governance · Human-in-the-loop sign-off
                     </span>
@@ -480,7 +515,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
               <ol className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
                 {LIFECYCLE_STEPS.map((step, idx) => (
                   <li key={step} className="flex items-start gap-2.5 rounded-xl border border-white/[0.08] bg-[#050505] p-3">
-                    <span className="font-mono text-[11px] font-bold text-emerald-400">0{idx + 1}</span>
+                    <span className="tabular-nums text-[11px] font-bold text-emerald-400">0{idx + 1}</span>
                     <span className="text-xs leading-snug text-[#E0E0E0]">{step}</span>
                   </li>
                 ))}
@@ -488,8 +523,13 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
             </DeepDive>
           </div>
 
+        </div>
+      </section>
+
+      <section className="mc-section" aria-label="Next steps">
+        <div className="mc-container">
           {/* One CTA, then related */}
-          <div className="mt-10 space-y-8 sm:mt-14">
+          <div className="space-y-10 md:space-y-14">
             <motion.div {...reveal}>
               <ContextualCTA
                 title="Put an AI system into production"
@@ -508,7 +548,6 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
               ]}
             />
           </div>
-
         </div>
       </section>
     </MotionConfig>

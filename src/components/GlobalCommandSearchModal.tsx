@@ -220,7 +220,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
               <button
                 onClick={onClose}
                 aria-label="Close search"
-                className="mc-tap px-3 text-xs font-mono text-neutral-400 border border-white/10 rounded-lg hover:bg-white/5 active:scale-[0.96] shrink-0"
+                className="mc-tap px-3 text-xs tabular-nums text-neutral-400 border border-white/10 rounded-lg hover:bg-white/5 active:scale-[0.96] shrink-0"
               >
                 <span className="hidden sm:inline">ESC</span>
                 <X className="w-4 h-4 sm:hidden" />
@@ -232,7 +232,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
               {searchResults ? (
                 searchResults.length > 0 ? (
                   <div className="space-y-2" aria-live="polite">
-                    <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
+                    <div className="text-xs text-neutral-400 font-medium">
                       Search Results ({searchResults.length})
                     </div>
                     {searchResults.map((res, idx) => (
@@ -260,7 +260,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
                               <span className="text-sm font-semibold text-white group-hover:text-indigo-400">
                                 {res.title}
                               </span>
-                              <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-white/5 text-neutral-400 border border-white/10">
+                              <span className="text-[11px] tabular-nums px-1.5 py-0.5 rounded bg-white/5 text-neutral-400 border border-white/10">
                                 {res.type}
                               </span>
                             </div>
@@ -282,7 +282,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
                 /* Default Suggested Fast-Access Links */
                 <div className="space-y-5">
                   <div>
-                    <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">
+                    <div className="text-xs text-neutral-400 mb-2 font-medium">
                       Popular Gateways & Frameworks
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -303,7 +303,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
                   </div>
 
                   <div>
-                    <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">
+                    <div className="text-xs text-neutral-400 mb-2 font-medium">
                       Top Industries
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -328,7 +328,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
             </div>
 
             {/* Footer info bar */}
-            <div className="shrink-0 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-white/10 bg-[#050505] text-[11px] font-mono text-neutral-400 flex items-center justify-between gap-3">
+            <div className="shrink-0 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-white/10 bg-[#050505] text-[11px] tabular-nums text-neutral-400 flex items-center justify-between gap-3">
               <span>Arrow keys to move, Enter to open</span>
               <span className="hidden sm:inline">Press ESC to close</span>
             </div>

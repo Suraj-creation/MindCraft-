@@ -1,14 +1,15 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { NavTab, RoleLens, EngagementBlueprint } from './types';
 import { Header } from './components/Header';
 import { HeroOperatingSystem } from './components/HeroOperatingSystem';
 import { Footer } from './components/Footer';
-import { CapabilitiesSection, WhySection, LifeSciencesBand, ProblemsSection, EngagementSection } from './components/LandingSections';
-import { PathwayExplorer } from './components/PathwayExplorer';
-import { LocalizationModule } from './components/LocalizationModule';
-import { SeniorExpertiseCard } from './components/SeniorExpertise';
+import { CapabilitiesSection, IndustriesSection, ExpertiseReachSection, ApproachSection, ClosingSection } from './components/LandingSections';
 import { InsightsStrip } from './components/InsightsStrip';
-import { SectionHeader } from './components/ui/primitives';
+import { NavContext } from './components/ui/primitives';
+import { UNIVERSAL_INDUSTRIES } from './data/industryAndAfricaData';
+import { tabFromHash } from './data/navigation';
+import { glideToTop, scrollToTop as jumpToTop, startSmoothScroll } from './lib/smoothScroll';
 
 // New Advanced Bento Components
 
@@ -37,7 +38,7 @@ const MindCraftUniverseOrbital = lazy(() => import('./components/MindCraftUniver
 const GlobalCommandSearchModal = lazy(() => import('./components/GlobalCommandSearchModal').then(m => ({ default: m.GlobalCommandSearchModal })));
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<NavTab>('home');
+  const [activeTab, setActiveTab] = useState<NavTab>(() => tabFromHash(window.location.hash) ?? 'home');
   const [activeRole, setActiveRole] = useState<RoleLens>('all');
   const [isIntakeOpen, setIsIntakeOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
@@ -46,6 +47,32 @@ export default function App() {
   
   // Cross-component selected entities
   const [preselectedIndustry, setPreselectedIndustry] = useState<string | undefined>(undefined);
+  // Callers pass either an industry id or its display name; the explorer needs the id
+  const preselectedIndustryId = UNIVERSAL_INDUSTRIES.find(
+    (i) => i.id === preselectedIndustry || i.name === preselectedIndustry
+  )?.id;
+
+  /** The single navigation path for menus, contextual links, search and direct URLs. */
+  const navigate = useCallback((tab: NavTab) => {
+    setActiveTab(tab);
+    const hash = `#${encodeURIComponent(tab)}`;
+    if (window.location.hash !== hash) window.history.pushState(null, '', hash);
+  }, []);
+
+  // Direct entry, browser history and manually edited hashes resolve through the same route validation.
+  useEffect(() => {
+    const syncFromLocation = () => {
+      const tab = tabFromHash(window.location.hash);
+      if (tab) setActiveTab(tab);
+      else if (!window.location.hash) setActiveTab('home');
+    };
+    window.addEventListener('hashchange', syncFromLocation);
+    window.addEventListener('popstate', syncFromLocation);
+    return () => {
+      window.removeEventListener('hashchange', syncFromLocation);
+      window.removeEventListener('popstate', syncFromLocation);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,10 +86,13 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Smooth wheel scrolling for the whole site (skipped for reduced motion)
+  useEffect(() => startSmoothScroll(), []);
+
   // Every navigation starts at the top of the new view
   useEffect(() => {
     if (activeTab !== 'senior-expertise') {
-      window.scrollTo({ top: 0 });
+      jumpToTop();
       return;
     }
     // The About view is lazy-loaded: wait for the anchor to exist, then scroll to it
@@ -72,7 +102,7 @@ export default function App() {
       if (el || ++tries > 40) {
         window.clearInterval(id);
         if (el) el.scrollIntoView({ block: 'start' });
-        else window.scrollTo({ top: 0 });
+        else jumpToTop();
       }
     }, 50);
     return () => window.clearInterval(id);
@@ -111,71 +141,76 @@ export default function App() {
     setIsIntakeOpen(true);
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const skipToContent = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    document.getElementById('main-content')?.focus();
   };
 
-  // Role perspective descriptions
+  const navContext = useMemo(() => ({ activeTab, navigate }), [activeTab, navigate]);
+
+  // Role perspective descriptions (documented capabilities only; see the corporate profile s.4-5)
   const roleSummaries: { [key in RoleLens]: { title: string; desc: string; focus: string } } = {
     all: {
-      title: 'Full Executive Overview',
-      desc: 'Showing integrated strategy, primary intelligence, AI training & production systems.',
-      focus: 'End-to-End Multidisciplinary Value Chain'
+      title: 'Full overview',
+      desc: 'Business consulting, market research, AI training and AI enterprise solutions together.',
+      focus: 'The integrated model'
     },
     executive: {
-      title: 'C-Suite & Managing Director Lens',
-      desc: 'Highlighting market entry speed, capital allocation ROI, enterprise risk & governed AI adoption.',
-      focus: 'Corporate Strategy & Governance'
+      title: 'Executive lens',
+      desc: 'Growth and market-entry strategy, transformation roadmaps and responsible AI adoption.',
+      focus: 'Strategy and governance'
     },
     lifesciences: {
-      title: 'Life Sciences & Healthcare Lens',
-      desc: 'Highlighting pharma, medical devices, diagnostics, hospitals & regulatory intelligence.',
-      focus: 'Therapeutic Strategy & Clinical Impact'
+      title: 'Life Sciences & healthcare lens',
+      desc: 'Pharmaceuticals, medical devices, diagnostics, equipment, surgical consumables and hospitals.',
+      focus: 'Sector depth'
     },
     technology: {
-      title: 'CIO, CTO & AI Innovation Lens',
-      desc: 'Highlighting private tenant-isolated LLM gateways, vector RAG knowledge vaults & system integration.',
-      focus: 'Production AI Software Architecture'
+      title: 'Technology & AI lens',
+      desc: 'AI strategy and solution architecture, analytics, automation and integration with existing systems.',
+      focus: 'Applied AI'
     },
     commercial: {
-      title: 'Commercial & Market Access Lens',
-      desc: 'Highlighting KOL networks, formulary inclusion, pricing elasticity & field-force AI copilots.',
-      focus: 'Revenue Acceleration & Territory Intelligence'
+      title: 'Commercial & market access lens',
+      desc: 'Market access, competitive intelligence, pricing analysis and go-to-market planning.',
+      focus: 'Commercial effectiveness'
     },
     regulatory: {
-      title: 'Regulatory Affairs & Pharmacovigilance Lens',
-      desc: 'Highlighting PPB/NAFDAC/SAHPRA filings, automated adverse event screening & compliance safety.',
-      focus: 'Pan-African Regulatory Compliance'
+      title: 'Regulatory & quality lens',
+      desc: 'Regulatory landscape mapping, compliance strategy and quality management systems support.',
+      focus: 'Regulatory readiness'
     },
     africa: {
-      title: 'Pan-African Market Lead Lens',
-      desc: 'Highlighting 45+ national dossiers, local associate networks & regional harmonization.',
-      focus: 'Pan-Continental Operational Scale'
+      title: 'African markets lens',
+      desc: 'Multi-country market entry, regulatory mapping and research across East, West, Southern and North Africa.',
+      focus: 'African market knowledge'
     },
     learning: {
-      title: 'Chief People & Talent Officer Lens',
-      desc: 'Highlighting applied AI curriculum, cohort simulator & internal AI champion certification.',
-      focus: 'Human Enablement & Change Management'
+      title: 'People & learning lens',
+      desc: 'Executive AI briefings, function-specific training and train-the-trainer programmes.',
+      focus: 'Capability building'
     },
     investor: {
-      title: 'Private Equity & Healthcare Investor Lens',
-      desc: 'Highlighting market sizing, competitive moats, asset due diligence & operational scalability.',
-      focus: 'Commercial Diligence & Valuation Moats'
+      title: 'Investor lens',
+      desc: 'Market sizing, competitive intelligence and commercial diligence research.',
+      focus: 'Evidence for investment decisions'
     },
     hospital: {
-      title: 'Hospital & Healthcare Provider Lens',
-      desc: 'Highlighting clinical pathway adherence, insurance claims pre-check & equipment uptime.',
-      focus: 'Clinical Quality & Revenue Cycle Management'
+      title: 'Hospitals & providers lens',
+      desc: 'Operational strategy, digital transformation, patient experience research and workforce capacity.',
+      focus: 'Provider operations'
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#e0e0e0] font-sans selection:bg-indigo-500 selection:text-white">
+    <NavContext.Provider value={navContext}>
+    <div className="min-h-screen bg-[#050505] text-[#e0e0e0] font-sans">
+      <a className="mc-skip-link" href="#main-content" onClick={skipToContent}>Skip to content</a>
       
       {/* Global Navigation Header */}
       <Header
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={navigate}
         roleLens={activeRole}
         setRoleLens={setActiveRole}
         onOpenIntake={handleOpenIntakeGeneric}
@@ -183,7 +218,7 @@ export default function App() {
       />
 
       {/* Main View Router */}
-      <main className="pt-16">
+      <main id="main-content" tabIndex={-1} className="pt-16 lg:pt-20">
         <Suspense fallback={<div className="min-h-[60dvh]" aria-busy="true" />}>
         {/* Role Lens Active Notice Banner (if filtered) */}
       {activeRole !== 'all' && (
@@ -191,50 +226,47 @@ export default function App() {
           <div className="mc-container flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
-              <span className="font-mono text-[11px] tracking-wider uppercase font-bold text-indigo-300">
+              <span className="text-xs font-semibold text-indigo-300">
                 {roleSummaries[activeRole].title}:
               </span>
               <span className="text-white/70 text-xs">{roleSummaries[activeRole].desc}</span>
             </div>
             <button
               onClick={() => setActiveRole('all')}
-              className="text-indigo-400 hover:text-white font-mono text-[11px] tracking-wider uppercase border border-indigo-500/30 px-3 min-h-9 rounded bg-indigo-950/40 hover:bg-indigo-900/60 transition-colors self-start sm:self-auto"
+              className="text-indigo-400 hover:text-white text-xs border border-indigo-500/30 px-3 min-h-9 rounded bg-indigo-950/40 hover:bg-indigo-900/60 transition-colors self-start sm:self-auto font-medium"
             >
-              Reset to Full Overview
+              Reset to full overview
             </button>
           </div>
         </div>
       )}
 
+        {/* Pages cross-fade so a route change reads as one continuous move */}
+        <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={view}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+          exit={{ opacity: 0, transition: { duration: 0.12 } }}
+        >
         {/* 1. Overview / Home */}
         {(view === 'home' || view === 'overview') && (
           <div>
             <HeroOperatingSystem
               onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
               roleLens={activeRole}
             />
-            <CapabilitiesSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
-            <WhySection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
-            <LifeSciencesBand setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
-            <PathwayExplorer
-              onNavigate={setActiveTab}
-              onSelectIndustry={(ind) => setPreselectedIndustry(ind)}
+            <CapabilitiesSection setActiveTab={navigate} onOpenIntake={handleOpenIntakeGeneric} />
+            <IndustriesSection
+              setActiveTab={navigate}
               onOpenIntake={handleOpenIntakeGeneric}
+              onSelectIndustry={(id) => setPreselectedIndustry(id)}
             />
-            <LocalizationModule variant="compact" onNavigate={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
-            <section className="mc-section" id="senior-expertise-home">
-              <div className="mc-container">
-                <SectionHeader
-                  eyebrow="Who proves it"
-                  title="Senior Life Sciences expertise behind every engagement"
-                />
-                <SeniorExpertiseCard onOpenProfile={() => setActiveTab('senior-expertise')} />
-              </div>
-            </section>
-            <ProblemsSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
-            <InsightsStrip onNavigate={setActiveTab} />
-            <EngagementSection setActiveTab={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <ApproachSection setActiveTab={navigate} onOpenIntake={handleOpenIntakeGeneric} />
+            <ExpertiseReachSection setActiveTab={navigate} onOpenIntake={handleOpenIntakeGeneric} />
+            <InsightsStrip onNavigate={navigate} />
+            <ClosingSection setActiveTab={navigate} onOpenIntake={handleOpenIntakeGeneric} />
           </div>
         )}
 
@@ -243,7 +275,8 @@ export default function App() {
           <div>
             <IndustryIntelligenceExplorer
               headingLevel={1}
-              onNavigate={setActiveTab}
+              initialIndustryId={preselectedIndustryId}
+              onNavigate={navigate}
               onSelectIndustryForEngagement={(ind) => setPreselectedIndustry(ind)}
             />
           </div>
@@ -253,7 +286,7 @@ export default function App() {
         {view === 'africa-explorer' && (
           <div>
             <AfricaIntelligenceExplorer
-              onNavigate={setActiveTab}
+              onNavigate={navigate}
             />
           </div>
         )}
@@ -262,7 +295,7 @@ export default function App() {
         {(view === 'question-to-outcome') && (
           <div>
             <ProblemCrossSectionView
-              onNavigate={setActiveTab}
+              onNavigate={navigate}
             />
           </div>
         )}
@@ -271,7 +304,7 @@ export default function App() {
         {view === 'market-entry' && (
           <div>
             <MarketEntryFrameworkView
-              onNavigate={setActiveTab}
+              onNavigate={navigate}
             />
           </div>
         )}
@@ -281,7 +314,7 @@ export default function App() {
           <div>
             <Matrix3DView
               headingLevel={1}
-              onNavigate={setActiveTab}
+              onNavigate={navigate}
             />
           </div>
         )}
@@ -291,7 +324,7 @@ export default function App() {
           <div>
             <MindCraftUniverseOrbital
               headingLevel={1}
-              onNavigate={setActiveTab}
+              onNavigate={navigate}
               onSelectIndustry={(ind) => setPreselectedIndustry(ind)}
             />
           </div>
@@ -302,7 +335,7 @@ export default function App() {
           <div>
             <BusinessConsultingPillar 
               onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
             />
           </div>
         )}
@@ -311,7 +344,7 @@ export default function App() {
           <div>
             <MarketResearchWorkspace 
               onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
             />
           </div>
         )}
@@ -320,7 +353,7 @@ export default function App() {
           <div>
             <AITrainingSimulation 
               onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
             />
           </div>
         )}
@@ -329,7 +362,7 @@ export default function App() {
           <div>
             <AIEnterpriseSolutionsView 
               onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
             />
           </div>
         )}
@@ -339,7 +372,7 @@ export default function App() {
           <div>
             <LifeSciencesEcosystem 
               onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
               roleLens={activeRole}
             />
           </div>
@@ -350,7 +383,7 @@ export default function App() {
           <div>
             <AfricaIntelligenceMap 
               onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
             />
           </div>
         )}
@@ -359,11 +392,11 @@ export default function App() {
         {view === 'operating-model' && (
           <div>
             <IntegratedModelSection 
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
               onOpenIntake={handleOpenIntakeGeneric}
             />
             <MindCraftMethod onOpenIntake={handleOpenIntakeGeneric} />
-            <MindCraftUniverseOrbital onNavigate={setActiveTab} />
+            <MindCraftUniverseOrbital onNavigate={navigate} />
           </div>
         )}
 
@@ -377,14 +410,14 @@ export default function App() {
         {/* Localization capability */}
         {view === 'localization' && (
           <div>
-            <LocalizationView onNavigate={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <LocalizationView onNavigate={navigate} onOpenIntake={handleOpenIntakeGeneric} />
           </div>
         )}
 
         {/* Insights */}
         {view === 'insights' && (
           <div>
-            <InsightsView onNavigate={setActiveTab} onOpenIntake={handleOpenIntakeGeneric} />
+            <InsightsView onNavigate={navigate} onOpenIntake={handleOpenIntakeGeneric} />
           </div>
         )}
 
@@ -393,10 +426,12 @@ export default function App() {
           <div>
             <AboutLeadership 
               onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={setActiveTab}
+              setActiveTab={navigate}
             />
           </div>
         )}
+        </motion.div>
+        </AnimatePresence>
         </Suspense>
       </main>
 
@@ -412,23 +447,23 @@ export default function App() {
       <GlobalCommandSearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
-        onNavigate={setActiveTab}
+        onNavigate={navigate}
         onSelectIndustry={(indId) => setPreselectedIndustry(indId)}
       />
       </Suspense>
 
       {/* Global Footer */}
       <Footer 
-        setActiveTab={setActiveTab}
+        setActiveTab={navigate}
         onOpenIntake={handleOpenIntakeGeneric}
       />
 
       {/* Floating Back to Top Button */}
       {showBackToTop && (
         <button
-          onClick={scrollToTop}
+          onClick={glideToTop}
           id="back-to-top-btn"
-          className="fixed right-4 sm:right-6 bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 z-40 w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white shadow-xl shadow-indigo-950 transition-[background-color,transform] duration-150"
+          className="fixed right-4 sm:right-6 bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 z-40 w-12 h-12 flex items-center justify-center rounded-full bg-[#0a0a0a]/90 backdrop-blur border border-white/10 hover:border-white/25 text-white/75 hover:text-white active:scale-95 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.8)] transition-[border-color,color,transform] duration-150"
           aria-label="Back to Top"
         >
           <ArrowUp className="w-5 h-5" />
@@ -436,5 +471,6 @@ export default function App() {
       )}
 
     </div>
+    </NavContext.Provider>
   );
 }

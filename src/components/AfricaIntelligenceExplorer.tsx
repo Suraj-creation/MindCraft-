@@ -16,6 +16,9 @@ import {
 import { AFRICA_REGIONS_DATA, UNIVERSAL_INDUSTRIES, MARKET_ENTRY_9STEPS } from '../data/industryAndAfricaData';
 import { AFRICAN_COUNTRIES } from '../data/mindcraftData';
 import { AfricaRegionName, NavTab } from '../types';
+import { PageHeader } from './ui/primitives';
+import { ArtImage } from './ui/ArtImage';
+import { ArtCaption } from './ui/Hero';
 
 interface Props {
   onNavigate: (tab: NavTab) => void;
@@ -57,7 +60,7 @@ const primaryBtn =
 
 const panel = 'bg-[#0a0a0a] border border-white/[0.08] rounded-2xl';
 const inset = 'bg-[#050505] border border-white/[0.08] rounded-xl';
-const monoLabel = 'text-[11px] font-mono uppercase tracking-wider text-gray-400';
+const monoLabel = 'text-xs font-medium text-gray-400';
 
 /** Collapsible block: open by default on desktop, collapsed on phones (progressive disclosure). */
 const Disclosure: React.FC<{
@@ -78,7 +81,7 @@ const Disclosure: React.FC<{
         <span className="text-sm font-semibold flex items-center gap-2 min-w-0">{title}</span>
         <span className="flex items-center gap-2 shrink-0">
           {typeof count === 'number' && (
-            <span className="text-[11px] font-mono text-gray-400">{count}</span>
+            <span className="text-[11px] tabular-nums text-gray-400">{count}</span>
           )}
           <ChevronDown
             className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
@@ -199,11 +202,11 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-5 border-b border-white/[0.08]">
         <div className="min-w-0">
-          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-emerald-400 mb-1">
+          <div className="flex items-center gap-2 text-xs text-emerald-400 mb-1 font-medium">
             <MapPin className="w-4 h-4" /> {selectedCountryDossier.region}
           </div>
           <h2 className="mc-h2">{selectedCountryDossier.name} Market Dossier</h2>
-          <p className="text-[12px] text-gray-400 mt-2 font-mono leading-relaxed">
+          <p className="text-[12px] text-gray-400 mt-2 tabular-nums leading-relaxed">
             Capital: {selectedCountryDossier.capital} • Currency: {selectedCountryDossier.currency}
           </p>
         </div>
@@ -227,7 +230,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
       </div>
 
       <div className="space-y-3 pt-5 border-t border-white/[0.08]">
-        <div className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">
+        <div className="text-xs text-indigo-400 font-medium">
           MindCraft In-Country Execution Capabilities
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -253,7 +256,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
         <div className="space-y-2.5 text-sm text-[#E0E0E0]">
           {selectedCountryDossier.typicalQuestions.map((q, idx) => (
             <div key={idx} className="flex items-start gap-2">
-              <span className="font-mono text-indigo-400 shrink-0">Q{idx + 1}:</span>
+              <span className="tabular-nums text-indigo-400 shrink-0">Q{idx + 1}:</span>
               <span>{q}</span>
             </div>
           ))}
@@ -264,26 +267,20 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="mc-section w-full bg-[#050505] text-white">
-        <div className="mc-container space-y-8">
+      <section className="mc-section mc-page-intro w-full text-white">
+        <div className="mc-container space-y-10 md:space-y-14">
           {/* Intent + key facts */}
-          <header className="space-y-6">
-            <div className="space-y-3">
-              <span className="mc-eyebrow">Pan-African Intelligence Footprint</span>
-              <h1 className="mc-h2">Africa Intelligence Explorer</h1>
-              <p className="mc-lead">
-                In-depth on-the-ground intelligence, regulatory tracking, healthcare systems, and commercial execution frameworks across East, West, Southern, and North Africa.
-              </p>
-            </div>
-            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/[0.08] border border-white/[0.08] rounded-2xl overflow-hidden">
-              {facts.map(f => (
-                <div key={f.label} className="bg-[#0a0a0a] px-4 py-4">
-                  <dd className="text-2xl font-semibold text-white leading-none">{f.value}</dd>
-                  <dt className="text-[11px] font-mono uppercase tracking-wider text-gray-400 mt-2">{f.label}</dt>
-                </div>
-              ))}
-            </dl>
-          </header>
+          <PageHeader
+            title="African market context."
+            lead="Explore regional and country context alongside the decisions MindCraft can support."
+            metrics={facts}
+          />
+
+          <figure className="relative min-h-56 overflow-hidden border border-white/[0.08] sm:min-h-72">
+            <ArtImage name="africa-network" alt="" sizes="(min-width: 1024px) 88rem, 100vw" position="object-[52%_50%]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,5,5,.58),rgba(5,5,5,.05))]" />
+            <ArtCaption className="absolute bottom-4 left-4">African market illustration</ArtCaption>
+          </figure>
 
           {/* View switcher */}
           <div
@@ -331,7 +328,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                     }`}
                   >
                     <span className="block font-semibold text-sm text-white">{reg.name}</span>
-                    <span className="block text-[11px] font-mono text-gray-400 mt-1">
+                    <span className="block text-[11px] tabular-nums text-gray-400 mt-1">
                       {reg.countries.length} Jurisdictions
                     </span>
                     <span className="hidden sm:block text-xs text-gray-400 mt-2 line-clamp-1">
@@ -354,7 +351,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
               <div className={`${panel} p-4 sm:p-6 lg:p-8`}>
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-6 border-b border-white/[0.08]">
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-indigo-400 mb-2">
+                    <div className="flex items-center gap-2 text-xs text-indigo-400 mb-2 font-medium">
                       <Globe2 className="w-4 h-4" /> Regional Cluster Profile
                     </div>
                     <h2 className="mc-h2">{selectedRegion.name}</h2>
@@ -455,7 +452,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                       <div className="space-y-2.5">
                         {selectedRegion.strategicQuestions.map((q, idx) => (
                           <div key={idx} className="text-sm text-[#E0E0E0] flex items-start gap-2">
-                            <span className="font-mono text-amber-400 shrink-0">Q{idx + 1}:</span>
+                            <span className="tabular-nums text-amber-400 shrink-0">Q{idx + 1}:</span>
                             <span>{q}</span>
                           </div>
                         ))}
@@ -511,11 +508,11 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                                 <span className="text-sm font-medium truncate">{c.name}</span>
                               </span>
                               {c.name === 'Kenya' ? (
-                                <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                                <span className="text-[11px] tabular-nums px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
                                   HQ
                                 </span>
                               ) : query ? (
-                                <span className="hidden sm:inline text-[11px] font-mono text-gray-400 shrink-0 truncate max-w-[6rem]">
+                                <span className="hidden sm:inline text-[11px] tabular-nums text-gray-400 shrink-0 truncate max-w-[6rem]">
                                   {c.region.replace(' Africa', '')}
                                 </span>
                               ) : null}
@@ -525,7 +522,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                       </div>
                     )}
                     {!isDesktop && (
-                      <p className="text-[11px] font-mono text-gray-400">Tap a jurisdiction to open its dossier.</p>
+                      <p className="text-[11px] tabular-nums text-gray-400">Tap a jurisdiction to open its dossier.</p>
                     )}
                   </div>
                 </div>
@@ -549,7 +546,6 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
             {activeTab === 'crossover' && (
               <div className={`${panel} p-4 sm:p-6 lg:p-8 space-y-6`}>
                 <div className="pb-5 border-b border-white/[0.08] space-y-3">
-                  <span className="mc-eyebrow">Interactive Cross-Matrix Engine</span>
                   <h2 className="mc-h2">Africa Region + Industry Crossover Engine</h2>
                   <p className="text-sm text-gray-400 max-w-2xl">
                     Select an African Region (or Country) and an Industry Vertical to synthesize a tailored market-intelligence pathway.
@@ -591,7 +587,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                 <div className="p-4 sm:p-6 rounded-2xl bg-[#050505] border border-indigo-500/35 space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/[0.08]">
                     <div className="min-w-0">
-                      <div className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">Synthesized Pathway</div>
+                      <div className="text-xs text-indigo-400 font-medium">Synthesized Pathway</div>
                       <h3 className="text-xl font-bold text-white mt-1">
                         {crossoverIndustry.name} Strategy across {selectedRegion.name}
                       </h3>
@@ -652,7 +648,6 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
             {activeTab === 'global-connector' && (
               <div className={`${panel} p-4 sm:p-6 lg:p-8 space-y-8`}>
                 <div className="max-w-3xl space-y-3">
-                  <span className="mc-eyebrow">Global Footprint &amp; Strategic Topology</span>
                   <h2 className="mc-h2">Africa as a Global Connector</h2>
                   <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
                     MindCraft serves as the bi-directional bridge connecting international innovation hubs (North America, Europe, Asia) with dynamic African commercial ecosystems.
@@ -661,20 +656,20 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className={`p-5 ${inset} space-y-3`}>
-                    <div className="text-[11px] font-mono uppercase tracking-wider text-sky-400">Originating Hub</div>
+                    <div className="text-xs text-sky-400 font-medium">Originating Hub</div>
                     <h3 className="text-lg font-bold text-white">United States &amp; Canada</h3>
                     <p className="text-sm text-gray-400 leading-relaxed">
                       Supporting global pharma innovators, medical device OEMs, technology enterprises, and investors seeking validated African market entry and regulatory navigation.
                     </p>
-                    <div className="text-[12px] font-mono text-gray-400 pt-3 border-t border-white/[0.08]">
+                    <div className="text-[12px] tabular-nums text-gray-400 pt-3 border-t border-white/[0.08]">
                       Flow: Capital, IP, Advanced Technology
                     </div>
                   </div>
 
                   <div className="p-5 rounded-xl bg-[#0D0F17] border border-indigo-500/35 space-y-3">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">Operational Hub</span>
-                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                      <span className="text-xs text-indigo-400 font-medium">Operational Hub</span>
+                      <span className="text-[11px] tabular-nums px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
                         Nairobi HQ
                       </span>
                     </div>
@@ -682,18 +677,18 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                     <p className="text-sm text-[#E0E0E0] leading-relaxed">
                       Central coordination hub orchestrating primary research, strategic consulting, role-based AI training cohorts, and enterprise AI software builds across 4 African regions.
                     </p>
-                    <div className="text-[12px] font-mono text-indigo-400 pt-3 border-t border-indigo-500/35">
+                    <div className="text-[12px] tabular-nums text-indigo-400 pt-3 border-t border-indigo-500/35">
                       Network: Associate consultants • In-country research partners • Subject-matter experts
                     </div>
                   </div>
 
                   <div className={`p-5 ${inset} space-y-3`}>
-                    <div className="text-[11px] font-mono uppercase tracking-wider text-amber-400">International Node</div>
+                    <div className="text-xs text-amber-400 font-medium">International Node</div>
                     <h3 className="text-lg font-bold text-white">Europe &amp; International Hubs</h3>
                     <p className="text-sm text-gray-400 leading-relaxed">
                       Partnering with European pharmaceutical manufacturers, development finance institutions, and multinational FMCG brand owners on sustainable commercial expansion.
                     </p>
-                    <div className="text-[12px] font-mono text-gray-400 pt-3 border-t border-white/[0.08]">
+                    <div className="text-[12px] tabular-nums text-gray-400 pt-3 border-t border-white/[0.08]">
                       Flow: HEOR Research, Public-Private Partnerships
                     </div>
                   </div>
@@ -763,7 +758,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
               >
                 <div className="sticky top-0 z-10 flex items-center justify-between gap-3 px-4 pt-3 pb-2 bg-[#0a0a0a] border-b border-white/[0.08]">
                   <span className="mx-auto absolute left-1/2 -translate-x-1/2 top-1.5 w-10 h-1 rounded-full bg-white/20" aria-hidden="true" />
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400 pt-2">
+                  <span className="text-xs text-gray-400 pt-2 font-medium">
                     Country Dossier
                   </span>
                   <button

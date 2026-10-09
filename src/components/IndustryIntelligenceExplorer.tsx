@@ -39,6 +39,9 @@ import {
   X
 } from 'lucide-react';
 import { UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
+import { PageHeader } from './ui/primitives';
+import { ArtImage } from './ui/ArtImage';
+import { ArtCaption } from './ui/Hero';
 import { UniversalIndustry, NavTab } from '../types';
 
 interface Props {
@@ -118,7 +121,7 @@ const Disclosure: React.FC<{
           <span className="min-w-0">{title}</span>
         </span>
         <span className="flex items-center gap-2 shrink-0">
-          {meta && <span className="font-mono text-[11px] text-gray-400">{meta}</span>}
+          {meta && <span className="tabular-nums text-[11px] text-gray-400">{meta}</span>}
           <ChevronDown
             aria-hidden="true"
             className={`w-4 h-4 text-gray-400 lg:hidden transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
@@ -156,7 +159,6 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
   initialIndustryId,
   headingLevel = 2
 }) => {
-  const Heading = headingLevel === 1 ? 'h1' : 'h2';
   const [selectedIndustryId, setSelectedIndustryId] = useState<string>(
     initialIndustryId || UNIVERSAL_INDUSTRIES[0].id
   );
@@ -272,13 +274,6 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
   const matrixIndustries = byCategory;
   const matrixVisible = showAllMatrix ? matrixIndustries : matrixIndustries.slice(0, 8);
 
-  const fadeIn = {
-    initial: { opacity: 0, y: 8 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: '-10%' },
-    transition: { duration: dur, ease: EASE }
-  } as const;
-
   const filterBar = (
     <div className="flex flex-wrap gap-2" role="group" aria-label="Filter industries by category">
       {filterChips.map(chip => (
@@ -293,7 +288,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
           className={chipClass(activeCategoryFilter === chip.id)}
         >
           {chip.label}
-          <span className="font-mono text-[11px] opacity-70">{chip.count}</span>
+          <span className="tabular-nums text-[11px] opacity-70">{chip.count}</span>
         </button>
       ))}
     </div>
@@ -303,32 +298,26 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
 
   return (
     <section
-      className="mc-section bg-[#050505] text-white overflow-x-clip"
+      className={`mc-section ${headingLevel === 1 ? 'mc-page-intro' : ''} text-white overflow-x-clip`}
       aria-labelledby="industry-explorer-title"
     >
-      <div className="mc-container space-y-8 md:space-y-10">
+      <div className="mc-container space-y-10 md:space-y-14">
         {/* Intent + proof */}
-        <motion.header {...fadeIn} className="space-y-4">
-          <p className="mc-eyebrow">
-            <Layers className="w-3.5 h-3.5" aria-hidden="true" />
-            Universal Industry Intelligence Explorer
-          </p>
-          <Heading id="industry-explorer-title" className={`${headingLevel === 1 ? 'mc-h1' : 'mc-h2'} font-semibold`}>
-            Industry Intelligence &amp; Capabilities
-          </Heading>
-          <p className="mc-lead">
-            Explore MindCraft’s specialized research, strategic consulting, AI capability building, and custom enterprise systems across {totalCount} distinct industry sectors.
-          </p>
-          <dl className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 pt-2">
-            {stats.map(s => (
-              <div key={s.label} className="rounded-xl bg-[#0A0A0A] border border-white/[0.08] px-4 py-3">
-                <dt className="sr-only">{s.label}</dt>
-                <dd className="font-mono text-2xl sm:text-3xl font-semibold text-white leading-none">{s.value}</dd>
-                <p className="mt-1.5 text-[11px] font-mono uppercase tracking-wider text-gray-400" aria-hidden="true">{s.label}</p>
-              </div>
-            ))}
-          </dl>
-        </motion.header>
+        <PageHeader
+          as={headingLevel === 1 ? 'h1' : 'h2'}
+          id="industry-explorer-title"
+          title="Industry context for better decisions."
+          lead={<>Explore sectors and the MindCraft capabilities that may help teams make sense of them.</>}
+          metrics={stats}
+        />
+
+        {headingLevel === 1 && (
+          <figure className="relative -mt-4 min-h-56 overflow-hidden border border-white/[0.08] sm:min-h-72">
+            <ArtImage name="industries-panorama" alt="" sizes="(min-width: 1024px) 88rem, 100vw" position="object-[50%_50%]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,5,5,.58),rgba(5,5,5,.05))]" />
+            <ArtCaption className="absolute bottom-4 left-4">Industry illustration</ArtCaption>
+          </figure>
+        )}
 
         {/* View toggle */}
         <div
@@ -369,7 +358,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
               </p>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 {filterBar}
-                <div className="flex items-center gap-4 text-[11px] font-mono text-gray-400">
+                <div className="flex items-center gap-4 text-[11px] tabular-nums text-gray-400">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" /> Core Life Sciences
                   </span>
@@ -410,7 +399,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                           <span className="font-semibold text-sm text-white">{ind.name}</span>
                           <ArrowRight className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true" />
                         </span>
-                        <span className={`mt-1 inline-block text-[11px] font-mono uppercase tracking-wide ${isCore ? 'text-indigo-400' : 'text-amber-400'}`}>
+                        <span className={`mt-1 inline-block text-xs font-medium${isCore ? 'text-indigo-400' : 'text-amber-400'}`}>
                           {isCore ? 'Life Sciences Core' : 'Diversified Vertical'}
                         </span>
                         <span className="mt-1.5 block text-[13px] text-gray-400 leading-snug line-clamp-2">{ind.tagline}</span>
@@ -434,7 +423,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
             <div className="hidden xl:block bg-[#0A0A0A] border border-white/[0.08] rounded-2xl overflow-x-auto">
               <table className="w-full text-left text-[13px] border-collapse">
                 <thead>
-                  <tr className="border-b border-white/[0.08] bg-white/5 text-[#E0E0E0] font-mono text-[11px] uppercase tracking-wider">
+                  <tr className="border-b border-white/[0.08] bg-white/5 text-[#E0E0E0] text-xs font-medium">
                     <th scope="col" className="p-3 font-semibold min-w-[200px]">Industry Vertical</th>
                     <th scope="col" className="p-3 font-semibold min-w-[160px]">Tier &amp; Heritage</th>
                     <th scope="col" className="p-3 font-semibold min-w-[200px]">Strategic Consulting</th>
@@ -476,7 +465,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                           </button>
                         </td>
                         <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded text-[11px] font-mono uppercase border ${
+                          <span className={`px-2 py-0.5 rounded text-xs border font-medium${
                             isCore
                               ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/35'
                               : 'bg-white/5 text-gray-400 border-white/[0.08]'
@@ -591,7 +580,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
           /* ===================== DOSSIER VIEW ===================== */
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
             {/* Index: swipe rail on phones, sticky list on desktop */}
-            <div className="min-w-0 lg:col-span-4 space-y-3 lg:sticky lg:top-20 lg:self-start">
+            <div className="min-w-0 lg:col-span-4 space-y-3 lg:sticky lg:top-24 lg:self-start">
               <div className="space-y-3">
                 <label className="relative block">
                   <span className="sr-only">Search industries</span>
@@ -607,7 +596,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                 {filterBar}
               </div>
 
-              <p className="lg:hidden text-[11px] font-mono uppercase tracking-wider text-gray-400">
+              <p className="lg:hidden text-xs text-gray-400 font-medium">
                 {filteredIndustries.length} of {totalCount} · swipe to browse
               </p>
 
@@ -652,7 +641,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                           <span className="flex items-center justify-between gap-2">
                             <span className="font-semibold text-sm text-white truncate">{ind.name}</span>
                             {isCore && (
-                              <span className="text-[11px] font-mono px-1.5 rounded bg-indigo-500/15 text-indigo-400 border border-indigo-500/35 shrink-0">
+                              <span className="text-[11px] tabular-nums px-1.5 rounded bg-indigo-500/15 text-indigo-400 border border-indigo-500/35 shrink-0">
                                 Core
                               </span>
                             )}
@@ -678,7 +667,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                 {/* Header card */}
                 <div className="bg-[#0A0A0A] border border-white/[0.08] rounded-2xl p-5 md:p-7 space-y-5">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className={`px-3 py-1 text-[11px] font-mono tracking-wider uppercase rounded-full border ${
+                    <span className={`px-3 py-1 text-xs rounded-full border font-medium${
                       isCoreSel
                         ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/35'
                         : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
@@ -686,7 +675,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                       {isCoreSel ? 'Core Life Sciences Sector' : 'Diversified Industry Vertical'}
                     </span>
                     {selectedIndustry.heritageNote && (
-                      <span className="text-[11px] text-gray-400 font-mono">• {selectedIndustry.heritageNote}</span>
+                      <span className="text-[11px] text-gray-400 tabular-nums">• {selectedIndustry.heritageNote}</span>
                     )}
                   </div>
 
@@ -705,7 +694,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                   </div>
 
                   <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08]">
-                    <div className="text-[11px] font-mono text-gray-400 uppercase tracking-wider mb-1.5">
+                    <div className="text-xs text-gray-400 mb-1.5 font-medium">
                       Industry Context &amp; Structural Dynamics
                     </div>
                     <p className="text-sm text-[#E0E0E0] leading-relaxed">{selectedIndustry.context}</p>
@@ -733,7 +722,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                     <div className="space-y-2">
                       {selectedIndustry.keyQuestions.map((q, idx) => (
                         <div key={idx} className="p-3 rounded-xl bg-[#050505] border border-white/[0.08] text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
-                          <span className="font-mono text-indigo-400 font-bold shrink-0">Q{idx + 1}</span>
+                          <span className="tabular-nums text-indigo-400 font-bold shrink-0">Q{idx + 1}</span>
                           <span className="min-w-0">{q}</span>
                         </div>
                       ))}
@@ -789,11 +778,11 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                   >
                     <div className="space-y-3">
                       <div>
-                        <div className="text-[11px] font-mono uppercase tracking-wider text-gray-400 mb-2">Custom Training</div>
+                        <div className="text-xs text-gray-400 mb-2 font-medium">Custom Training</div>
                         <BulletList items={selectedIndustry.capabilityBuilding} tone="amber" />
                       </div>
                       <div className="pt-3 border-t border-white/[0.08]">
-                        <div className="text-[11px] font-mono uppercase tracking-wider text-gray-400 mb-2">Systems</div>
+                        <div className="text-xs text-gray-400 mb-2 font-medium">Systems</div>
                         <BulletList items={selectedIndustry.enterpriseSolutions} tone="amber" />
                       </div>
                     </div>
@@ -810,7 +799,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                   className="!border-indigo-500/35"
                 >
                   <div className="space-y-5">
-                    <span className="inline-block text-[11px] font-mono uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/35">
+                    <span className="inline-block text-xs text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/35 font-medium">
                       Illustrative Capability • Example Engagement • Potential Solution
                     </span>
 
@@ -822,7 +811,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                         { n: '04. AI & Systems Layer', tone: 'emerald', text: selectedIndustry.illustrativeEngagement.aiLayer }
                       ] as { n: string; tone: Tone; text: string }[]).map(step => (
                         <div key={step.n} className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1.5">
-                          <div className={`text-[11px] font-mono uppercase tracking-wider ${TONE_TEXT[step.tone]}`}>{step.n}</div>
+                          <div className={`text-xs font-medium${TONE_TEXT[step.tone]}`}>{step.n}</div>
                           <p className="text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed">{step.text}</p>
                         </div>
                       ))}
@@ -872,7 +861,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                       ['AI & Automation', selectedIndustry.sectorEcosystem.aiOpportunities, true]
                     ] as [string, string, boolean][]).map(([label, text, accent]) => (
                       <div key={label} className="p-3.5 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1.5">
-                        <div className={`font-mono text-[11px] uppercase tracking-wider ${accent ? 'text-emerald-400' : 'text-gray-400'}`}>{label}</div>
+                        <div className={`text-xs font-medium${accent ? 'text-emerald-400' : 'text-gray-400'}`}>{label}</div>
                         <div className="text-[13px] text-[#E0E0E0] leading-relaxed">{text}</div>
                       </div>
                     ))}

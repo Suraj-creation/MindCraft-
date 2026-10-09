@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPinned } from 'lucide-react';
 import { NavTab } from '../types';
 import { AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { AFRICAN_COUNTRIES, SERVICE_PILLARS } from '../data/mindcraftData';
-import { ContextualCTA, DeepDive, EASE, MetricStrip, RelatedLinks, SectionHeader, TONES } from './ui/primitives';
+import { ContextualCTA, DeepDive, EASE, PageHeader, RelatedLinks, SectionHeader, TONES } from './ui/primitives';
 import { LocalizationModule } from './LocalizationModule';
+import { ArtImage } from './ui/ArtImage';
+import { ArtCaption } from './ui/Hero';
 
 interface LocalizationViewProps {
   onNavigate: (tab: NavTab) => void;
@@ -32,22 +34,24 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
 
   return (
     <div>
-      <section className="mc-section" aria-labelledby="localization-title">
+      <section className="mc-section mc-page-intro" aria-labelledby="localization-title">
         <div className="mc-container">
-          <SectionHeader
-            as="h1"
-            eyebrow="Africa Hub · Localization"
-            title={<span id="localization-title">Local market capability</span>}
-            lead="How a global strategy becomes a local result: market intelligence, country context, local partners and execution, delivered from Nairobi across Africa."
-          />
-          <MetricStrip
-            items={[
+          <PageHeader
+            id="localization-title"
+            title="Make strategy work locally."
+            lead="Bring commercial and regulatory decisions into the realities of each market across Africa."
+            metrics={[
               { value: AFRICA_REGIONS_DATA.length, label: 'African regions' },
               { value: jurisdictions, label: 'Jurisdictions' },
               { value: SERVICE_PILLARS.length, label: 'Service pillars' },
               { value: AFRICAN_COUNTRIES.length, label: 'Country dossiers' }
             ]}
           />
+          <figure className="relative mt-10 min-h-56 overflow-hidden border border-white/[0.08] sm:min-h-72">
+            <ArtImage name="localization-market" alt="" sizes="(min-width: 1024px) 88rem, 100vw" position="object-[52%_52%]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,5,5,.62),rgba(5,5,5,.04))]" />
+            <ArtCaption className="absolute bottom-4 left-4">Local market illustration</ArtCaption>
+          </figure>
         </div>
       </section>
 
@@ -56,7 +60,6 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
       <section className="mc-section" aria-labelledby="country-picker-title">
         <div className="mc-container">
           <SectionHeader
-            eyebrow="Start from a country"
             title={<span id="country-picker-title">Where do you need local context?</span>}
             lead="Choose a region, then a country. Published dossiers show the market context we hold today."
           />
@@ -75,7 +78,7 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                   }`}
                 >
                   {r.name}
-                  <span className="ml-2 font-mono text-[11px] text-white/40 tabular-nums">{r.countries.length}</span>
+                  <span className="ml-2 tabular-nums text-[11px] text-white/40 tabular-nums">{r.countries.length}</span>
                 </button>
               );
             })}
@@ -118,19 +121,19 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                   {dossier ? (
                     <div>
                       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                        <h3 className="font-heading text-2xl font-light text-white">{dossier.name}</h3>
-                        <span className="font-mono text-[11px] uppercase tracking-wider text-emerald-300">
+                        <h3 className="font-heading text-2xl font-medium text-white">{dossier.name}</h3>
+                        <span className="text-xs text-emerald-300 font-medium">
                           {dossier.isHQ ? 'MindCraft headquarters · ' : ''}
                           {dossier.region}
                         </span>
                       </div>
                       <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10">
                         <div className="bg-[#0a0a0a] p-3.5">
-                          <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">Capital</dt>
+                          <dt className="text-xs text-white/50 font-medium">Capital</dt>
                           <dd className="mt-1 text-sm text-white">{dossier.capital}</dd>
                         </div>
                         <div className="bg-[#0a0a0a] p-3.5">
-                          <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">Currency</dt>
+                          <dt className="text-xs text-white/50 font-medium">Currency</dt>
                           <dd className="mt-1 text-sm text-white">{dossier.currency}</dd>
                         </div>
                       </dl>
@@ -149,7 +152,7 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
 
                       <ul aria-label="Key sectors" className="mt-4 flex flex-wrap gap-1.5">
                         {dossier.keySectors.map((s) => (
-                          <li key={s} className={`rounded-full border px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider ${TONES.indigo.chip}`}>
+                          <li key={s} className={`rounded-full border px-2.5 py-1 text-xs font-medium${TONES.indigo.chip}`}>
                             {s}
                           </li>
                         ))}
@@ -158,16 +161,16 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                       <DeepDive className="mt-5" title="Regulatory and market-entry context" hint={`${dossier.name} dossier`} tone="emerald">
                         <dl className="mt-2 space-y-3 text-sm">
                           <div>
-                            <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">Regulatory intelligence</dt>
+                            <dt className="text-xs text-white/50 font-medium">Regulatory intelligence</dt>
                             <dd className="mt-1 text-white/75 leading-snug">{dossier.capabilityCoverage.regulatoryIntelligence}</dd>
                           </div>
                           <div>
-                            <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">Market entry support</dt>
+                            <dt className="text-xs text-white/50 font-medium">Market entry support</dt>
                             <dd className="mt-1 text-white/75 leading-snug">{dossier.capabilityCoverage.marketEntrySupport}</dd>
                           </div>
                           {dossier.marketHighlights.length > 3 && (
                             <div>
-                              <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">More highlights</dt>
+                              <dt className="text-xs text-white/50 font-medium">More highlights</dt>
                               <dd className="mt-1">
                                 <ul className="space-y-1.5 text-white/75">
                                   {dossier.marketHighlights.slice(3).map((h) => (
@@ -191,7 +194,7 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                     </div>
                   ) : (
                     <div>
-                      <h3 className="font-heading text-2xl font-light text-white">{country}</h3>
+                      <h3 className="font-heading text-2xl font-medium text-white">{country}</h3>
                       <p className="mt-2 text-sm text-white/65 leading-relaxed max-w-xl">
                         A country dossier has not been published yet for {country}. Tell us what you need to know and we will scope the local context with you.
                       </p>
@@ -213,7 +216,7 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
       </section>
 
       <section className="mc-section" aria-label="Next steps">
-        <div className="mc-container space-y-8">
+        <div className="mc-container space-y-10 md:space-y-14">
           <RelatedLinks
             title="Continue exploring"
             items={[

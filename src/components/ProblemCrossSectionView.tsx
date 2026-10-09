@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { PROBLEM_CROSS_SECTIONS } from '../data/industryAndAfricaData';
 import { NavTab, ProblemCrossSection } from '../types';
+import { BTN_PRIMARY, PageHeader } from './ui/primitives';
 
 interface Props {
   onNavigate: (tab: NavTab) => void;
@@ -61,27 +62,19 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
   ];
 
   return (
-    <div className="w-full min-h-dvh bg-[#050505] text-white overflow-x-clip">
-      <div className="mc-container mc-section !border-b-0 space-y-6 md:space-y-8">
+    <section className="mc-section mc-page-intro w-full text-white overflow-x-clip">
+      <div className="mc-container space-y-10 md:space-y-14">
         {/* Header: intent first */}
-        <header className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-          <div className="space-y-3 min-w-0">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="mc-eyebrow">Problem-Led Cross-Section Experience</span>
-              <span className="text-[11px] text-neutral-400 font-mono">10 Archetypal Business Challenges</span>
-            </div>
-            <h1 className="mc-h1 font-semibold tracking-tight">What Are You Trying to Solve?</h1>
-            <p className="mc-lead">
-              Start directly from your core business objective. Explore how MindCraft weaves primary research, strategic advisory, AI enablement, and capability building to deliver concrete outcomes.
-            </p>
-          </div>
-          <button
-            onClick={() => handleStartEngagement(selectedProblem.problemTitle)}
-            className="mc-tap hidden lg:inline-flex px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition-colors active:scale-[0.98] shrink-0 items-center gap-2"
-          >
-            Build Engagement for this Challenge <ArrowRight className="w-4 h-4" />
-          </button>
-        </header>
+        <PageHeader
+          title="What Are You Trying to Solve?"
+          lead="Start directly from your core business objective. Explore how MindCraft weaves primary research, strategic advisory, AI enablement, and capability building to deliver concrete outcomes."
+          meta="10 Archetypal Business Challenges"
+          actions={
+            <button type="button" onClick={() => handleStartEngagement(selectedProblem.problemTitle)} className={BTN_PRIMARY}>
+              <span>Build Engagement for this Challenge</span>
+            </button>
+          }
+        />
 
         {/* Challenge picker: chips rail on phones, list on desktop */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8">
@@ -128,7 +121,7 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
                         : 'bg-[#0a0a0a] border-white/10 hover:border-white/25'
                     }`}
                   >
-                    <span className={`text-[11px] font-mono font-bold shrink-0 ${isSelected ? 'text-indigo-400' : 'text-neutral-400'}`}>
+                    <span className={`text-[11px] tabular-nums font-bold shrink-0 ${isSelected ? 'text-indigo-400' : 'text-neutral-400'}`}>
                       {String(idx + 1).padStart(2, '0')}
                     </span>
                     <span className="min-w-0">
@@ -162,7 +155,7 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
               >
                 {/* Problem */}
                 <section className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-5 md:p-7 space-y-4">
-                  <div className="flex items-center gap-2 text-[11px] font-mono text-indigo-400 uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-xs text-indigo-400 font-medium">
                     <Target className="w-4 h-4" aria-hidden="true" />
                     Problem {String(selectedIndex + 1).padStart(2, '0')} / Core Business Objective
                   </div>
@@ -174,14 +167,14 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
                   </p>
 
                   <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1">
-                    <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">Triggering Executive Question</div>
+                    <div className="text-xs text-neutral-400 font-medium">Triggering Executive Question</div>
                     <p className="text-sm md:text-base text-white italic">
                       "{selectedProblem.triggerQuestion}"
                     </p>
                   </div>
 
                   <div>
-                    <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">
+                    <div className="text-xs text-neutral-400 mb-2 font-medium">
                       Frequently Encountered Across Industries
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -204,7 +197,7 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
                       <Layers className="w-5 h-5 text-indigo-400 shrink-0" aria-hidden="true" />
                       How MindCraft Solves This: 5-Pillar Integrated Architecture
                     </h3>
-                    <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">Methodology Framework</span>
+                    <span className="text-xs text-neutral-400 font-medium">Methodology Framework</span>
                   </div>
 
                   <ol className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -216,7 +209,7 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
                         transition={{ duration: 0.2, ease: EASE, delay: i * 0.04 }}
                         className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-2"
                       >
-                        <div className={`flex items-center gap-2 ${color} text-xs font-semibold uppercase tracking-wide`}>
+                        <div className={`flex items-center gap-2 ${color}text-xs font-semibold`}>
                           <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
                           <span>{n}. {label}</span>
                         </div>
@@ -227,7 +220,7 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
 
                   {/* 05 outcome */}
                   <div className="p-4 rounded-xl bg-[#0d0f17] border border-emerald-500/30 space-y-1.5">
-                    <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wide">
+                    <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
                       <TrendingUp className="w-4 h-4 shrink-0" aria-hidden="true" />
                       05. Measurable Business Outcome
                     </div>
@@ -240,7 +233,7 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
                 {/* Illustrative engagement + single CTA */}
                 <section className="p-5 md:p-6 rounded-2xl bg-[#0a0a0a] border border-indigo-500/35 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1 min-w-0">
-                    <div className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">Illustrative Client Engagement</div>
+                    <div className="text-xs text-indigo-400 font-medium">Illustrative Client Engagement</div>
                     <div className="text-sm font-semibold text-white">{selectedProblem.illustrativeEngagement}</div>
                   </div>
                   <button
@@ -255,6 +248,6 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

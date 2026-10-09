@@ -12,8 +12,7 @@ export const InsightsStrip: React.FC<{ onNavigate: (tab: NavTab) => void }> = ({
     <section className="mc-section bg-[#050505]" aria-label="Insights">
       <div className="mc-container">
         <SectionHeader
-          eyebrow="Insights"
-          title={<>How MindCraft <span className="font-bold text-indigo-400">thinks</span></>}
+          title={<>How MindCraft thinks</>}
           lead="Perspectives on Life Sciences, African markets and applied AI."
           action={
             <button
@@ -33,10 +32,10 @@ export const InsightsStrip: React.FC<{ onNavigate: (tab: NavTab) => void }> = ({
                 onClick={() => onNavigate('insights')}
                 className="mc-card-interactive mc-tap group w-full h-full text-left p-5 rounded-2xl bg-[#0a0a0a] border border-white/10 flex flex-col"
               >
-                <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">{a.category}</span>
-                <span className="mt-3 font-heading text-base font-light text-white leading-snug">{a.title}</span>
+                <span className="text-xs text-indigo-400 font-medium">{a.category}</span>
+                <span className="mt-3 font-heading text-base font-medium text-white leading-snug">{a.title}</span>
                 <span className="mt-auto pt-4 flex items-center justify-between text-xs text-white/50">
-                  <span className="font-mono">{a.readTime}</span>
+                  <span className="tabular-nums">{a.readTime}</span>
                   <ArrowRight className="w-4 h-4 text-indigo-400 group-hover:translate-x-0.5 transition-transform duration-200" aria-hidden="true" />
                 </span>
               </button>

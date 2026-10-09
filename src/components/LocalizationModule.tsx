@@ -84,7 +84,6 @@ export const LocalizationModule: React.FC<LocalizationModuleProps> = ({ variant 
     <section className="mc-section" aria-labelledby="localization-module-title">
       <div className="mc-container">
         <SectionHeader
-          eyebrow="Localization"
           title={<span id="localization-module-title">From global strategy to local result</span>}
           lead="Localization at MindCraft is a local-market capability: regulatory, commercial and cultural context carried through to execution."
           action={
@@ -115,7 +114,7 @@ export const LocalizationModule: React.FC<LocalizationModuleProps> = ({ variant 
               )}
               <span
                 aria-hidden
-                className="absolute left-0 top-0 lg:left-0 flex h-9 w-9 items-center justify-center rounded-full border border-indigo-500/35 bg-[#0d0f17] font-mono text-xs text-indigo-300 tabular-nums"
+                className="absolute left-0 top-0 lg:left-0 flex h-9 w-9 items-center justify-center rounded-full border border-indigo-500/35 bg-[#0d0f17] tabular-nums text-xs text-indigo-300 tabular-nums"
               >
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -128,7 +127,7 @@ export const LocalizationModule: React.FC<LocalizationModuleProps> = ({ variant 
                 {s.chips && (
                   <ul className="mt-2.5 flex flex-wrap gap-1.5">
                     {s.chips.map((c) => (
-                      <li key={c} className={`rounded-full border px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider ${TONES.indigo.chip}`}>
+                      <li key={c} className={`rounded-full border px-2.5 py-1 text-xs font-medium${TONES.indigo.chip}`}>
                         {c}
                       </li>
                     ))}
@@ -141,7 +140,7 @@ export const LocalizationModule: React.FC<LocalizationModuleProps> = ({ variant 
 
         {full && (
           <div className="mt-10 sm:mt-14">
-            <h3 className="font-heading text-xl sm:text-2xl font-light text-white">What gets localized</h3>
+            <h3 className="font-heading text-xl sm:text-2xl font-medium text-white">What gets localized</h3>
             <p className="mt-2 text-sm text-white/60 max-w-2xl">
               Five areas where global work meets local conditions, each delivered through one of MindCraft&rsquo;s pillars.
             </p>
@@ -158,7 +157,7 @@ export const LocalizationModule: React.FC<LocalizationModuleProps> = ({ variant 
                     className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#0a0a0a] p-4 sm:p-5"
                   >
                     <div>
-                      <span className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider ${TONES[tone].chip}`}>
+                      <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium${TONES[tone].chip}`}>
                         {pillar?.name ?? item.pillar}
                       </span>
                       <h4 className="mt-3 text-base font-bold text-white">{item.title}</h4>

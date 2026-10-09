@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef, useId } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { EngagementBlueprint } from '../types';
+import { UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
 import {
   X,
   CheckCircle2,
   ArrowRight,
   ArrowLeft,
-  ShieldCheck,
-  Copy
+  Copy,
+  Mail
 } from 'lucide-react';
 
 interface EngagementIntakeModalProps {
@@ -18,21 +19,46 @@ interface EngagementIntakeModalProps {
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+/** The enquiry address published in the corporate profile (s.10). */
+const CONTACT_EMAIL = 'info@mindcraftconsultancy.com';
+
 const FIELD_CLASS =
-  'w-full min-h-11 px-3 py-2.5 rounded-xl bg-[#050505] border border-white/10 text-base sm:text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500';
-const LABEL_CLASS = 'block text-[11px] font-mono uppercase font-bold tracking-wider text-indigo-400';
+  'w-full min-h-11 px-3 py-2.5 rounded-xl bg-[#050505] border border-white/10 text-base sm:text-sm text-white placeholder-white/35 focus:outline-none focus:border-indigo-500 aria-[invalid=true]:border-amber-400/70';
+const LABEL_CLASS = 'block text-[13px] font-medium text-white/80';
+const OPTIONAL = <span className="font-normal text-white/50"> (optional)</span>;
 
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
-const Heading: React.FC<{ lead: string; accent: string; hint: string }> = ({ lead, accent, hint }) => (
+/** Option values match the Engagement Builder's blueprint values so a blueprint pre-fills cleanly. */
+const NEEDS: { value: string; label: string }[] = [
+  { value: 'Not sure yet', label: 'Not sure yet: help me work it out' },
+  { value: 'Integrated Multi-Pillar (Strategy + Research + AI)', label: 'A combination of capabilities' },
+  { value: 'Business Consulting & Strategic Advisory', label: 'Business Consulting' },
+  { value: 'Market Research & Commercial Evidence', label: 'Market Research & Intelligence' },
+  { value: 'AI Training & Organizational Capability', label: 'AI Training & Digital Literacy' },
+  { value: 'AI Enterprise Solutions & Engineering', label: 'AI Enterprise Solutions' }
+];
+
+const TIMELINES = ['Within the next month', 'Within 3 months', 'Within 6 months', 'Exploring options for now'];
+
+const OTHER_SECTOR = 'Other / not listed';
+
+const Heading: React.FC<{ title: string; hint: string }> = ({ title, hint }) => (
   <div>
-    <h3 className="text-xl font-light text-white leading-snug">
-      {lead} <span className="font-bold text-indigo-400">{accent}</span>
-    </h3>
+    <h3 className="text-xl font-medium text-white leading-snug">{title}</h3>
     <p className="text-sm text-white/60 mt-1">{hint}</p>
   </div>
 );
+
+const FieldError: React.FC<{ id: string; message: string }> = ({ id, message }) =>
+  message ? (
+    <p id={id} className="text-[13px] text-amber-300">
+      {message}
+    </p>
+  ) : null;
+
+const STEP_TITLES = ['About you', 'What you need', 'Your challenge', 'Review and send'];
 
 export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
   isOpen,
@@ -41,19 +67,19 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
 }) => {
   const [step, setStep] = useState<number>(1);
   const [copied, setCopied] = useState<boolean>(false);
+  const [showErrors, setShowErrors] = useState<boolean>(false);
 
   // Form State
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [organization, setOrganization] = useState<string>('');
   const [roleTitle, setRoleTitle] = useState<string>('');
-  const [targetMarkets, setTargetMarkets] = useState<string>('Kenya, Nigeria, South Africa');
+  const [targetMarkets, setTargetMarkets] = useState<string>('');
 
-  const [sector, setSector] = useState<string>(initialBlueprint?.industry || 'Pharmaceuticals');
-  const [pillarNeed, setPillarNeed] = useState<string>(initialBlueprint?.need || 'Integrated Multi-Pillar (Strategy + Research + AI)');
+  const [sector, setSector] = useState<string>(initialBlueprint?.industry || '');
+  const [pillarNeed, setPillarNeed] = useState<string>(initialBlueprint?.need || NEEDS[0].value);
   const [challengeDescription, setChallengeDescription] = useState<string>('');
-  const [timelineUrgency, setTimelineUrgency] = useState<string>('Within 30 Days (Immediate Priority)');
-  const [dataReadiness, setDataReadiness] = useState<string>('Partial structured data + clinical/market documents');
+  const [timelineUrgency, setTimelineUrgency] = useState<string>(TIMELINES[1]);
 
   const [referenceId, setReferenceId] = useState<string>('');
 
@@ -67,6 +93,7 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
     if (initialBlueprint) {
       setSector(initialBlueprint.industry);
       setPillarNeed(initialBlueprint.need);
+      if (initialBlueprint.geography) setTargetMarkets(initialBlueprint.geography);
       if (initialBlueprint.objective) {
         setChallengeDescription(`Focus on: ${initialBlueprint.objective}`);
       }
@@ -122,38 +149,89 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
     bodyRef.current?.scrollTo({ top: 0 });
   }, [step]);
 
+  const fid = (name: string) => `${uid}-${name}`;
+
+  // Step 1 is the only step with required fields
+  const errors = {
+    name: fullName.trim() ? '' : 'Please enter your name.',
+    email: !email.trim()
+      ? 'Please enter your email address.'
+      : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+        ? ''
+        : 'Please enter a valid email address, like name@company.com.',
+    org: organization.trim() ? '' : 'Please enter your organisation.'
+  };
+  const stepOneValid = !errors.name && !errors.email && !errors.org;
+  const errorFor = (key: keyof typeof errors) => (showErrors ? errors[key] : '');
+
+  const needLabel = NEEDS.find((n) => n.value === pillarNeed)?.label ?? pillarNeed;
+
+  const summary = (ref = referenceId) =>
+    [
+      `Reference: ${ref}`,
+      `Name: ${fullName.trim()}${roleTitle.trim() ? `, ${roleTitle.trim()}` : ''}`,
+      `Email: ${email.trim()}`,
+      `Organisation: ${organization.trim()}`,
+      `Industry: ${sector || 'Not specified'}`,
+      `Support needed: ${needLabel}`,
+      `Markets in scope: ${targetMarkets.trim() || 'Not specified'}`,
+      `Timing: ${timelineUrgency}`,
+      '',
+      'Challenge:',
+      challengeDescription.trim() || 'Not specified'
+    ].join('\n');
+
+  const mailtoHref = (ref = referenceId) => {
+    const subject = `Enquiry from ${organization.trim() || fullName.trim()} [${ref}]`;
+    // Keep the URL inside the length most mail clients accept
+    const body = summary(ref).slice(0, 1800);
+    return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   const handleNext = () => {
+    if (step === 1 && !stepOneValid) {
+      setShowErrors(true);
+      const firstInvalid = errors.name ? 'name' : errors.email ? 'email' : 'org';
+      document.getElementById(fid(firstInvalid))?.focus();
+      return;
+    }
     if (step === 4) {
-      // Generate Ref ID
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      setReferenceId(`MC-ENG-2026-${randomNum}`);
+      const ref = referenceId || `MC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+      setReferenceId(ref);
       setStep(5);
-    } else {
-      setStep(prev => prev + 1);
+      // Hand the brief to the visitor's email app inside the click, so browsers treat it as user-initiated
+      window.location.href = mailtoHref(ref);
+      return;
+    }
+    setStep((prev) => prev + 1);
+  };
+
+  // A finished enquiry starts fresh next time; details typed so far are kept
+  useEffect(() => {
+    if (isOpen && step === 5) {
+      setStep(1);
+      setReferenceId('');
+      setShowErrors(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  const handleCopySummary = async () => {
+    try {
+      await navigator.clipboard.writeText(`To: ${CONTACT_EMAIL}\n\n${summary()}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
     }
   };
 
-  const handleCopySummary = () => {
-    const text = `MindCraft Engagement Request [${referenceId}]
-Organization: ${organization}
-Lead: ${fullName} (${roleTitle} - ${email})
-Sector: ${sector}
-Target Markets: ${targetMarkets}
-Primary Scope: ${pillarNeed}
-Timeline: ${timelineUrgency}
-Challenge Context: ${challengeDescription}`;
+  const sectorOptions = UNIVERSAL_INDUSTRIES.map((i) => i.name);
+  const lifeSciences = UNIVERSAL_INDUSTRIES.filter((i) => i.category === 'core-lifesciences').map((i) => i.name);
+  const otherIndustries = UNIVERSAL_INDUSTRIES.filter((i) => i.category !== 'core-lifesciences').map((i) => i.name);
+  const extraSector = sector && !sectorOptions.includes(sector) && sector !== OTHER_SECTOR ? sector : null;
+  const extraNeed = !NEEDS.some((n) => n.value === pillarNeed) ? pillarNeed : null;
 
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
-  };
-
-  const fid = (name: string) => `${uid}-${name}`;
-  const stepTitle =
-    step === 1 ? 'Stakeholder Profile'
-    : step === 2 ? 'Sector & Capability Scope'
-    : step === 3 ? 'Strategic Context & Data'
-    : 'Engagement Architecture Review';
 
   return (
     <AnimatePresence>
@@ -175,20 +253,17 @@ Challenge Context: ${challengeDescription}`;
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 24 }}
             transition={{ duration: 0.22, ease: EASE }}
-            className="relative w-full sm:max-w-3xl max-h-[90dvh] flex flex-col rounded-t-2xl sm:rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-2xl overflow-hidden outline-none"
+            className="relative w-full sm:max-w-2xl max-h-[90dvh] flex flex-col rounded-t-2xl sm:rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-2xl overflow-hidden outline-none"
           >
             {/* Modal Top Bar */}
             <div className="shrink-0 pl-4 sm:pl-6 pr-1.5 bg-[#050505] border-b border-white/10 flex items-center justify-between">
-              <div className="flex items-center gap-2 py-3">
-                <div className="w-2 h-2 rounded-full bg-indigo-400" aria-hidden="true" />
-                <span id={fid('title')} className="text-[11px] font-mono font-bold text-indigo-400 uppercase tracking-wider">
-                  MindCraft Diagnostic Intake Wizard
-                </span>
-              </div>
+              <h2 id={fid('title')} className="py-3 text-sm font-semibold text-white">
+                Start a conversation with MindCraft
+              </h2>
 
               <button
                 onClick={onClose}
-                aria-label="Close intake wizard"
+                aria-label="Close"
                 className="mc-tap flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors active:scale-[0.96]"
               >
                 <X className="w-5 h-5" />
@@ -198,9 +273,9 @@ Challenge Context: ${challengeDescription}`;
             {/* Step Progress Tracker */}
             {step < 5 && (
               <div className="shrink-0 px-4 sm:px-6 pt-3 pb-3 border-b border-white/10 bg-[#050505]">
-                <div className="flex items-center justify-between gap-3 text-xs text-white/60 mb-2 font-mono">
-                  <span className="shrink-0">Step 0{step} of 04</span>
-                  <span className="text-right truncate">{stepTitle}</span>
+                <div className="flex items-center justify-between gap-3 text-xs text-white/60 mb-2 tabular-nums">
+                  <span className="shrink-0">Step {step} of 4</span>
+                  <span className="text-right truncate">{STEP_TITLES[step - 1]}</span>
                 </div>
                 <div
                   className="w-full h-1 bg-white/10 rounded-full overflow-hidden"
@@ -208,7 +283,7 @@ Challenge Context: ${challengeDescription}`;
                   aria-valuemin={1}
                   aria-valuemax={4}
                   aria-valuenow={step}
-                  aria-label="Intake progress"
+                  aria-label="Enquiry progress"
                 >
                   <div
                     className="h-full w-full origin-left bg-indigo-500"
@@ -228,79 +303,122 @@ Challenge Context: ${challengeDescription}`;
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.16, ease: EASE }}
                 >
-                  {/* STEP 1: Stakeholder Profile */}
+                  {/* STEP 1: About you */}
                   {step === 1 && (
                     <div className="space-y-4">
-                      <Heading
-                        lead="Client Organization &"
-                        accent="Lead Profile"
-                        hint="Please provide your leadership contact details for secure consultation scheduling."
-                      />
+                      <Heading title="About you" hint="So the right person at MindCraft can reply to you." />
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                         <div className="space-y-1.5">
-                          <label htmlFor={fid('name')} className={LABEL_CLASS}>Your Full Name *</label>
+                          <label htmlFor={fid('name')} className={LABEL_CLASS}>Your name</label>
                           <input
                             id={fid('name')}
                             type="text"
                             required
                             autoComplete="name"
-                            placeholder="Dr. Jane Doe / John Smith"
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
+                            aria-invalid={Boolean(errorFor('name'))}
+                            aria-describedby={errorFor('name') ? fid('name-err') : undefined}
                             className={FIELD_CLASS}
                           />
+                          <FieldError id={fid('name-err')} message={errorFor('name')} />
                         </div>
 
                         <div className="space-y-1.5">
-                          <label htmlFor={fid('email')} className={LABEL_CLASS}>Professional Email Address *</label>
+                          <label htmlFor={fid('email')} className={LABEL_CLASS}>Work email</label>
                           <input
                             id={fid('email')}
                             type="email"
                             inputMode="email"
                             required
                             autoComplete="email"
-                            placeholder="jane.doe@company.com"
+                            placeholder="name@company.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            aria-invalid={Boolean(errorFor('email'))}
+                            aria-describedby={errorFor('email') ? fid('email-err') : undefined}
                             className={FIELD_CLASS}
                           />
+                          <FieldError id={fid('email-err')} message={errorFor('email')} />
                         </div>
 
                         <div className="space-y-1.5">
-                          <label htmlFor={fid('org')} className={LABEL_CLASS}>Organization Name *</label>
+                          <label htmlFor={fid('org')} className={LABEL_CLASS}>Organisation</label>
                           <input
                             id={fid('org')}
                             type="text"
                             required
                             autoComplete="organization"
-                            placeholder="e.g. Novartis, Roche, KEMRI, Equity Bank"
                             value={organization}
                             onChange={(e) => setOrganization(e.target.value)}
+                            aria-invalid={Boolean(errorFor('org'))}
+                            aria-describedby={errorFor('org') ? fid('org-err') : undefined}
                             className={FIELD_CLASS}
                           />
+                          <FieldError id={fid('org-err')} message={errorFor('org')} />
                         </div>
 
                         <div className="space-y-1.5">
-                          <label htmlFor={fid('role')} className={LABEL_CLASS}>Your Title / Role *</label>
+                          <label htmlFor={fid('role')} className={LABEL_CLASS}>Your role{OPTIONAL}</label>
                           <input
                             id={fid('role')}
                             type="text"
-                            required
                             autoComplete="organization-title"
-                            placeholder="e.g. VP Market Access / Head of Commercial"
                             value={roleTitle}
                             onChange={(e) => setRoleTitle(e.target.value)}
                             className={FIELD_CLASS}
                           />
                         </div>
+                      </div>
+                    </div>
+                  )}
 
-                        <div className="sm:col-span-2 space-y-1.5">
-                          <label htmlFor={fid('markets')} className={LABEL_CLASS}>Target African Markets in Scope *</label>
+                  {/* STEP 2: What you need */}
+                  {step === 2 && (
+                    <div className="space-y-4">
+                      <Heading title="What you need" hint="A rough idea is fine. We can work out the details together." />
+
+                      <div className="space-y-4 pt-1">
+                        <div className="space-y-1.5">
+                          <label htmlFor={fid('sector')} className={LABEL_CLASS}>Industry{OPTIONAL}</label>
+                          <select
+                            id={fid('sector')}
+                            value={sector}
+                            onChange={(e) => setSector(e.target.value)}
+                            className={FIELD_CLASS}
+                          >
+                            <option value="">Select your industry</option>
+                            {extraSector && <option value={extraSector}>{extraSector}</option>}
+                            <optgroup label="Life Sciences and healthcare">
+                              {lifeSciences.map((n) => <option key={n} value={n}>{n}</option>)}
+                            </optgroup>
+                            <optgroup label="Other industries">
+                              {otherIndustries.map((n) => <option key={n} value={n}>{n}</option>)}
+                            </optgroup>
+                            <option value={OTHER_SECTOR}>{OTHER_SECTOR}</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label htmlFor={fid('need')} className={LABEL_CLASS}>Support you are looking for</label>
+                          <select
+                            id={fid('need')}
+                            value={pillarNeed}
+                            onChange={(e) => setPillarNeed(e.target.value)}
+                            className={FIELD_CLASS}
+                          >
+                            {extraNeed && <option value={extraNeed}>{extraNeed}</option>}
+                            {NEEDS.map((n) => <option key={n.value} value={n.value}>{n.label}</option>)}
+                          </select>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label htmlFor={fid('markets')} className={LABEL_CLASS}>Markets or countries in scope{OPTIONAL}</label>
                           <input
                             id={fid('markets')}
                             type="text"
-                            placeholder="e.g. Kenya, Nigeria, Ghana, South Africa, Egypt"
+                            placeholder="For example: Kenya and Nigeria, or Europe"
                             value={targetMarkets}
                             onChange={(e) => setTargetMarkets(e.target.value)}
                             className={FIELD_CLASS}
@@ -310,206 +428,132 @@ Challenge Context: ${challengeDescription}`;
                     </div>
                   )}
 
-                  {/* STEP 2: Sector & Pillar Scope */}
-                  {step === 2 && (
-                    <div className="space-y-4">
-                      <Heading
-                        lead="Sector &"
-                        accent="Capability Alignment"
-                        hint="Define your industry domain and the primary MindCraft service pillars required."
-                      />
-
-                      <div className="space-y-4 pt-1">
-                        <div className="space-y-1.5">
-                          <label htmlFor={fid('sector')} className={LABEL_CLASS}>Industry Vertical</label>
-                          <select
-                            id={fid('sector')}
-                            value={sector}
-                            onChange={(e) => setSector(e.target.value)}
-                            className={FIELD_CLASS}
-                          >
-                            <option value="Pharmaceuticals">Pharmaceuticals (Innovative / Generic / Biotech)</option>
-                            <option value="Medical Devices">Medical Devices & Implants</option>
-                            <option value="Medical Diagnostics">Medical Diagnostics & Laboratory Systems</option>
-                            <option value="Medical Equipment">Capital Medical Equipment & Imaging</option>
-                            <option value="Surgical Consumables">Surgical Consumables & Hospital Supplies</option>
-                            <option value="Hospitals & Healthcare Providers">Hospitals & Healthcare Provider Networks</option>
-                            <option value="Chemicals & Materials">Chemicals & Specialty Materials</option>
-                            <option value="Agrochemicals">Agrochemicals & Crop Protection</option>
-                            <option value="Automotive">Automotive & Mobility</option>
-                            <option value="Banking & Finance">Banking & Financial Services</option>
-                          </select>
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <label htmlFor={fid('need')} className={LABEL_CLASS}>Primary Capability Need</label>
-                          <select
-                            id={fid('need')}
-                            value={pillarNeed}
-                            onChange={(e) => setPillarNeed(e.target.value)}
-                            className={FIELD_CLASS}
-                          >
-                            <option value="Integrated Multi-Pillar (Strategy + Research + AI)">Integrated Multi-Pillar (Full Strategy, Research & AI Stack)</option>
-                            <option value="Business Consulting & Strategic Advisory">Business Consulting & Strategic Advisory (Pillar 01)</option>
-                            <option value="Market Research & Commercial Evidence">Market Research & Primary/Desk Intelligence (Pillar 02)</option>
-                            <option value="AI Training & Organizational Capability">AI Training & Digital Literacy Enablement (Pillar 03)</option>
-                            <option value="AI Enterprise Solutions & Engineering">AI Enterprise Solutions & Private Software Build (Pillar 04)</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* STEP 3: Strategic Context & Data */}
+                  {/* STEP 3: Your challenge */}
                   {step === 3 && (
                     <div className="space-y-4">
-                      <Heading
-                        lead="Strategic Challenge &"
-                        accent="Context"
-                        hint="Briefly outline the business question or dilemma you need MindCraft to solve."
-                      />
+                      <Heading title="Your challenge" hint="A few sentences on the situation and what you would like to achieve." />
 
                       <div className="space-y-4 pt-1">
                         <div className="space-y-1.5">
-                          <label htmlFor={fid('challenge')} className={LABEL_CLASS}>Core Strategic Dilemma / Objective</label>
+                          <label htmlFor={fid('challenge')} className={LABEL_CLASS}>What would you like to discuss?{OPTIONAL}</label>
                           <textarea
                             id={fid('challenge')}
-                            rows={4}
-                            placeholder="e.g. We are launching a specialty oncology portfolio across Kenya and Ghana, needing reimbursement mapping, key opinion leader validation, and a custom field detailing copilot."
+                            rows={5}
+                            placeholder="For example: we plan to launch in two new East African markets next year and need to understand demand, regulation and the right distribution partners."
                             value={challengeDescription}
                             onChange={(e) => setChallengeDescription(e.target.value)}
                             className={`${FIELD_CLASS} resize-y`}
                           />
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-1.5">
-                            <label htmlFor={fid('timeline')} className={LABEL_CLASS}>Timeline / Priority</label>
-                            <select
-                              id={fid('timeline')}
-                              value={timelineUrgency}
-                              onChange={(e) => setTimelineUrgency(e.target.value)}
-                              className={FIELD_CLASS}
-                            >
-                              <option value="Within 30 Days (Immediate Priority)">Immediate (Next 30 Days)</option>
-                              <option value="Q1 / Q2 Strategic Planning Cycle">Q1 / Q2 Strategic Cycle</option>
-                              <option value="6-Month Multi-Phase Transformation">6-Month Transformation</option>
-                              <option value="Ongoing Retainer Partnership">Annual Retainer Scope</option>
-                            </select>
-                          </div>
-
-                          <div className="space-y-1.5">
-                            <label htmlFor={fid('data')} className={LABEL_CLASS}>Internal Data Readiness</label>
-                            <select
-                              id={fid('data')}
-                              value={dataReadiness}
-                              onChange={(e) => setDataReadiness(e.target.value)}
-                              className={FIELD_CLASS}
-                            >
-                              <option value="Partial structured data + clinical/market documents">Partial data + documents</option>
-                              <option value="Robust CRM / ERP data ready for AI ingestion">Robust CRM/ERP records</option>
-                              <option value="Early-stage; need MindCraft primary data collection">Need primary field research</option>
-                            </select>
-                          </div>
+                        <div className="space-y-1.5 sm:max-w-xs">
+                          <label htmlFor={fid('timeline')} className={LABEL_CLASS}>When would you like to start?</label>
+                          <select
+                            id={fid('timeline')}
+                            value={timelineUrgency}
+                            onChange={(e) => setTimelineUrgency(e.target.value)}
+                            className={FIELD_CLASS}
+                          >
+                            {TIMELINES.map((t) => <option key={t} value={t}>{t}</option>)}
+                          </select>
                         </div>
                       </div>
                     </div>
                   )}
 
-                  {/* STEP 4: Review & Blueprint Confirmation */}
+                  {/* STEP 4: Review */}
                   {step === 4 && (
                     <div className="space-y-4">
                       <Heading
-                        lead="Engagement Diagnostic"
-                        accent="Summary"
-                        hint="Confirm your diagnostic details before submitting to MindCraft Senior Practice Partners."
+                        title="Review and send"
+                        hint={`Sending opens your email app with this summary addressed to ${CONTACT_EMAIL}.`}
                       />
 
                       <dl className="p-4 sm:p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-3">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                           <div>
-                            <dt className="text-white/50 text-[11px] font-mono uppercase tracking-wider">Organization</dt>
-                            <dd className="font-bold text-white break-words">{organization || 'Not Specified'}</dd>
+                            <dt className="text-white/50 text-xs font-medium">Organisation</dt>
+                            <dd className="font-semibold text-white break-words">{organization}</dd>
                           </div>
                           <div>
-                            <dt className="text-white/50 text-[11px] font-mono uppercase tracking-wider">Contact</dt>
-                            <dd className="font-bold text-white break-words">{fullName} ({roleTitle})</dd>
+                            <dt className="text-white/50 text-xs font-medium">Contact</dt>
+                            <dd className="font-semibold text-white break-words">
+                              {fullName}{roleTitle ? `, ${roleTitle}` : ''}
+                            </dd>
                           </div>
                           <div>
-                            <dt className="text-white/50 text-[11px] font-mono uppercase tracking-wider">Industry Sector</dt>
-                            <dd className="font-bold text-indigo-400">{sector}</dd>
+                            <dt className="text-white/50 text-xs font-medium">Industry</dt>
+                            <dd className="font-semibold text-white">{sector || 'Not specified'}</dd>
                           </div>
                           <div>
-                            <dt className="text-white/50 text-[11px] font-mono uppercase tracking-wider">Markets in Scope</dt>
-                            <dd className="font-bold text-white break-words">{targetMarkets}</dd>
+                            <dt className="text-white/50 text-xs font-medium">Markets in scope</dt>
+                            <dd className="font-semibold text-white break-words">{targetMarkets || 'Not specified'}</dd>
                           </div>
                         </div>
 
-                        <div className="pt-3 border-t border-white/[0.08] text-sm">
-                          <dt className="text-white/50 text-[11px] font-mono uppercase tracking-wider">Primary Scope & Need</dt>
-                          <dd className="font-semibold text-white">{pillarNeed}</dd>
+                        <div className="pt-3 border-t border-white/[0.08] grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <dt className="text-white/50 text-xs font-medium">Support needed</dt>
+                            <dd className="font-semibold text-white">{needLabel}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-white/50 text-xs font-medium">Timing</dt>
+                            <dd className="font-semibold text-white">{timelineUrgency}</dd>
+                          </div>
                         </div>
 
                         <div className="text-sm">
-                          <dt className="text-white/50 text-[11px] font-mono uppercase tracking-wider">Dilemma Context</dt>
-                          <dd className="text-white/70 italic break-words">{challengeDescription || 'Strategic consultation requested.'}</dd>
+                          <dt className="text-white/50 text-xs font-medium">Challenge</dt>
+                          <dd className="text-white/75 break-words whitespace-pre-line">{challengeDescription || 'Not specified'}</dd>
                         </div>
                       </dl>
 
-                      <div className="flex items-start gap-2 text-sm text-white/60 bg-[#050505] p-3.5 rounded-xl border border-white/10">
-                        <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>Protected by MindCraft Enterprise Non-Disclosure & Data Privacy Guarantee.</span>
-                      </div>
+                      <p className="text-[13px] text-white/50 leading-relaxed">
+                        Nothing is sent until you press send in your email app.
+                      </p>
                     </div>
                   )}
 
-                  {/* STEP 5: Success Confirmation */}
+                  {/* STEP 5: Hand-off to email */}
                   {step === 5 && (
-                    <div className="text-center py-4 space-y-5" aria-live="polite">
-                      <div className="w-16 h-16 rounded-2xl bg-[#0d0f17] border border-indigo-500/35 flex items-center justify-center mx-auto">
-                        <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                    <div className="text-center py-4 space-y-5" role="status" aria-live="polite">
+                      <div className="w-14 h-14 rounded-2xl bg-[#0d0f17] border border-indigo-500/35 flex items-center justify-center mx-auto">
+                        <CheckCircle2 aria-hidden="true" className="w-7 h-7 text-emerald-400" />
                       </div>
 
                       <div>
-                        <div className="text-[11px] font-mono uppercase text-indigo-400 font-bold tracking-wider">
-                          Engagement Intake Received
-                        </div>
-                        <h3 className="text-2xl font-light text-white mt-1">
-                          Consultation Request <span className="font-bold text-indigo-400">Scheduled</span>
-                        </h3>
-                        <p className="text-sm text-white/70 mt-2 max-w-lg mx-auto leading-relaxed">
-                          Thank you, <span className="text-white font-semibold">{fullName}</span>. A Senior Practice Partner from MindCraft Nairobi HQ will review your diagnostic brief and contact you within 24 hours.
+                        <h3 className="text-2xl font-medium text-white">Your email is ready to send</h3>
+                        <p className="text-sm text-white/70 mt-2 max-w-md mx-auto leading-relaxed">
+                          Thank you, {fullName.trim().split(' ')[0]}. Your email app should now show your summary addressed to{' '}
+                          <span className="text-white">{CONTACT_EMAIL}</span>. Press send there and the MindCraft team will reply to you.
                         </p>
-                      </div>
-
-                      <div className="p-4 sm:p-5 rounded-2xl bg-[#050505] border border-indigo-500/35 max-w-md mx-auto text-left space-y-2">
-                        <div className="flex items-center justify-between gap-3 text-sm">
-                          <span className="text-white/50">Dossier Reference ID</span>
-                          <span className="font-mono font-bold text-indigo-400">{referenceId}</span>
-                        </div>
-                        <div className="flex items-center justify-between gap-3 text-sm">
-                          <span className="text-white/50">Lead Partner Assigned</span>
-                          <span className="font-semibold text-white text-right">Nairobi Practice Lead</span>
-                        </div>
-                        <div className="flex items-center justify-between gap-3 text-sm">
-                          <span className="text-white/50">Estimated Briefing</span>
-                          <span className="text-emerald-400 font-semibold text-right">Within 24 Business Hours</span>
-                        </div>
+                        <p className="text-[13px] text-white/50 mt-3 max-w-md mx-auto leading-relaxed">
+                          If no email app opened, copy the summary and send it to {CONTACT_EMAIL} from any email account.
+                        </p>
                       </div>
 
                       <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2">
                         <button
+                          type="button"
                           onClick={handleCopySummary}
                           className="mc-tap px-4 py-2 rounded-xl bg-[#050505] hover:bg-white/5 border border-white/10 text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center justify-center gap-1.5"
                         >
-                          <Copy className="w-4 h-4" />
-                          <span>{copied ? 'Copied to Clipboard!' : 'Copy Summary'}</span>
+                          <Copy aria-hidden="true" className="w-4 h-4" />
+                          <span>{copied ? 'Summary copied' : 'Copy summary'}</span>
                         </button>
+                        <a
+                          href={mailtoHref()}
+                          className="mc-tap px-4 py-2 rounded-xl bg-[#050505] hover:bg-white/5 border border-white/10 text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center justify-center gap-1.5"
+                        >
+                          <Mail aria-hidden="true" className="w-4 h-4" />
+                          <span>Open email again</span>
+                        </a>
                         <button
+                          type="button"
                           onClick={onClose}
                           className="mc-tap px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors active:scale-[0.98]"
                         >
-                          Return to Portal
+                          Done
                         </button>
                       </div>
                     </div>
@@ -523,10 +567,11 @@ Challenge Context: ${challengeDescription}`;
               <div className="shrink-0 px-4 sm:px-6 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-[#050505] border-t border-white/10 flex items-center justify-between gap-3">
                 {step > 1 ? (
                   <button
+                    type="button"
                     onClick={() => setStep(prev => prev - 1)}
                     className="mc-tap px-4 py-2 rounded-xl bg-[#0a0a0a] hover:bg-white/5 text-white/70 hover:text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center gap-1.5 border border-white/10"
                   >
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft aria-hidden="true" className="w-4 h-4" />
                     <span>Back</span>
                   </button>
                 ) : (
@@ -534,12 +579,13 @@ Challenge Context: ${challengeDescription}`;
                 )}
 
                 <button
+                  type="button"
                   onClick={handleNext}
                   id="intake-next-btn"
                   className="mc-tap flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center justify-center gap-1.5"
                 >
-                  <span>{step === 4 ? 'Confirm & Submit Engagement Brief' : 'Continue'}</span>
-                  <ArrowRight className="w-4 h-4 shrink-0" />
+                  <span>{step === 4 ? 'Send by email' : 'Continue'}</span>
+                  {step === 4 ? <Mail aria-hidden="true" className="w-4 h-4 shrink-0" /> : <ArrowRight aria-hidden="true" className="w-4 h-4 shrink-0" />}
                 </button>
               </div>
             )}

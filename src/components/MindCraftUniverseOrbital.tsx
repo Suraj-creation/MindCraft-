@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { MotionConfig, motion, AnimatePresence } from 'motion/react';
-import {
-  Orbit,
-  CheckCircle2,
-} from 'lucide-react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
+import { ArrowRight, Check } from 'lucide-react';
 import { UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { SERVICE_PILLARS } from '../data/mindcraftData';
 import { NavTab } from '../types';
-import { ContextualCTA, EASE } from './ui/primitives';
+import { ContextualCTA, EASE, reveal } from './ui/primitives';
+import { HeroCopy, HeroSection } from './ui/Hero';
 
 interface Props {
   onNavigate: (tab: NavTab) => void;
@@ -18,308 +16,465 @@ interface Props {
 
 type RingId = 'center' | 'capabilities' | 'industries' | 'regions' | 'outcomes';
 
+/* What the work is for, stated as aims rather than promised results (no figures have been published) */
 const OUTCOMES = [
-  'Accelerated Pan-African Market Access & Fast-Track Approvals',
-  'Protected Commercial Margins & Vetted Distributor Networks',
-  'Sustained Daily Adoption of Governed Enterprise AI Tools',
-  'Automated Claims, Tender Tracking & Intelligent Document Engines'
+  'Clearer decisions on market entry and market access',
+  'Stronger commercial positioning and better-chosen channel partners',
+  'AI tools that teams use safely and consistently in daily work',
+  'Routine work such as claims, tenders and documents automated, with human review'
 ];
 
-const TOTAL_JURISDICTIONS = AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0);
+const TOTAL_COUNTRIES = AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0);
+const CORE_INDUSTRIES = UNIVERSAL_INDUSTRIES.filter((i) => i.category === 'core-lifesciences');
+const OTHER_INDUSTRIES = UNIVERSAL_INDUSTRIES.filter((i) => i.category !== 'core-lifesciences');
 
-export const MindCraftUniverseOrbital: React.FC<Props> = ({
-  onNavigate,
-  onSelectIndustry,
-  headingLevel = 2
-}) => {
-  const Heading = headingLevel === 1 ? 'h1' : 'h2';
+/* The four capabilities in the order work usually flows, with their site accents and pages */
+const PILLAR_ORDER = ['market-research', 'consulting', 'ai-training', 'ai-solutions'];
+const PILLAR_META: Record<string, { dot: string; text: string; hex: string; tab: NavTab }> = {
+  'market-research': { dot: 'bg-sky-400', text: 'text-sky-300', hex: '#38BDF8', tab: 'market-research' },
+  consulting: { dot: 'bg-teal-400', text: 'text-teal-300', hex: '#2DD4BF', tab: 'consulting' },
+  'ai-training': { dot: 'bg-amber-400', text: 'text-amber-300', hex: '#FBBF24', tab: 'ai-training' },
+  'ai-solutions': { dot: 'bg-emerald-400', text: 'text-emerald-300', hex: '#34D399', tab: 'ai-solutions' }
+};
+const PILLARS = PILLAR_ORDER.map((id) => SERVICE_PILLARS.find((p) => p.id === id)).filter(
+  (p): p is (typeof SERVICE_PILLARS)[number] => Boolean(p)
+);
+
+/* ------------------------------------------------------------------ */
+/* Geometry shared by the hero drawing and the interactive diagram */
+
+const polar = (c: number, r: number, deg: number) => {
+  const a = ((deg - 90) * Math.PI) / 180;
+  return { x: c + r * Math.cos(a), y: c + r * Math.sin(a) };
+};
+const arc = (c: number, r: number, from: number, to: number) => {
+  const s = polar(c, r, from);
+  const e = polar(c, r, to);
+  return `M${s.x.toFixed(2)} ${s.y.toFixed(2)} A${r} ${r} 0 ${to - from > 180 ? 1 : 0} 1 ${e.x.toFixed(2)} ${e.y.toFixed(2)}`;
+};
+
+/** Marks that make each ring mean something: 4 capabilities, one dot per industry, one arc per region. */
+const RingMarks: React.FC<{ c: number; r: Record<'capabilities' | 'industries' | 'regions', number>; scale: number; strength?: number }> = ({
+  c,
+  r,
+  scale,
+  strength = 1
+}) => (
+  <g>
+    {PILLARS.map((p, i) => {
+      const pt = polar(c, r.capabilities, 45 + i * 90);
+      return <circle key={p.id} cx={pt.x} cy={pt.y} r={3.6 * scale} fill={PILLAR_META[p.id].hex} opacity={0.85 * strength} />;
+    })}
+    {UNIVERSAL_INDUSTRIES.map((ind, i) => {
+      const pt = polar(c, r.industries, (360 / UNIVERSAL_INDUSTRIES.length) * i);
+      const core = ind.category === 'core-lifesciences';
+      return <circle key={ind.id} cx={pt.x} cy={pt.y} r={(core ? 2.4 : 1.8) * scale} fill={core ? '#818CF8' : '#FFFFFF'} opacity={(core ? 0.8 : 0.32) * strength} />;
+    })}
+    {AFRICA_REGIONS_DATA.map((reg, i) => {
+      const span = 360 / AFRICA_REGIONS_DATA.length;
+      return (
+        <path
+          key={reg.name}
+          d={arc(c, r.regions, i * span + 6, (i + 1) * span - 6)}
+          fill="none"
+          stroke="#FFFFFF"
+          strokeOpacity={0.3 * strength}
+          strokeWidth={1.6 * scale}
+          strokeLinecap="round"
+        />
+      );
+    })}
+  </g>
+);
+
+/** Hero motif: nucleus and four rings at low contrast, cropped by the right edge. */
+const RingsMotif: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const c = 400;
+  const r = { capabilities: 150, industries: 236, regions: 312, outcomes: 388 };
+  const labels: [string, number][] = [
+    ['Capabilities', r.capabilities],
+    ['Industries', r.industries],
+    ['Regions', r.regions],
+    ['Outcomes', r.outcomes]
+  ];
+  return (
+    <svg aria-hidden="true" viewBox="0 0 800 800" className={`pointer-events-none absolute ${className}`}>
+      <circle cx={c} cy={c} r={r.outcomes} fill="none" stroke="#FFFFFF" strokeOpacity="0.1" strokeDasharray="3 9" />
+      <circle cx={c} cy={c} r={r.regions} fill="none" stroke="#FFFFFF" strokeOpacity="0.06" />
+      <circle cx={c} cy={c} r={r.industries} fill="none" stroke="#FFFFFF" strokeOpacity="0.09" />
+      <circle cx={c} cy={c} r={r.capabilities} fill="none" stroke="#818CF8" strokeOpacity="0.22" />
+      <RingMarks c={c} r={r} scale={1.15} strength={0.75} />
+      <circle cx={c} cy={c} r="54" fill="rgba(99,102,241,0.12)" stroke="#818CF8" strokeOpacity="0.45" />
+      <circle cx={c} cy={c} r="4" fill="#818CF8" fillOpacity="0.8" />
+      {labels.map(([label, radius]) => (
+        <text
+          key={label}
+          x={c}
+          y={c - radius - 9}
+          textAnchor="middle"
+          fontSize="11"
+          fontFamily="var(--font-mono)"
+          fill="#FFFFFF"
+          fillOpacity="0.32"
+          style={{ textTransform: 'uppercase', letterSpacing: '0.14em' }}
+        >
+          {label}
+        </text>
+      ))}
+    </svg>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+
+export const MindCraftUniverseOrbital: React.FC<Props> = ({ onNavigate, onSelectIndustry, headingLevel = 2 }) => {
   const [activeRing, setActiveRing] = useState<RingId>('capabilities');
+  const isPage = headingLevel === 1;
 
-  const ringsInfo: { id: RingId; name: string; desc: string; count: string }[] = [
+  const ringsInfo: { id: RingId; label: string; name: string; desc: string; count: string }[] = [
     {
       id: 'center',
-      name: 'Nucleus: MindCraft Core',
-      desc: 'Pan-African intelligence, consulting advisory, and AI transformation engine.',
-      count: '1 Core Engine'
+      label: 'Nucleus',
+      name: 'MindCraft core',
+      desc: 'One team, headquartered in Nairobi, bringing the four capabilities together.',
+      count: '1'
     },
     {
       id: 'capabilities',
-      name: 'Ring 1: 4 Service Pillars',
-      desc: 'Strategic Consulting, Market Research, Applied AI Training, Enterprise AI Solutions.',
-      count: '4 Pillars'
+      label: 'Ring 1',
+      name: 'Service pillars',
+      desc: 'Market Research, Business Consulting, AI Training and AI Enterprise Solutions.',
+      count: String(PILLARS.length)
     },
     {
       id: 'industries',
-      name: 'Ring 2: 24 Industry Verticals',
-      desc: '6 Core Life Sciences + 18 Diversified Industry Verticals.',
-      count: '24 Sectors'
+      label: 'Ring 2',
+      name: 'Industries',
+      desc: `${CORE_INDUSTRIES.length} core Life Sciences sectors and ${OTHER_INDUSTRIES.length} further industry verticals.`,
+      count: String(UNIVERSAL_INDUSTRIES.length)
     },
     {
       id: 'regions',
-      name: 'Ring 3: African Geographies',
-      desc: `East Africa, West Africa, Southern Africa, North Africa (${TOTAL_JURISDICTIONS} Jurisdictions).`,
-      count: '4 Regions'
+      label: 'Ring 3',
+      name: 'African regional clusters',
+      desc: `East, West, Southern and North Africa: ${TOTAL_COUNTRIES} countries in all.`,
+      count: String(AFRICA_REGIONS_DATA.length)
     },
     {
       id: 'outcomes',
-      name: 'Ring 4: Measurable Business Outcomes',
-      desc: 'Market access, margin expansion, risk mitigation, workflow velocity.',
-      count: 'High Impact'
+      label: 'Ring 4',
+      name: 'Outcomes',
+      desc: 'What the work is for: better decisions, stronger commercial results and AI that is actually used.',
+      count: String(OUTCOMES.length)
     }
   ];
+  const active = ringsInfo.find((r) => r.id === activeRing) ?? ringsInfo[1];
 
-  const active = ringsInfo.find(r => r.id === activeRing) ?? ringsInfo[1];
-
-  // SVG ring geometry (viewBox 400 x 400, scales with container width)
-  const rings: { id: RingId; r: number; stroke: string; fill: string; dash?: string; label: string }[] = [
-    { id: 'outcomes', r: 190, stroke: '#10B981', fill: 'rgba(16,185,129,0.06)', dash: '4 6', label: 'Outcomes' },
-    { id: 'regions', r: 150, stroke: '#F59E0B', fill: 'rgba(245,158,11,0.06)', dash: '4 6', label: 'Regions' },
-    { id: 'industries', r: 110, stroke: '#0EA5E9', fill: 'rgba(14,165,233,0.06)', dash: '4 6', label: 'Industries' },
-    { id: 'capabilities', r: 72, stroke: '#6366F1', fill: 'rgba(99,102,241,0.10)', label: 'Pillars' }
+  // Interactive diagram geometry (viewBox 400 x 400)
+  const R = { capabilities: 78, industries: 118, regions: 156, outcomes: 190 };
+  const rings: { id: RingId; r: number; dash?: string; label: string }[] = [
+    { id: 'outcomes', r: R.outcomes, dash: '3 6', label: 'Outcomes' },
+    { id: 'regions', r: R.regions, label: 'Regions' },
+    { id: 'industries', r: R.industries, label: 'Industries' },
+    { id: 'capabilities', r: R.capabilities, label: 'Pillars' }
   ];
 
-  const activate = (id: RingId) => setActiveRing(id);
+  const onTabKey = (e: React.KeyboardEvent) => {
+    const ids = ringsInfo.map((r) => r.id);
+    const i = ids.indexOf(activeRing);
+    const last = ids.length - 1;
+    const next =
+      e.key === 'ArrowDown' || e.key === 'ArrowRight' ? (i === last ? 0 : i + 1)
+      : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? (i === 0 ? last : i - 1)
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : null;
+    if (next === null) return;
+    e.preventDefault();
+    setActiveRing(ids[next]);
+    document.getElementById(`orbital-tab-${ids[next]}`)?.focus();
+  };
 
-  return (
-    <MotionConfig reducedMotion="user">
-    <section className="mc-section bg-[#050505] text-white" id="model-universe">
-      <div className="mc-container space-y-6 md:space-y-8">
-        {/* A. Intent */}
-        <header className="max-w-3xl">
-          <span className="mc-eyebrow">MindCraft universe</span>
-          <Heading className={`${headingLevel === 1 ? 'mc-h1' : 'mc-h2'} mt-3 font-light`}>
-            Where the model <span className="font-semibold">applies</span>
-          </Heading>
-          <p className="mc-lead mt-3">
-            One nucleus powers 4 capabilities across 24 industry verticals, {AFRICA_REGIONS_DATA.length} African regional clusters and measurable business outcomes. Select a layer to inspect it.
-          </p>
-        </header>
+  /* ---------------------------------------------------------------- */
+  const explorer = (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+      {/* Diagram: pointer shortcut to the layers; the list is the accessible control */}
+      <div className="hidden sm:block lg:col-span-7 lg:order-2">
+        <div className="lg:sticky lg:top-28">
+          <svg viewBox="0 0 400 400" className="mx-auto w-full max-w-[34rem] h-auto" aria-hidden="true">
+            {rings.map((ring) => {
+              const on = activeRing === ring.id;
+              return (
+                <g key={ring.id} onClick={() => setActiveRing(ring.id)} className="cursor-pointer">
+                  <circle
+                    cx="200"
+                    cy="200"
+                    r={ring.r}
+                    fill={on ? 'rgba(99,102,241,0.08)' : 'transparent'}
+                    stroke={on ? '#818CF8' : 'rgba(255,255,255,0.16)'}
+                    strokeWidth={on ? 1.5 : 1}
+                    strokeDasharray={ring.dash}
+                    style={{ transition: 'stroke 200ms, fill 200ms' }}
+                  />
+                  <text
+                    x="200"
+                    y={200 - ring.r + 15}
+                    textAnchor="middle"
+                    fontSize="10"
+                    fontFamily="var(--font-mono)"
+                    fill={on ? '#C7D2FE' : 'rgba(255,255,255,0.5)'}
+                    style={{ textTransform: 'uppercase', letterSpacing: '0.12em' }}
+                  >
+                    {ring.label}
+                  </text>
+                </g>
+              );
+            })}
+            <g className="pointer-events-none">
+              <RingMarks c={200} r={R} scale={0.85} />
+            </g>
+            <g onClick={() => setActiveRing('center')} className="cursor-pointer">
+              <circle cx="200" cy="200" r="38" fill="#312E81" stroke={activeRing === 'center' ? '#FFFFFF' : '#818CF8'} strokeWidth="1.25" />
+              <text x="200" y="204" textAnchor="middle" fontSize="12" fontWeight="600" fill="#FFFFFF" fontFamily="var(--font-heading)">
+                MindCraft
+              </text>
+            </g>
+          </svg>
+          <p className="mt-4 text-center text-[13px] text-white/50">Select a ring, or choose a layer from the list.</p>
+        </div>
+      </div>
 
-        {/* Layer selector: swipeable chips on phones, grid on larger screens */}
-        <div
-          role="tablist"
-          aria-label="Orbital layers"
-          className="mc-snap-row sm:!grid sm:!grid-cols-3 lg:!grid-cols-5 sm:!overflow-visible sm:!gap-3"
-        >
+      <div className="lg:col-span-5 lg:order-1 min-w-0">
+        <div role="tablist" aria-label="Layers of the MindCraft universe" aria-orientation="vertical" className="border-t border-white/[0.1]">
           {ringsInfo.map((r) => {
-            const isActive = activeRing === r.id;
-            const [head, tail] = r.name.split(':');
+            const on = activeRing === r.id;
             return (
               <button
                 key={r.id}
                 type="button"
                 role="tab"
                 id={`orbital-tab-${r.id}`}
-                aria-selected={isActive}
+                aria-selected={on}
                 aria-controls="orbital-panel"
-                onClick={() => activate(r.id)}
-                className={`mc-tap !flex-none !basis-auto sm:!basis-auto px-3.5 py-2.5 sm:p-4 rounded-xl border text-left transition-colors active:scale-[0.98] ${
-                  isActive
-                    ? 'bg-[#0d0f17] border-indigo-500/60'
-                    : 'bg-[#0a0a0a] border-white/10 hover:border-white/25'
+                tabIndex={on ? 0 : -1}
+                onClick={() => setActiveRing(r.id)}
+                onKeyDown={onTabKey}
+                className={`group mc-tap w-full grid grid-cols-[4.75rem_1fr_auto] items-center gap-3 border-b border-white/[0.1] px-2 py-3 text-left transition-colors duration-150 ${
+                  on ? 'bg-[#0d0f17]' : 'hover:bg-white/[0.03]'
                 }`}
               >
-                <div className="flex items-center gap-2 sm:justify-between">
-                  <span className="font-semibold text-sm text-white whitespace-nowrap">{head}</span>
-                  <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-white/5 text-neutral-400 shrink-0 whitespace-nowrap">
-                    {r.count}
-                  </span>
-                </div>
-                <p className="hidden sm:block text-xs text-neutral-400 mt-1 sm:line-clamp-2">{tail?.trim()}</p>
+                <span className={`font-mono text-[11px] uppercase tracking-[0.08em] ${on ? 'text-indigo-300' : 'text-white/45'}`}>{r.label}</span>
+                <span className={`font-heading text-[1.0625rem] font-medium tracking-[-0.01em] ${on ? 'text-white' : 'text-white/70 group-hover:text-white'}`}>
+                  {r.name}
+                </span>
+                <span className={`font-mono text-[13px] tabular-nums ${on ? 'text-white' : 'text-white/45'}`}>{r.count}</span>
               </button>
             );
           })}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8">
-          {/* Orbital graph: hidden on phones (the list above is the fallback) */}
-          <div className="hidden sm:flex lg:col-span-7 bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 flex-col items-center justify-center min-w-0">
-            <svg
-              viewBox="0 0 400 400"
-              className="w-full max-w-[440px] h-auto"
-              role="group"
-              aria-label="Concentric orbital diagram: nucleus, 4 service pillars, 24 industries, 4 African regions, measurable outcomes"
-            >
-              {rings.map((ring) => {
-                const isActive = activeRing === ring.id;
-                return (
-                  <g
-                    key={ring.id}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`Focus ${ring.label}`}
-                    aria-pressed={isActive}
-                    onClick={() => activate(ring.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        activate(ring.id);
-                      }
-                    }}
-                    className="cursor-pointer outline-none"
-                    style={{ transition: 'opacity 0.2s cubic-bezier(0.16,1,0.3,1)' }}
-                    opacity={isActive ? 1 : 0.55}
-                  >
-                    <circle
-                      cx="200"
-                      cy="200"
-                      r={ring.r}
-                      fill={isActive ? ring.fill : 'transparent'}
-                      stroke={isActive ? ring.stroke : 'rgba(255,255,255,0.18)'}
-                      strokeWidth={isActive ? 1.75 : 1}
-                      strokeDasharray={ring.dash}
-                    />
-                    {/* Always-visible ring label (no hover-only info) */}
-                    <text
-                      x="200"
-                      y={200 - ring.r + 16}
-                      textAnchor="middle"
-                      fontSize="12"
-                      fontFamily="var(--font-mono)"
-                      fill={isActive ? ring.stroke : '#9CA3AF'}
-                      style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}
-                    >
-                      {ring.label}
-                    </text>
-                  </g>
-                );
-              })}
+        <div id="orbital-panel" role="tabpanel" aria-labelledby={`orbital-tab-${activeRing}`} className="mt-8">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div key={activeRing} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2, ease: EASE }}>
+              <h3 className="font-heading text-[1.375rem] sm:text-[1.5rem] font-medium leading-tight tracking-[-0.015em] text-white">{active.name}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-white/65">{active.desc}</p>
 
-              <g
-                role="button"
-                tabIndex={0}
-                aria-label="Focus nucleus"
-                aria-pressed={activeRing === 'center'}
-                onClick={() => activate('center')}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    activate('center');
-                  }
-                }}
-                className="cursor-pointer outline-none"
-              >
-                <circle
-                  cx="200"
-                  cy="200"
-                  r="36"
-                  fill="#4F46E5"
-                  stroke={activeRing === 'center' ? '#FFFFFF' : '#6366F1'}
-                  strokeWidth="1.5"
-                />
-                <text x="200" y="204" textAnchor="middle" fontSize="12" fontWeight="700" fill="#FFFFFF" fontFamily="var(--font-heading)">
-                  MindCraft
-                </text>
-              </g>
-            </svg>
+              {activeRing === 'center' && (
+                <p className="mt-5 text-[15px] leading-relaxed text-white/80">
+                  MindCraft Consultancy Services is a Nairobi-headquartered consultancy combining business consulting, market research, AI training and
+                  AI enterprise solutions. Its core expertise is in Life Sciences, and it serves clients across Africa (its primary focus), Europe and the
+                  United States.
+                </p>
+              )}
 
-            <p className="text-xs font-mono text-neutral-400 mt-4 text-center">
-              Select any ring to focus that layer of the MindCraft universe.
-            </p>
-          </div>
+              {activeRing === 'capabilities' && (
+                <ul className="mt-5 border-t border-white/[0.08]">
+                  {PILLARS.map((p) => (
+                    <li key={p.id} className="border-b border-white/[0.08]">
+                      <button
+                        type="button"
+                        onClick={() => onNavigate(PILLAR_META[p.id].tab)}
+                        className="group mc-tap w-full flex items-start gap-3 py-3.5 text-left"
+                      >
+                        <span aria-hidden="true" className={`mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-full ${PILLAR_META[p.id].dot}`} />
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[15px] font-medium text-white group-hover:text-indigo-200 transition-colors duration-150">{p.name}</span>
+                          <span className="mt-0.5 block text-[13px] leading-snug text-white/60">{p.tagline}</span>
+                        </span>
+                        <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/30 group-hover:text-white/70 transition-colors duration-150" aria-hidden="true" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-          {/* Active layer inspector */}
-          <div id="orbital-panel" role="tabpanel" aria-labelledby={`orbital-tab-${activeRing}`} className="lg:col-span-5 sm:max-lg:col-span-1 min-w-0 bg-[#0a0a0a] border border-indigo-500/35 rounded-2xl p-4 md:p-7 space-y-4">
-            <div>
-              <span className="mc-eyebrow">Active layer</span>
-              <h3 className="text-xl font-bold text-white mt-2">{active.name}</h3>
-              <p className="text-sm text-neutral-400 mt-1">{active.desc}</p>
-            </div>
-
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={activeRing}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.18, ease: EASE }}
-              >
-                {activeRing === 'capabilities' && (
-                  <div className="space-y-2">
-                    {SERVICE_PILLARS.map(p => (
-                      <div key={p.id} className="p-3 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1">
-                        <div className="text-sm font-semibold text-indigo-400">{p.name}</div>
-                        <p className="text-sm text-[#E0E0E0]">{p.tagline}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeRing === 'industries' && (
-                  <div className="space-y-3">
-                    <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">Core Life Sciences (6) & Verticals (18)</div>
-                    <div className="flex flex-wrap gap-2 max-h-[16rem] lg:max-h-[300px] overflow-y-auto pr-1">
-                      {UNIVERSAL_INDUSTRIES.map(i => (
-                        <button
-                          key={i.id}
-                          type="button"
-                          onClick={() => {
-                            if (onSelectIndustry) onSelectIndustry(i.id);
-                            onNavigate('industries');
-                          }}
-                          className={`mc-tap px-3 py-1.5 rounded-lg text-xs transition-colors active:scale-[0.98] ${
-                            i.category === 'core-lifesciences'
-                              ? 'bg-[#0d0f17] text-indigo-400 border border-indigo-500/35 hover:bg-indigo-500/10'
-                              : 'bg-white/5 text-[#E0E0E0] border border-white/10 hover:bg-white/10'
-                          }`}
-                        >
-                          {i.name}
-                        </button>
-                      ))}
+              {activeRing === 'industries' && (
+                <div className="mt-5 space-y-5">
+                  {[
+                    { title: `Core: Life Sciences (${CORE_INDUSTRIES.length})`, items: CORE_INDUSTRIES, core: true },
+                    { title: `Further industries (${OTHER_INDUSTRIES.length})`, items: OTHER_INDUSTRIES, core: false }
+                  ].map((group) => (
+                    <div key={group.title}>
+                      <p className="text-[13px] font-medium text-white/55">{group.title}</p>
+                      <ul className="mt-2.5 flex flex-wrap gap-2">
+                        {group.items.map((i) => (
+                          <li key={i.id}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                onSelectIndustry?.(i.id);
+                                onNavigate('industries');
+                              }}
+                              className={`mc-tap inline-flex items-center rounded-lg border px-3 text-[13px] transition-colors duration-150 ${
+                                group.core
+                                  ? 'border-indigo-500/35 bg-[#0d0f17] text-indigo-200 hover:border-indigo-400/60'
+                                  : 'border-white/10 text-white/75 hover:border-white/25 hover:text-white'
+                              }`}
+                            >
+                              {i.name}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  </div>
-                )}
+                  ))}
+                </div>
+              )}
 
-                {activeRing === 'regions' && (
-                  <div className="space-y-2">
-                    {AFRICA_REGIONS_DATA.map(r => (
-                      <div key={r.name} className="p-3 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-sm font-semibold text-emerald-400">{r.name}</span>
-                          <span className="text-[11px] font-mono text-neutral-400 shrink-0">{r.countries.length} Jurisdictions</span>
+              {activeRing === 'regions' && (
+                <>
+                  <ul className="mt-5 border-t border-white/[0.08]">
+                    {AFRICA_REGIONS_DATA.map((r) => (
+                      <li key={r.name} className="border-b border-white/[0.08] py-3.5">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <span className="text-[15px] font-medium text-white">{r.name}</span>
+                          <span className="font-mono text-[11px] tabular-nums text-white/50">{r.countries.length} countries</span>
                         </div>
-                        <p className="text-xs text-neutral-400 line-clamp-2">{r.countries.join(', ')}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeRing === 'outcomes' && (
-                  <ul className="space-y-2 text-sm text-[#E0E0E0]">
-                    {OUTCOMES.map(o => (
-                      <li key={o} className="p-3 rounded-xl bg-[#050505] border border-white/[0.08] flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
-                        <span>{o}</span>
+                        <p className="mt-1 text-[13px] leading-snug text-white/60 line-clamp-2">{r.countries.join(', ')}</p>
                       </li>
                     ))}
                   </ul>
-                )}
+                  <button
+                    type="button"
+                    onClick={() => onNavigate('africa-explorer')}
+                    className="group mc-tap mt-3 inline-flex items-center gap-2 text-sm font-medium text-indigo-300 hover:text-indigo-200"
+                  >
+                    Open the Africa hub
+                    <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
+                  </button>
+                </>
+              )}
 
-                {activeRing === 'center' && (
-                  <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] flex items-start gap-3 text-sm text-[#E0E0E0]">
-                    <Orbit className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" aria-hidden="true" />
-                    <p>
-                      MindCraft is the specialized consulting, research, and enterprise AI transformation house headquartered in Nairobi, Kenya, serving Africa (primary focus), Europe and the United States.
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
-
-          </div>
+              {activeRing === 'outcomes' && (
+                <ul className="mt-5 space-y-3">
+                  {OUTCOMES.map((o) => (
+                    <li key={o} className="flex items-start gap-3 text-[15px] leading-snug text-white/80">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden="true" />
+                      {o}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
-
-        {/* One closing CTA for the whole page */}
-        <ContextualCTA
-          title="Configure an engagement across the model"
-          body="Combine capabilities, industries and geographies into a scoped engagement."
-          primaryLabel="Configure custom engagement"
-          onPrimary={() => onNavigate('engagement-builder')}
-          secondaryLabel="Explore 24 industries"
-          onSecondary={() => onNavigate('industries')}
-        />
       </div>
-    </section>
+    </div>
+  );
+
+  /* ---------------------------------------------------------------- */
+  if (isPage) {
+    return (
+      <MotionConfig reducedMotion="user">
+        <HeroSection id="model-universe" labelledBy="universe-title" className="lg:min-h-[36rem]">
+          <RingsMotif className="right-[-13rem] top-24 w-[28rem] opacity-55 sm:right-[-10rem] sm:top-16 sm:w-[36rem] sm:opacity-80 lg:top-1/2 lg:-translate-y-[44%] lg:right-[-4rem] lg:w-[46rem] lg:opacity-100 xl:right-[calc((100vw-88rem)/2)]" />
+          <div className="mc-container relative z-10 pt-10 sm:pt-14 lg:pt-20 pb-14 sm:pb-16 lg:pb-24">
+            <HeroCopy
+              id="universe-title"
+              className="max-w-[38rem] lg:max-w-[min(40rem,52%)]"
+              meta={<span aria-hidden="true">MindCraft Universe</span>}
+              title={
+                <>
+                  <span className="sr-only">MindCraft Universe: </span>
+                  One core team, <em>four rings</em> of reach.
+                </>
+              }
+              lead={`At the centre, four capabilities. Around them, ${UNIVERSAL_INDUSTRIES.length} industries, Africa's ${AFRICA_REGIONS_DATA.length} regional clusters and the outcomes the work is for. Choose a layer below to explore it.`}
+            >
+              <ol aria-label="Layers, from the centre out" className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+                <li>Core</li>
+                <li>
+                  <span className="text-white/85 tabular-nums">{PILLARS.length}</span> capabilities
+                </li>
+                <li>
+                  <span className="text-white/85 tabular-nums">{UNIVERSAL_INDUSTRIES.length}</span> industries
+                </li>
+                <li>
+                  <span className="text-white/85 tabular-nums">{AFRICA_REGIONS_DATA.length}</span> regions
+                </li>
+                <li>Outcomes</li>
+              </ol>
+            </HeroCopy>
+          </div>
+        </HeroSection>
+
+        <section className="mc-section" aria-label="Explore the layers">
+          <div className="mc-container">
+            {explorer}
+            {/* Tool page: a quiet close rather than a banner */}
+            <div className="mt-16 lg:mt-20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-white/[0.1] pt-6">
+              <p className="text-[15px] text-white/65">Ready to combine the layers for your own situation?</p>
+              <div className="flex flex-col sm:flex-row gap-x-6 gap-y-1">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('engagement-builder')}
+                  className="group mc-tap inline-flex items-center gap-2 text-sm font-medium text-indigo-300 hover:text-indigo-200"
+                >
+                  Sketch an engagement blueprint
+                  <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('question-to-outcome')}
+                  className="group mc-tap inline-flex items-center gap-2 text-sm font-medium text-white/70 hover:text-white"
+                >
+                  Start from a challenge
+                  <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </MotionConfig>
+    );
+  }
+
+  // Inside the operating-model page: a compact section, then that page's closing call to action
+  return (
+    <MotionConfig reducedMotion="user">
+      <section className="mc-section" id="model-universe" aria-labelledby="universe-title">
+        <div className="mc-container">
+          <motion.div {...reveal} className="max-w-2xl mb-10 lg:mb-14">
+            <h2 id="universe-title" className="mc-h2">
+              Where the model applies
+            </h2>
+            <p className="mc-lead mt-4">
+              {`One core team, ${PILLARS.length} capabilities, ${UNIVERSAL_INDUSTRIES.length} industries and ${AFRICA_REGIONS_DATA.length} African regional clusters. Choose a layer to explore it.`}
+            </p>
+          </motion.div>
+          {explorer}
+          <motion.div {...reveal} className="mt-16 lg:mt-24">
+            <ContextualCTA
+              title="Bring us the question; we will assemble the team"
+              body="Tell us what you need to decide or deliver. We scope the research, consulting, training and AI work around it, as one engagement."
+              primaryLabel="Sketch an engagement blueprint"
+              onPrimary={() => onNavigate('engagement-builder')}
+              secondaryLabel="Start from a challenge"
+              onSecondary={() => onNavigate('question-to-outcome')}
+            />
+          </motion.div>
+        </div>
+      </section>
     </MotionConfig>
   );
 };

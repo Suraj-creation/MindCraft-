@@ -16,6 +16,7 @@ import {
 import { UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { SERVICE_PILLARS } from '../data/mindcraftData';
 import { NavTab } from '../types';
+import { BTN_SECONDARY, PageHeader } from './ui/primitives';
 
 interface Props {
   onNavigate: (tab: NavTab) => void;
@@ -36,12 +37,12 @@ const StepHeader: React.FC<{
   icon: React.ReactNode;
 }> = ({ n, label, meta, tone, icon }) => (
   <div className="flex items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
-    <span className={`text-[11px] font-mono uppercase tracking-wider flex items-center gap-2 ${tone}`}>
+    <span className={`text-xs flex items-center gap-2 font-medium${tone}`}>
       <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-[11px] leading-none">{n}</span>
       {icon}
       {label}
     </span>
-    <span className="text-[11px] font-mono text-gray-400 text-right">{meta}</span>
+    <span className="text-[11px] tabular-nums text-gray-400 text-right">{meta}</span>
   </div>
 );
 
@@ -65,7 +66,6 @@ export const Matrix3DView: React.FC<Props> = ({
   onSelectEngagementConfig,
   headingLevel = 2
 }) => {
-  const Heading = headingLevel === 1 ? 'h1' : 'h2';
   const [selectedIndustryId, setSelectedIndustryId] = useState('pharmaceuticals');
   const [selectedGeography, setSelectedGeography] = useState('East Africa');
   const [selectedCapabilityId, setSelectedCapabilityId] = useState('consulting');
@@ -163,42 +163,23 @@ export const Matrix3DView: React.FC<Props> = ({
 
   return (
     <section
-      className="mc-section bg-[#050505] text-white overflow-x-clip"
+      className={`mc-section ${headingLevel === 1 ? 'mc-page-intro' : ''} text-white overflow-x-clip`}
       aria-labelledby="matrix-title"
     >
-      <div className="mc-container space-y-8 md:space-y-10">
+      <div className="mc-container space-y-10 md:space-y-14">
         {/* Intent + proof */}
-        <motion.header {...fadeIn} className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-          <div className="space-y-4 min-w-0">
-            <p className="mc-eyebrow">
-              <Box className="w-3.5 h-3.5" aria-hidden="true" />
-              Multi-Dimensional Configuration Engine
-            </p>
-            <Heading id="matrix-title" className={`${headingLevel === 1 ? 'mc-h1' : 'mc-h2'} font-semibold`}>
-              Industry × Geography × Capability 3D Matrix
-            </Heading>
-            <p className="mc-lead">
-              Synthesize an instant, custom engagement profile by intersecting any industry vertical with a regional geographic footprint and a core MindCraft service pillar.
-            </p>
-            <dl className="grid grid-cols-3 gap-2 sm:gap-3 pt-2 max-w-xl">
-              {stats.map(s => (
-                <div key={s.label} className="rounded-xl bg-[#0A0A0A] border border-white/[0.08] px-3 sm:px-4 py-3">
-                  <dt className="sr-only">{s.label}</dt>
-                  <dd className="font-mono text-2xl sm:text-3xl font-semibold text-white leading-none">{s.value}</dd>
-                  <p className="mt-1.5 text-[11px] font-mono uppercase tracking-wider text-gray-400" aria-hidden="true">{s.label}</p>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleLaunch}
-            className="hidden lg:flex mc-tap shrink-0 items-center gap-2 px-5 rounded-xl border border-white/[0.08] hover:border-white/20 text-[13px] font-medium text-[#E0E0E0] transition-colors active:scale-[0.98]"
-          >
-            Build Engagement from Matrix <ArrowRight className="w-4 h-4" aria-hidden="true" />
-          </button>
-        </motion.header>
+        <PageHeader
+          as={headingLevel === 1 ? 'h1' : 'h2'}
+          id="matrix-title"
+          title="Industry × Geography × Capability 3D Matrix"
+          lead="Synthesize an instant, custom engagement profile by intersecting any industry vertical with a regional geographic footprint and a core MindCraft service pillar."
+          actions={
+            <button type="button" onClick={handleLaunch} className={BTN_SECONDARY}>
+              <span>Build Engagement from Matrix</span>
+            </button>
+          }
+          metrics={stats}
+        />
 
         {/* Three-step selector */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -312,7 +293,7 @@ export const Matrix3DView: React.FC<Props> = ({
         >
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-white/[0.08]">
             <div className="min-w-0">
-              <div className="flex items-center gap-2 text-[11px] font-mono text-indigo-400 uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs text-indigo-400 font-medium">
                 <Box className="w-4 h-4 shrink-0" aria-hidden="true" /> Synthesized 3D Matrix Blueprint
               </div>
               <h3 className="text-xl md:text-2xl font-bold text-white mt-2 leading-tight">
@@ -320,13 +301,13 @@ export const Matrix3DView: React.FC<Props> = ({
               </h3>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-[11px] font-mono border border-indigo-500/35">
+              <span className="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-[11px] tabular-nums border border-indigo-500/35">
                 {selectedIndustry.name}
               </span>
-              <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-mono border border-emerald-500/30">
+              <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] tabular-nums border border-emerald-500/30">
                 {selectedGeography}
               </span>
-              <span className="px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 text-[11px] font-mono border border-sky-500/30">
+              <span className="px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 text-[11px] tabular-nums border border-sky-500/30">
                 {selectedPillar.name}
               </span>
             </div>
@@ -350,13 +331,13 @@ export const Matrix3DView: React.FC<Props> = ({
                 </div>
               ))}
             </div>
-            <p className="md:hidden -mt-3 text-[11px] font-mono uppercase tracking-wider text-gray-400">
+            <p className="md:hidden -mt-3 text-xs text-gray-400 font-medium">
               Swipe for all {blocks.length} blocks
             </p>
 
             {/* Measured outcome */}
             <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1.5">
-              <div className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <div className="text-xs text-emerald-400 flex items-center gap-1.5 font-medium">
                 <TrendingUp className="w-4 h-4" aria-hidden="true" /> Target Business Outcome
               </div>
               <p className="text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2">

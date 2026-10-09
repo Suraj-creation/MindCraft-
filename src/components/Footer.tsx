@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { NavTab } from '../types';
-import logoMark from '../assets/logo-mark.png';
+import { BrandLogo } from './ui/BrandLogo';
 import {
   Sparkles,
   MapPin,
@@ -16,12 +16,14 @@ import {
 interface FooterProps {
   setActiveTab: (tab: NavTab) => void;
   onOpenIntake: () => void;
+  /** Every page now ends with its own, page-specific call to action, so this closing band is opt-in */
+  showClosingCta?: boolean;
 }
 
 const linkClass =
   'min-h-11 py-2 text-left text-[13px] text-white/60 hover:text-white active:text-white transition-colors inline-flex items-center gap-2';
 
-export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) => {
+export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake, showClosingCta = false }) => {
   const go = (tab: NavTab) => {
     setActiveTab(tab);
     window.scrollTo({ top: 0 });
@@ -30,37 +32,34 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) =>
   return (
     <footer className="bg-[#050505] border-t border-white/10 text-white/60 text-sm">
       {/* Closing CTA */}
+      {showClosingCta && (
       <div className="mc-container py-10 sm:py-14 border-b border-white/10">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-10%' }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl bg-[#0a0a0a] border border-indigo-500/25 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-[0_0_25px_rgba(99,102,241,0.1)]"
+          className="rounded-2xl bg-[#0a0a0a] border border-indigo-500/25 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6"
         >
           <div className="max-w-2xl">
-            <div className="mc-eyebrow mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Ready for strategic clarity &amp; production AI?</span>
-            </div>
-            <h3 className="mc-h2 font-light">
-              Transform your organization with{' '}
-              <span className="font-bold text-indigo-400">MindCraft</span>
+            <h3 className="mc-h2">
+              Start a conversation with MindCraft
             </h3>
-            <p className="mt-3 text-sm text-white/60 leading-relaxed">
-              Discuss your therapeutic portfolio, African market entry, workforce AI upskilling, or custom enterprise AI architecture with our senior practice partners.
+            <p className="mt-3 text-sm text-white/60 leading-relaxed max-w-[34em]">
+              Tell us about the challenge in front of your organisation. We&rsquo;ll suggest the consulting, research, training or AI support that fits.
             </p>
           </div>
 
           <button
             onClick={onOpenIntake}
-            className="mc-tap w-full md:w-auto px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-semibold text-sm shadow-[0_0_15px_rgba(99,102,241,0.35)] transition-[background-color,transform] duration-150 flex items-center justify-center gap-2 shrink-0"
+            className="mc-tap w-full md:w-auto px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-semibold text-sm transition-[background-color,transform] duration-150 flex items-center justify-center gap-2 shrink-0"
           >
-            <span>Start an Engagement</span>
+            <span>Start a conversation</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </motion.div>
       </div>
+      )}
 
       {/* Link columns */}
       <div className="mc-container py-10 sm:py-14">
@@ -68,19 +67,13 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) =>
 
           {/* Brand & mission */}
           <div className="col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <img src={logoMark} alt="" width={52} height={33} className="h-8 w-auto" />
-              <div className="leading-tight">
-                <span className="font-heading text-base font-bold text-white tracking-tight uppercase">MindCraft</span>
-                <span className="block text-[11px] font-mono text-indigo-400 tracking-widest uppercase">Consultancy Services</span>
-              </div>
-            </div>
+            <BrandLogo height={96} className="h-20 sm:h-24" sizes="(min-width: 640px) 130px, 108px" />
 
             <p className="text-[13px] text-white/60 leading-relaxed max-w-md">
               Business Consulting, Market Research, AI Training and AI Enterprise Solutions, delivered as one integrated engagement. Core expertise in Life Sciences, with a deliberate focus on African markets.
             </p>
 
-            <div className="flex items-start gap-2 text-xs text-white/60 font-mono leading-relaxed">
+            <div className="flex items-start gap-2 text-xs text-white/60 tabular-nums leading-relaxed">
               <MapPin className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
               <span>Headquarters: Nairobi, Kenya · Africa (primary focus) · Europe · United States</span>
             </div>
@@ -101,7 +94,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) =>
           <div className="hidden lg:block">
             <div className="mc-eyebrow !text-white mb-2">Life Sciences</div>
             <ul>
-              {['Pharmaceuticals & Biologics', 'Medical Devices & Implants', 'Diagnostics & Laboratory Systems', 'Hospital & Provider Networks', 'Surgical Consumables'].map((label) => (
+              {['Pharmaceuticals', 'Medical Devices', 'Medical Diagnostics', 'Medical Equipment', 'Surgical Consumables', 'Hospitals & Healthcare Providers'].map((label) => (
                 <li key={label}><button onClick={() => go('life-sciences')} className={linkClass}>{label}</button></li>
               ))}
             </ul>
@@ -116,15 +109,15 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake }) =>
               <li><button onClick={() => go('insights')} className={linkClass}>Insights</button></li>
               <li><button onClick={() => go('responsible-ai')} className={linkClass}><ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />Responsible AI</button></li>
             </ul>
-            <div className="mt-3 space-y-1 text-xs font-mono text-white/60">
+            <div className="mt-3 space-y-1 text-xs tabular-nums text-white/60">
               <a href="mailto:info@mindcraftconsultancy.com" className="block min-h-11 py-2.5 hover:text-white">info@mindcraftconsultancy.com</a>
             </div>
           </div>
         </div>
 
         {/* Bottom strip */}
-        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-white/50 font-mono">
-          <div>© 2026 MindCraft Consultancy Services Ltd. All Rights Reserved.</div>
+        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-white/50 tabular-nums">
+          <div>© 2026 MindCraft Consultancy Services. All rights reserved.</div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6">
             <span>Nairobi, Kenya · Africa · Europe · United States</span>
             <span className="text-white/50">www.mindcraftconsultancy.com</span>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { EngagementBlueprint } from '../types';
+import { PageHeader } from './ui/primitives';
 import {
   Sparkles,
   Layers,
@@ -165,26 +166,19 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
   const viewport = { once: true, margin: '-10%' } as const;
 
   return (
-    <section className="mc-section bg-[#050505]" id="engagement-builder-section">
+    <section className="mc-section mc-page-intro" id="engagement-builder-section">
       <div className="mc-container">
 
         {/* Header: intent first */}
-        <div className="text-center max-w-3xl mx-auto mb-8 md:mb-12">
-          <div className="mc-eyebrow mb-3 px-3 py-1 rounded-full bg-[#0a0a0a] border border-indigo-500/35">
-            <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Interactive Architecture</span>
-          </div>
-          <h1 className="mc-h2 font-light tracking-tight">
-            Build Your <span className="font-bold text-indigo-400">Engagement Blueprint</span>
-          </h1>
-          <p className="mc-lead mx-auto mt-3">
-            Select your industry, geographic market, core capability need, and strategic objective to instantly generate a tailored MindCraft engagement architecture.
-          </p>
-        </div>
+        <PageHeader
+          className="mb-10 md:mb-14"
+          title={<>Build Your Engagement Blueprint</>}
+          lead="Select your industry, geographic market, core capability need, and strategic objective to instantly generate a tailored MindCraft engagement architecture."
+        />
 
         {/* Selectors: stepwise on phones, 4-up grid from md */}
         <div className="mb-6 md:mb-10">
-          <div className="md:hidden flex items-center justify-between mb-3 font-mono text-xs text-white/70">
+          <div className="md:hidden flex items-center justify-between mb-3 tabular-nums text-xs text-white/70">
             <span>Step 0{mobileStep + 1} of 04</span>
             <div className="flex items-center gap-1.5" role="tablist" aria-label="Builder steps">
               {controls.map((c, i) => (
@@ -213,7 +207,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
                 >
                   <label
                     htmlFor={id}
-                    className={`text-[11px] font-mono uppercase font-bold tracking-wider block ${isEmerald ? 'text-emerald-400' : 'text-indigo-400'}`}
+                    className={`text-xs font-semibold block${isEmerald ? 'text-emerald-400' : 'text-indigo-400'}`}
                   >
                     {c.label}
                   </label>
@@ -268,10 +262,10 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
           <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-5 md:pb-6 border-b border-white/10 gap-4">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                <span className="text-[11px] font-mono px-2.5 py-1 rounded bg-[#0d0f17] border border-indigo-500/35 text-indigo-400 font-bold tracking-wide">
-                  CUSTOM ENGAGEMENT BLUEPRINT
+                <span className="text-xs px-2.5 py-1 rounded-md bg-[#0d0f17] border border-indigo-500/35 text-indigo-300 font-semibold">
+                  Custom engagement blueprint
                 </span>
-                <span className="text-xs px-2.5 py-1 rounded bg-[#050505] border border-white/10 text-white/70 font-mono break-words">
+                <span className="text-xs px-2.5 py-1 rounded bg-[#050505] border border-white/10 text-white/70 tabular-nums break-words">
                   {blueprint.industry} · {blueprint.geography}
                 </span>
               </div>
@@ -280,7 +274,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, ease: EASE }}
-                className="text-2xl sm:text-3xl font-light text-white"
+                className="text-2xl sm:text-3xl font-medium text-white"
               >
                 {blueprint.objective}
               </motion.h3>
@@ -310,7 +304,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
             viewport={viewport}
             transition={{ duration: 0.22, ease: EASE }}
           >
-            <div className="text-xs font-mono uppercase font-bold tracking-wider text-indigo-400 flex items-center gap-2">
+            <div className="text-xs font-semibold text-indigo-400 flex items-center gap-2">
               <Layers className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Recommended Integrated Workstreams</span>
             </div>
@@ -321,13 +315,13 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <span className="text-sm font-bold text-white">{ws.pillar}</span>
-                      <span className="text-[11px] font-mono text-indigo-400 shrink-0">{ws.timeline}</span>
+                      <span className="text-[11px] tabular-nums text-indigo-400 shrink-0">{ws.timeline}</span>
                     </div>
                     <p className="text-sm text-white/70 leading-relaxed">
                       {ws.scope}
                     </p>
                   </div>
-                  <div className="mt-3 pt-2 border-t border-white/[0.08] text-[11px] text-white/50 font-mono">
+                  <div className="mt-3 pt-2 border-t border-white/[0.08] text-[11px] text-white/50 tabular-nums">
                     Lead: MindCraft Senior Practice
                   </div>
                 </div>
@@ -343,7 +337,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
             viewport={viewport}
             transition={{ duration: 0.22, ease: EASE }}
           >
-            <div className="text-xs font-mono uppercase font-bold tracking-wider text-indigo-400 flex items-center gap-2">
+            <div className="text-xs font-semibold text-indigo-400 flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Indicative 12-Week Delivery Phasing</span>
             </div>
@@ -352,8 +346,8 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
               {blueprint.indicativePhases.map((ph, i) => (
                 <li key={i} className="p-4 sm:p-5 rounded-2xl bg-[#050505] border border-white/10">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="text-[11px] font-mono text-indigo-400 font-bold">{ph.phase}</span>
-                    <span className="text-[11px] text-white/60 font-mono">{ph.duration}</span>
+                    <span className="text-[11px] tabular-nums text-indigo-400 font-bold">{ph.phase}</span>
+                    <span className="text-[11px] text-white/60 tabular-nums">{ph.duration}</span>
                   </div>
                   <div className="text-sm font-bold text-white mb-1.5">{ph.title}</div>
                   <p className="text-sm text-white/70 leading-relaxed">{ph.activities}</p>
@@ -371,7 +365,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
             transition={{ duration: 0.22, ease: EASE }}
           >
             <div className="p-4 sm:p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-2">
-              <div className="text-xs font-mono uppercase font-bold tracking-wider text-emerald-400 flex items-center gap-1.5">
+              <div className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Expected Deliverables</span>
               </div>
@@ -386,7 +380,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
             </div>
 
             <div className="p-4 sm:p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-2">
-              <div className="text-xs font-mono uppercase font-bold tracking-wider text-indigo-400 flex items-center gap-1.5">
+              <div className="text-xs font-semibold text-indigo-400 flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Key Stakeholders Required</span>
               </div>
@@ -401,7 +395,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
             </div>
 
             <div className="p-4 sm:p-5 rounded-2xl bg-[#050505] border border-indigo-500/35 space-y-2">
-              <div className="text-xs font-mono uppercase font-bold tracking-wider text-indigo-400 flex items-center gap-1.5">
+              <div className="text-xs font-semibold text-indigo-400 flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Success Impact Targets</span>
               </div>
@@ -436,7 +430,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
       <div className="md:hidden sticky bottom-0 z-20 mt-4 bg-[#050505]/95 backdrop-blur border-t border-white/10 pb-[env(safe-area-inset-bottom)]">
         <div className="mc-container h-14 flex items-center justify-between gap-3">
           <div className="min-w-0 leading-tight">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">Your blueprint</div>
+            <div className="text-xs text-indigo-400 font-medium">Your blueprint</div>
             <div className="text-xs text-white/80 truncate">{blueprint.industry} · {blueprint.objective}</div>
           </div>
           <button
