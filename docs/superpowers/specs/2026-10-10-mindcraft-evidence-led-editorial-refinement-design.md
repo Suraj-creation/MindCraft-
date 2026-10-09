@@ -138,3 +138,17 @@ The final quality gate runs `npm run lint`, `npm run build`, the installed Impec
 ## Out of Scope
 
 This refinement does not create new photo assets, claim unsupported client work, alter factual source material, convert the site to a router framework, change the verified enquiry destination, or remove the established executive-first navigation model.
+
+## Approved Art-Direction Amendment — 2026-10-10
+
+The earlier evidence-frame wording is refined by direct user feedback. Supplied art should feel immersive and naturally integrated with the obsidian canvas, rather than appearing as a collection of isolated rectangular, rounded or bordered windows.
+
+- Restore the original Overview opening composition: `overview/global-*` is again the one full-bleed hero image behind “Turn complexity into meaningful business progress.” The deep-indigo type-only hero is removed.
+- Remove isolated image boxes, visible card borders and rounded-corner framing from editorial art. Art may still be cropped for its subject, but it must extend to a page edge, a section boundary or the full width of its grid side.
+- Use the existing `Scrim` utility for deliberate canvas-black (`#050505`) and charcoal (`#0A0A0A`) fade fields. The fade protects readable overlay text and lets art dissolve into the surrounding surface; it is not a generic tint.
+- A short route assertion or factual caption may sit in the dark, quiet region of an image. It must have enough contrast, use no glass card, and never cover data controls or a subject’s face.
+- Accent light is restrained: at most a small approved semantic hue in a fade edge or label. There are no purple hero backgrounds, coloured text gradients, neon bloom or wide CTA shadows.
+- Each supplied image family remains assigned to its existing route. A route uses one primary image treatment; visual variety comes from crop, direction and placement rather than duplicating the art.
+- Apply the same grammar to Overview, capability, Markets, Life Sciences and About routes. Data explorers remain tool-first; their information panels do not receive decorative photo overlays.
+
+The revised design still targets reduced copy, clear navigation and source-grounded content. All existing verification requirements remain in force.
