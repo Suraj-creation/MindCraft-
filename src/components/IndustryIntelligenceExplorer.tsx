@@ -41,7 +41,7 @@ import {
 import { UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
 import { PageHeader } from './ui/primitives';
 import { ArtImage } from './ui/ArtImage';
-import { ArtCaption } from './ui/Hero';
+import { ArtCaption, Scrim } from './ui/Hero';
 import { UniversalIndustry, NavTab } from '../types';
 
 interface Props {
@@ -312,10 +312,11 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
         />
 
         {headingLevel === 1 && (
-          <figure className="relative -mt-4 min-h-56 overflow-hidden border border-white/[0.08] sm:min-h-72">
-            <ArtImage name="industries-panorama" alt="" sizes="(min-width: 1024px) 88rem, 100vw" position="object-[50%_50%]" />
-            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,5,5,.58),rgba(5,5,5,.05))]" />
-            <ArtCaption className="absolute bottom-4 left-4">Industry illustration</ArtCaption>
+          <figure className="mc-art-bleed mc-full-bleed relative -mt-4 min-h-56 sm:min-h-72">
+            <ArtImage name="industries-panorama" alt="" sizes="100vw" position="object-[50%_50%]" />
+            <Scrim background="linear-gradient(90deg, rgba(5,5,5,.78), rgba(5,5,5,.12) 68%, rgba(5,5,5,.02))" />
+            <Scrim background="linear-gradient(180deg, rgba(5,5,5,.28), rgba(5,5,5,0) 35%, rgba(5,5,5,.72))" />
+            <ArtCaption className="absolute bottom-4 left-[max(1rem,calc((100vw-min(100vw-2rem,88rem))/2))]">Industry illustration</ArtCaption>
           </figure>
         )}
 

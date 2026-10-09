@@ -4,6 +4,8 @@ import { NavTab, RoleLens } from '../types';
 import { ArrowRight } from 'lucide-react';
 import { UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
 import { BTN_PRIMARY, BTN_SECONDARY, EASE } from './ui/primitives';
+import { ArtImage } from './ui/ArtImage';
+import { Scrim } from './ui/Hero';
 
 interface HeroOperatingSystemProps {
   setActiveTab: (tab: NavTab) => void;
@@ -20,17 +22,29 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpen
   };
 
   return (
-    <section aria-labelledby="overview-title" className="mc-editorial-band--indigo border-b border-white/[0.12]">
-      <div className="mc-container py-[clamp(4.5rem,10vw,8rem)]">
+    <section aria-labelledby="overview-title" className="mc-art-bleed min-h-[clamp(34rem,72vw,48rem)] border-b border-white/[0.1] bg-[#050505]">
+      <div aria-hidden="true" className="absolute inset-0">
+        <ArtImage
+          name="global"
+          alt=""
+          priority
+          sizes="100vw"
+          position="object-[54%_42%] sm:object-[48%_45%] lg:object-[42%_48%]"
+        />
+        <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.96) 17%, rgba(5,5,5,.74) 38%, rgba(5,5,5,.28) 63%, rgba(5,5,5,.06) 100%)" />
+        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.78) 0%, rgba(5,5,5,0) 24%, rgba(5,5,5,0) 72%, #050505 100%)" />
+      </div>
+
+      <div className="mc-container mc-art-copy flex min-h-[clamp(34rem,72vw,48rem)] flex-col justify-end pb-12 pt-28 sm:pb-16 sm:pt-32 lg:pb-14 lg:pt-36">
         <motion.div
-          className="max-w-[46rem]"
+          className="max-w-[40rem]"
           initial={reduce ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: reduce ? 0 : 0.24, delay: reduce ? 0 : 0.03, ease: EASE }}
         >
           <h1
             id="overview-title"
-            className="font-heading font-medium text-white tracking-[-0.03em] leading-[1.02] text-[2.5rem] sm:text-[3.25rem] lg:text-[4rem] max-w-[13ch]"
+            className="font-heading font-medium text-white tracking-[-0.03em] leading-[1.02] text-[2.5rem] sm:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] max-w-[13ch]"
           >
             Turn complexity into meaningful business progress.
           </h1>
@@ -44,14 +58,14 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpen
               Discuss your business challenge
               <ArrowRight aria-hidden="true" className="w-4 h-4" />
             </button>
-            <button type="button" onClick={goCapabilities} id="hero-secondary-cta" className={BTN_SECONDARY}>
+            <button type="button" onClick={goCapabilities} id="hero-secondary-cta" className={`${BTN_SECONDARY} bg-black/35`}>
               Explore our capabilities
             </button>
           </div>
         </motion.div>
 
         {/* Three answers a first-time visitor is looking for */}
-        <dl className="mt-14 sm:mt-16 grid grid-cols-1 md:grid-cols-3 border-t border-white/[0.18]">
+        <dl className="mt-14 sm:mt-16 lg:mt-20 grid grid-cols-1 md:grid-cols-3 border-t border-white/[0.14]">
           {[
             {
               term: 'One team, four capabilities',
@@ -68,7 +82,7 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpen
           ].map((f, i) => (
             <div
               key={f.term}
-              className={`pt-6 pb-2 md:pb-0 md:pr-8 ${i > 0 ? 'md:pl-8 md:border-l md:border-white/[0.18] border-t border-white/[0.12] md:border-t-0 mt-4 md:mt-0' : ''}`}
+              className={`pt-6 pb-2 md:pb-0 md:pr-8 ${i > 0 ? 'md:pl-8 md:border-l md:border-white/[0.14] border-t border-white/[0.1] md:border-t-0 mt-4 md:mt-0' : ''}`}
             >
               <dt className="font-heading text-[1.0625rem] font-medium text-white leading-snug">{f.term}</dt>
               <dd className="mt-2 text-sm text-white/60 leading-relaxed max-w-[34em]">{f.desc}</dd>

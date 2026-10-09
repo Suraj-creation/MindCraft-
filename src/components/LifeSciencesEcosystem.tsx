@@ -8,7 +8,7 @@ import { NavTab, RoleLens, LifeSciencesSector } from '../types';
 import { BTN_PRIMARY, BTN_SECONDARY, ContextualCTA, DeepDive, EASE, RelatedLinks, reveal } from './ui/primitives';
 import { scrollToId } from './PillarParts';
 import { ArtImage } from './ui/ArtImage';
-import { ArtCaption, HeroCopy, HeroSection, Illumination, Scrim } from './ui/Hero';
+import { HeroCopy, HeroSection, Scrim } from './ui/Hero';
 
 interface LifeSciencesEcosystemProps {
   onOpenIntake: () => void;
@@ -17,13 +17,6 @@ interface LifeSciencesEcosystemProps {
 }
 
 /* ------------------------------------------------------------------ */
-/* Image treatment. The lab is bright daylight and full of faces in its upper half, so copy never sits there. */
-
-/* Framed (lg): settles the frame's lower edge into the page where the panel overlaps; faces and windows stay open */
-const LAB_SETTLE = 'linear-gradient(0deg, rgba(5,5,5,0.55) 0%, rgba(5,5,5,0.18) 22%, rgba(5,5,5,0) 42%)';
-/* Full-bleed (mobile): the band hands over to the canvas at the bottom, where the copy panel overlaps it */
-const LAB_SETTLE_MOBILE = 'linear-gradient(0deg, #050505 0%, rgba(5,5,5,0.55) 16%, rgba(5,5,5,0) 40%), linear-gradient(180deg, rgba(5,5,5,0.35) 0%, rgba(5,5,5,0) 16%)';
-
 /* ------------------------------------------------------------------ */
 /* Content overrides. Data strings that state unsupported specifics as fact are softened for display here. */
 
@@ -221,85 +214,49 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* ---------------------------------------------------------- */}
-      {/* Opening: the lab in a frame, the copy on a panel anchored to its lower-right corner, below the faces */}
-      <HeroSection id="lifesciences-section" labelledBy="lifesciences-title" className="text-white">
-        <div className="mc-container relative pt-6 sm:pt-8 lg:pt-12 pb-14 sm:pb-16 lg:pb-24">
-          <div className="relative">
-            <figure className="relative -mx-4 sm:-mx-6 lg:mx-0 lg:w-[66%]">
-              <div className="relative aspect-[4/3] md:aspect-[16/10] overflow-hidden lg:rounded-2xl lg:border lg:border-white/10">
-                <ArtImage
-                  name="lifesciences-lab"
-                  alt=""
-                  priority
-                  sizes="(min-width: 1024px) 62vw, 100vw"
-                  position="object-[50%_40%]"
-                  className="brightness-[0.85] saturate-[0.9]"
-                />
-                <Scrim background={LAB_SETTLE_MOBILE} className="lg:hidden" />
-                <Scrim background={LAB_SETTLE} className="hidden lg:block" />
-              </div>
-              <ArtCaption className="hidden lg:block absolute left-[calc(100%+2rem)] top-1 w-[13rem] xl:w-[16rem] leading-relaxed">
-                Illustration, not a MindCraft facility
-              </ArtCaption>
-            </figure>
-
-            <Illumination
-              tone="indigo"
-              strength={1}
-              className="-bottom-32 left-1/2 -translate-x-1/2 h-[30rem] w-[30rem] lg:left-auto lg:translate-x-0 lg:-right-24 lg:-bottom-40 lg:h-[46rem] lg:w-[46rem]"
-            />
-
-            {/* The row is pulled up into the frame; the list (left) is pushed back down, so only the panel overlaps. Panel first in source order */}
-            <div className="relative -mt-12 lg:-mt-[17.5%] lg:flex lg:flex-row-reverse lg:items-start">
-              <div className="relative z-10 rounded-2xl border border-indigo-500/25 bg-[#0D0F17] p-6 sm:p-8 lg:p-10 md:ml-auto md:w-[86%] lg:ml-0 lg:w-[56%]">
-                <HeroCopy
-                  id="lifesciences-title"
-                  size="title"
-                  className="lg:[&_h1]:text-[2.375rem] xl:[&_h1]:text-[3rem]"
-                  meta={<span aria-hidden="true">Life Sciences</span>}
-                  title={
-                    <>
-                      <span className="sr-only">Life Sciences: </span>
-                      Our deepest specialism, with <em>regulatory and commercial fluency</em> built in.
-                    </>
-                  }
-                  lead="Research, strategy, AI training and AI solutions for pharmaceutical, device, diagnostics and hospital organisations across Africa, Europe and the United States, with the deepest focus on African markets."
-                  note={<>One of the {UNIVERSAL_INDUSTRIES.length} industries we serve, and the one we know best.</>}
-                  actions={
-                    <>
-                      <button type="button" onClick={onOpenIntake} className={`${BTN_PRIMARY} !px-6`}>
-                        Discuss a Life Sciences engagement
-                      </button>
-                      <button type="button" onClick={() => scrollToId('ls-subsectors')} className={BTN_SECONDARY}>
-                        <span>See the {total} sub-sectors</span>
-                        <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                      </button>
-                    </>
-                  }
-                />
-              </div>
-              <div className="hidden lg:block lg:w-[44%] lg:mt-[17.5%] lg:pt-8 lg:pr-12">
-                <p id="ls-hero-index" className="mc-meta">{total} sub-sectors</p>
-                <ul aria-labelledby="ls-hero-index" className="mt-3 grid grid-cols-2 gap-x-6 border-t border-white/[0.08]">
-                  {LIFE_SCIENCES_SECTORS.map((s, i) => (
-                    <li key={s.id} className="border-b border-white/[0.08]">
-                      <button
-                        type="button"
-                        onClick={() => jumpToSector(i)}
-                        className="group mc-tap w-full flex items-center gap-3 py-2 text-left text-[13px] leading-snug text-white/65 hover:text-white transition-colors duration-150"
-                      >
-                        <span aria-hidden="true" className="font-mono text-[11px] tabular-nums text-white/40 group-hover:text-indigo-300 transition-colors duration-150">
-                          {pad(i + 1)}
-                        </span>
-                        {s.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-            </div>
+      <HeroSection id="lifesciences-section" labelledBy="lifesciences-title" className="mc-art-bleed min-h-[40rem] bg-[#050505] text-white lg:min-h-[min(48rem,calc(100dvh-5rem))]">
+        <div aria-hidden="true" className="absolute inset-0">
+          <ArtImage name="lifesciences-lab" alt="" priority sizes="100vw" position="object-[50%_40%] lg:object-[58%_44%]" className="brightness-[0.8] saturate-[0.9]" />
+          <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.94) 22%, rgba(5,5,5,.62) 47%, rgba(5,5,5,.18) 73%, rgba(5,5,5,.04) 100%)" />
+          <Scrim background="linear-gradient(180deg, rgba(5,5,5,.76) 0%, rgba(5,5,5,0) 22%, rgba(5,5,5,0) 72%, #050505 100%)" />
+        </div>
+        <div className="mc-container mc-art-copy flex min-h-[40rem] flex-col justify-end py-14 sm:py-20 lg:min-h-[min(48rem,calc(100dvh-5rem))] lg:py-24">
+          <HeroCopy
+            id="lifesciences-title"
+            size="title"
+            className="max-w-[39rem] lg:[&_h1]:text-[2.375rem] xl:[&_h1]:text-[3rem]"
+            title={
+              <>
+                <span className="sr-only">Life Sciences: </span>
+                Our deepest specialism, with <em>regulatory and commercial fluency</em> built in.
+              </>
+            }
+            lead="Research, strategy, AI training and AI solutions for pharmaceutical, device, diagnostics and hospital organisations, with deepest focus on African markets."
+            note={<>One of the {UNIVERSAL_INDUSTRIES.length} industries we serve, and the one we know best.</>}
+            actions={
+              <>
+                <button type="button" onClick={onOpenIntake} className={`${BTN_PRIMARY} !px-6`}>
+                  Discuss a Life Sciences engagement
+                </button>
+                <button type="button" onClick={() => scrollToId('ls-subsectors')} className={`${BTN_SECONDARY} bg-black/35`}>
+                  <span>See the {total} sub-sectors</span>
+                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </>
+            }
+          />
+          <div className="hidden max-w-[44rem] lg:block lg:mt-10">
+            <p id="ls-hero-index" className="mc-meta">{total} sub-sectors</p>
+            <ul aria-labelledby="ls-hero-index" className="mt-3 grid grid-cols-2 gap-x-6 border-t border-white/[0.12]">
+              {LIFE_SCIENCES_SECTORS.map((s, i) => (
+                <li key={s.id} className="border-b border-white/[0.12]">
+                  <button type="button" onClick={() => jumpToSector(i)} className="group mc-tap w-full flex items-center gap-3 py-2 text-left text-[13px] leading-snug text-white/70 hover:text-white transition-colors duration-150">
+                    <span aria-hidden="true" className="font-mono text-[11px] tabular-nums text-white/45 group-hover:text-indigo-300 transition-colors duration-150">{pad(i + 1)}</span>
+                    {s.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </HeroSection>

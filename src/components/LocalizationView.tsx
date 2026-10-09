@@ -7,7 +7,7 @@ import { AFRICAN_COUNTRIES, SERVICE_PILLARS } from '../data/mindcraftData';
 import { ContextualCTA, DeepDive, EASE, PageHeader, RelatedLinks, SectionHeader, TONES } from './ui/primitives';
 import { LocalizationModule } from './LocalizationModule';
 import { ArtImage } from './ui/ArtImage';
-import { ArtCaption } from './ui/Hero';
+import { ArtCaption, Scrim } from './ui/Hero';
 
 interface LocalizationViewProps {
   onNavigate: (tab: NavTab) => void;
@@ -47,10 +47,11 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
               { value: AFRICAN_COUNTRIES.length, label: 'Country dossiers' }
             ]}
           />
-          <figure className="relative mt-10 min-h-56 overflow-hidden border border-white/[0.08] sm:min-h-72">
-            <ArtImage name="localization-market" alt="" sizes="(min-width: 1024px) 88rem, 100vw" position="object-[52%_52%]" />
-            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,5,5,.62),rgba(5,5,5,.04))]" />
-            <ArtCaption className="absolute bottom-4 left-4">Local market illustration</ArtCaption>
+          <figure className="mc-art-bleed mc-full-bleed relative mt-10 min-h-56 sm:min-h-72">
+            <ArtImage name="localization-market" alt="" sizes="100vw" position="object-[52%_52%]" />
+            <Scrim background="linear-gradient(90deg, rgba(5,5,5,.8), rgba(5,5,5,.13) 68%, rgba(5,5,5,.02))" />
+            <Scrim background="linear-gradient(180deg, rgba(5,5,5,.28), rgba(5,5,5,0) 35%, rgba(5,5,5,.72))" />
+            <ArtCaption className="absolute bottom-4 left-[max(1rem,calc((100vw-min(100vw-2rem,88rem))/2))]">Local market illustration</ArtCaption>
           </figure>
         </div>
       </section>

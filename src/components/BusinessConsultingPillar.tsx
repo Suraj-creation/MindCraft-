@@ -5,7 +5,7 @@ import { NavTab } from '../types';
 import { BTN_PRIMARY, BTN_SECONDARY, ContextualCTA, EASE, RelatedLinks, reveal } from './ui/primitives';
 import { scrollToId } from './PillarParts';
 import { ArtImage } from './ui/ArtImage';
-import { HeroCopy, HeroSection, Illumination, Scrim } from './ui/Hero';
+import { HeroCopy, HeroSection, Scrim } from './ui/Hero';
 import { ChevronDown } from 'lucide-react';
 
 interface BusinessConsultingPillarProps {
@@ -76,11 +76,6 @@ const DIMENSIONS: { name: string; ask: string; stall: string; help: string }[] =
   }
 ];
 
-/* The image's left edge (data screen) hands over to the canvas; the team and the sunset stay open */
-const BOARDROOM_FADE =
-  'linear-gradient(90deg, #050505 0%, rgba(5,5,5,0.86) 14%, rgba(5,5,5,0.3) 36%, rgba(5,5,5,0) 58%), linear-gradient(0deg, #050505 0%, rgba(5,5,5,0) 30%), linear-gradient(180deg, rgba(5,5,5,0.55) 0%, rgba(5,5,5,0) 22%)';
-const BOARDROOM_FADE_MOBILE = 'linear-gradient(180deg, #050505 0%, rgba(5,5,5,0) 30%, rgba(5,5,5,0) 70%, #050505 100%)';
-
 export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> = ({ onOpenIntake, setActiveTab }) => {
   const pillar = SERVICE_PILLARS.find((p) => p.id === 'consulting') || SERVICE_PILLARS[0];
   const [active, setActive] = useState(0);
@@ -114,15 +109,22 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* ---------------------------------------------------------- */}
-      {/* Opening: copy on the canvas, the strategy room entering from the right edge */}
-      <HeroSection id="consulting-section" labelledBy="consulting-title" className="lg:min-h-[min(46rem,calc(100dvh-5rem))]">
-        <div className="mc-container relative z-10 pt-10 sm:pt-14 lg:pt-20 lg:pb-24">
-          <Illumination tone="teal" strength={1.1} className="-left-40 -top-24 h-[34rem] w-[34rem]" />
+      <HeroSection id="consulting-section" labelledBy="consulting-title" className="mc-art-bleed min-h-[35rem] bg-[#050505] lg:min-h-[min(46rem,calc(100dvh-5rem))]">
+        <div aria-hidden="true" className="absolute inset-0">
+          <ArtImage
+            name="consulting-boardroom"
+            alt=""
+            priority
+            sizes="100vw"
+            position="object-[60%_50%] lg:object-[64%_50%]"
+          />
+          <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.93) 20%, rgba(5,5,5,.58) 45%, rgba(5,5,5,.12) 72%, rgba(5,5,5,.04) 100%)" />
+          <Scrim background="linear-gradient(180deg, rgba(5,5,5,.72) 0%, rgba(5,5,5,0) 24%, rgba(5,5,5,0) 70%, #050505 100%)" />
+        </div>
+        <div className="mc-container mc-art-copy flex min-h-[35rem] items-end py-14 sm:py-20 lg:min-h-[min(46rem,calc(100dvh-5rem))] lg:py-24">
           <HeroCopy
             id="consulting-title"
-            className="relative max-w-[36rem] lg:max-w-[min(36rem,42%)]"
-            meta={<span aria-hidden="true">Business Consulting</span>}
+            className="max-w-[36rem]"
             title={
               <>
                 <span className="sr-only">Business Consulting: </span>
@@ -140,28 +142,13 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
                 <button type="button" onClick={onOpenIntake} className={`${BTN_PRIMARY} !px-6`}>
                   Scope a consulting engagement
                 </button>
-                <button type="button" onClick={() => scrollToId('consulting-capabilities')} className={`${BTN_SECONDARY} bg-[#050505]/60 backdrop-blur-sm`}>
+                <button type="button" onClick={() => scrollToId('consulting-capabilities')} className={`${BTN_SECONDARY} bg-black/35`}>
                   <span>See the five capabilities</span>
                   <ChevronDown className="h-4 w-4" aria-hidden="true" />
                 </button>
               </>
             }
           />
-        </div>
-
-        <div
-          aria-hidden="true"
-          className="relative mt-10 h-[clamp(15rem,62vw,26rem)] lg:mt-0 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[56%] overflow-hidden"
-        >
-          <ArtImage
-            name="consulting-boardroom"
-            alt=""
-            priority
-            sizes="(min-width: 1024px) 56vw, 100vw"
-            position="object-[60%_50%] lg:object-[64%_50%]"
-          />
-          <Scrim background={BOARDROOM_FADE_MOBILE} className="lg:hidden" />
-          <Scrim background={BOARDROOM_FADE} className="hidden lg:block" />
         </div>
       </HeroSection>
 
@@ -220,9 +207,8 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
 
       {/* ---------------------------------------------------------- */}
       {/* Diagnostic: a working tool, so it sits on its own surface */}
-      <section className="mc-section mc-surface relative overflow-hidden" aria-labelledby="diagnostic-title">
-        <Illumination tone="teal" strength={0.7} className="right-[-10rem] top-[-8rem] h-[30rem] w-[30rem]" />
-        <div className="mc-container relative">
+      <section className="mc-section mc-editorial-band" aria-labelledby="diagnostic-title">
+        <div className="mc-container">
           <motion.div {...reveal} className="max-w-2xl">
             <p className="mc-meta">8 dimensions</p>
             <h2 id="diagnostic-title" className="mc-h2 mt-3">How we assess AI readiness</h2>

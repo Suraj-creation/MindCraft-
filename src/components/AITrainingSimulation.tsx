@@ -135,7 +135,7 @@ export const AITrainingSimulation: React.FC<AITrainingSimulationProps> = ({ onOp
 
   return (
     <MotionConfig reducedMotion="user">
-      <HeroSection id="ai-training-section" labelledBy="ai-training-title" className="min-h-[35rem]">
+      <HeroSection id="ai-training-section" labelledBy="ai-training-title" className="mc-art-bleed min-h-[35rem] bg-[#050505]">
         <ArtImage
           name="training-workshop"
           alt="Facilitator leading a workshop"
@@ -144,7 +144,8 @@ export const AITrainingSimulation: React.FC<AITrainingSimulationProps> = ({ onOp
           priority
         />
         <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.9) 47%, rgba(5,5,5,.42) 74%, rgba(5,5,5,.18) 100%)" />
-        <div className="mc-container relative z-10 flex min-h-[28rem] items-end py-14 sm:py-20 lg:min-h-[34rem] lg:py-24">
+        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.62) 0%, rgba(5,5,5,0) 24%, rgba(5,5,5,0) 68%, #050505 100%)" />
+        <div className="mc-container mc-art-copy flex min-h-[28rem] items-end py-14 sm:py-20 lg:min-h-[34rem] lg:py-24">
           <HeroCopy
             id="ai-training-title"
             meta="AI training & digital literacy"
@@ -156,7 +157,7 @@ export const AITrainingSimulation: React.FC<AITrainingSimulationProps> = ({ onOp
                 <button type="button" onClick={onOpenIntake} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-5 text-sm font-semibold text-[#17120a] transition-[background-color,transform] hover:bg-amber-300 active:scale-[0.98]">
                   Discuss a learning programme <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </button>
-                <button type="button" onClick={() => scrollToId('tr-capabilities')} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-black/20 px-5 text-sm font-medium text-white transition-[background-color,transform] hover:bg-white/10 active:scale-[0.98]">
+                <button type="button" onClick={() => scrollToId('tr-capabilities')} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-black/35 px-5 text-sm font-medium text-white transition-[background-color,transform] hover:bg-white/10 active:scale-[0.98]">
                   Explore the capability groups
                 </button>
               </>

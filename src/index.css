@@ -190,6 +190,20 @@ html.lenis, html.lenis body { height: auto; }
   overflow: hidden;
   background-color: var(--mc-surface-raised);
 }
+.mc-art-bleed {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--mc-surface-raised);
+}
+.mc-art-copy {
+  position: relative;
+  z-index: 1;
+}
+.mc-full-bleed {
+  width: 100vw;
+  margin-left: calc((100vw - 100%) / -2);
+}
 .mc-rule-list > * + * { border-top: 1px solid rgba(255, 255, 255, 0.08); }
 
 /* Use a surface change at deliberate editorial moments, never as a site-wide gradient. */

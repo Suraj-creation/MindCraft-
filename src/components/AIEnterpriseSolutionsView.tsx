@@ -266,7 +266,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
 
   return (
     <MotionConfig reducedMotion="user">
-      <HeroSection id="ai-solutions-section" labelledBy="ai-solutions-title" className="min-h-[35rem]">
+      <HeroSection id="ai-solutions-section" labelledBy="ai-solutions-title" className="mc-art-bleed min-h-[35rem] bg-[#050505]">
         <ArtImage
           name="solutions-operations"
           alt="Operations team working in a control room"
@@ -275,7 +275,8 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
           priority
         />
         <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.9) 47%, rgba(5,5,5,.44) 74%, rgba(5,5,5,.18) 100%)" />
-        <div className="mc-container relative z-10 flex min-h-[28rem] items-end py-14 sm:py-20 lg:min-h-[34rem] lg:py-24">
+        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.62) 0%, rgba(5,5,5,0) 24%, rgba(5,5,5,0) 68%, #050505 100%)" />
+        <div className="mc-container mc-art-copy flex min-h-[28rem] items-end py-14 sm:py-20 lg:min-h-[34rem] lg:py-24">
           <HeroCopy
             id="ai-solutions-title"
             meta="AI enterprise solutions"
@@ -287,7 +288,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                 <button type="button" onClick={onOpenIntake} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 text-sm font-semibold text-[#06150f] transition-[background-color,transform] hover:bg-emerald-300 active:scale-[0.98]">
                   Discuss an AI need <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </button>
-                <button type="button" onClick={() => scrollToId('ai-capabilities')} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-black/20 px-5 text-sm font-medium text-white transition-[background-color,transform] hover:bg-white/10 active:scale-[0.98]">
+                <button type="button" onClick={() => scrollToId('ai-capabilities')} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-black/35 px-5 text-sm font-medium text-white transition-[background-color,transform] hover:bg-white/10 active:scale-[0.98]">
                   Explore solution groups
                 </button>
               </>

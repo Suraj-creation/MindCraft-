@@ -4,7 +4,7 @@ import { SERVICE_PILLARS, RESEARCH_WORKSPACE_SAMPLE } from '../data/mindcraftDat
 import { NavTab } from '../types';
 import { BTN_PRIMARY, ContextualCTA, EASE, RelatedLinks, reveal } from './ui/primitives';
 import { ArtImage } from './ui/ArtImage';
-import { HeroCopy, HeroSection, Illumination, Scrim } from './ui/Hero';
+import { HeroCopy, HeroSection, Scrim } from './ui/Hero';
 import { IllustrativeTag, MarkList, ScrollCue, tabKeyNav } from './PillarParts';
 
 interface MarketResearchWorkspaceProps {
@@ -142,11 +142,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 /* The sunset and port on the image's right edge dissolve into the canvas where the copy sits; the top is
    darkened under the section tabs and the floor settles into the next band */
-const MAPPING_FADE =
-  'linear-gradient(270deg, #050505 0%, rgba(5,5,5,0.9) 8%, rgba(5,5,5,0.45) 24%, rgba(5,5,5,0) 44%), linear-gradient(0deg, #050505 0%, rgba(5,5,5,0) 24%), linear-gradient(180deg, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0.3) 12%, rgba(5,5,5,0) 24%)';
-/* Phone band: a soft top edge under the tabs, a firm floor into the copy below */
-const MAPPING_FADE_MOBILE = 'linear-gradient(180deg, rgba(5,5,5,0.45) 0%, rgba(5,5,5,0) 20%, rgba(5,5,5,0) 58%, #050505 100%)';
-
 export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = ({ onOpenIntake, setActiveTab }) => {
   const pillar = SERVICE_PILLARS.find((p) => p.id === 'market-research') || SERVICE_PILLARS[1];
   const ws = RESEARCH_WORKSPACE_SAMPLE;
@@ -157,30 +152,22 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* ---------------------------------------------------------- */}
-      {/* Opening, mirrored: the analyst and the map enter from the left edge, the copy holds the right */}
-      <HeroSection id="market-research-section" labelledBy="mr-title" className="lg:min-h-[min(46rem,calc(100dvh-5rem))]">
-        <div
-          aria-hidden="true"
-          className="relative mt-6 aspect-[16/10] sm:aspect-[2/1] overflow-hidden lg:absolute lg:inset-y-0 lg:left-0 lg:mt-0 lg:aspect-auto lg:w-[56%] xl:w-[53%]"
-        >
+      <HeroSection id="market-research-section" labelledBy="mr-title" className="mc-art-bleed min-h-[35rem] bg-[#050505] lg:min-h-[min(46rem,calc(100dvh-5rem))]">
+        <div aria-hidden="true" className="absolute inset-0">
           <ArtImage
             name="research-mapping"
             alt=""
             priority
-            sizes="(min-width: 1024px) 56vw, 100vw"
+            sizes="100vw"
             position="object-[34%_40%] lg:object-[20%_50%]"
           />
-          <Scrim background={MAPPING_FADE_MOBILE} className="lg:hidden" />
-          <Scrim background={MAPPING_FADE} className="hidden lg:block" />
+          <Scrim background="linear-gradient(90deg, rgba(5,5,5,.05) 0%, rgba(5,5,5,.12) 28%, rgba(5,5,5,.64) 55%, rgba(5,5,5,.94) 79%, #050505 100%)" />
+          <Scrim background="linear-gradient(180deg, rgba(5,5,5,.76) 0%, rgba(5,5,5,0) 22%, rgba(5,5,5,0) 72%, #050505 100%)" />
         </div>
-
-        <div className="mc-container relative z-10 pt-6 pb-14 sm:pt-8 sm:pb-16 lg:pt-20 lg:pb-24">
-          <Illumination tone="sky" strength={1} className="right-[-10rem] top-[-6rem] h-[34rem] w-[34rem]" />
+        <div className="mc-container mc-art-copy flex min-h-[35rem] items-end py-14 sm:py-20 lg:min-h-[min(46rem,calc(100dvh-5rem))] lg:py-24">
           <HeroCopy
             id="mr-title"
-            className="relative max-w-[36rem] lg:ml-[55%] lg:max-w-[34rem]"
-            meta={<span aria-hidden="true">Market Research &amp; Intelligence</span>}
+            className="max-w-[34rem] lg:ml-auto"
             title={
               <>
                 <span className="sr-only">Market Research &amp; Intelligence: </span>
@@ -211,10 +198,10 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
         <div className="mc-container">
           <motion.div {...reveal} className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-16 lg:items-end">
             <h2 id="mr-caps-title" className="mc-h2 lg:col-span-6">
-              Four kinds of research, <em>one evidence base</em>
+              Question. Evidence. Decision.
             </h2>
             <p className="lg:col-span-5 lg:col-start-8 text-[15px] leading-relaxed text-white/65">
-              Use one on its own or combine them. Most studies pair fieldwork with desk research, and every one ends in findings tied to a decision.
+              Combine fieldwork and desk research around the decision that needs to be made.
             </p>
           </motion.div>
 

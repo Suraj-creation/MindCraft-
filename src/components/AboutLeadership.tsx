@@ -3,7 +3,7 @@ import { MotionConfig, motion } from 'motion/react';
 import { NavTab } from '../types';
 import { ContextualCTA, EASE, RelatedLinks, reveal } from './ui/primitives';
 import { ArtImage } from './ui/ArtImage';
-import { HeroCopy, HeroSection, Illumination, Scrim } from './ui/Hero';
+import { HeroCopy, HeroSection, Scrim } from './ui/Hero';
 import { SeniorExpertiseProfile } from './SeniorExpertise';
 
 interface AboutLeadershipProps {
@@ -115,10 +115,8 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
       <div id="about-section" className="bg-[#050505]">
         {/* ---------------------------------------------------------- */}
         {/* Opening: type-led statement, then the horizon with the vision set into its dark corner */}
-        <HeroSection id="about-who" labelledBy="about-title">
-          <div className="mc-container relative z-10 pt-10 sm:pt-14 lg:pt-20 pb-12 sm:pb-16 lg:pb-20">
-            <Illumination tone="indigo" strength={0.8} className="-left-44 -top-28 h-[32rem] w-[32rem]" />
-
+        <HeroSection id="about-who" labelledBy="about-title" className="bg-[#050505]">
+          <div className="mc-container relative z-10 pt-10 sm:pt-14 lg:pt-20">
             <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-y-6 lg:gap-x-16 lg:items-end">
               <HeroCopy
                 id="about-title"
@@ -148,27 +146,27 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
               </motion.div>
             </div>
 
-            <figure className="relative mt-10 sm:mt-14 lg:mt-16">
-              <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] aspect-[16/10] sm:aspect-[2/1] lg:aspect-[21/9]">
-                <ArtImage
-                  name="about-skyline"
-                  alt="Illustration: a strategy table with maps and reports, a city at sunset beyond tall windows"
-                  priority
-                  sizes="(min-width: 1408px) 1344px, (min-width: 1024px) calc(100vw - 4rem), (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
-                  position="object-[95%_50%] sm:object-[80%_50%] lg:object-[50%_50%]"
-                />
-                <Scrim background={FRAME_EDGE} className="lg:hidden" />
-                <Scrim background={QUOTE_CORNER} className="hidden lg:block" />
-              </div>
+          </div>
 
-              <div className="mt-7 lg:mt-0 lg:absolute lg:bottom-0 lg:left-0 lg:w-[min(30rem,36%)] lg:p-9 xl:p-11">
+          <figure className="mc-art-bleed relative mt-10 aspect-[16/10] sm:mt-14 sm:aspect-[2/1] lg:mt-16 lg:aspect-[21/9]">
+            <ArtImage
+              name="about-skyline"
+              alt="Illustration: a strategy table with maps and reports, a city at sunset beyond tall windows"
+              priority
+              sizes="100vw"
+              position="object-[95%_50%] sm:object-[80%_50%] lg:object-[50%_50%]"
+            />
+            <Scrim background={FRAME_EDGE} className="lg:hidden" />
+            <Scrim background={QUOTE_CORNER} className="hidden lg:block" />
+            <div className="mc-container mc-art-copy flex h-full items-end py-7 sm:py-9 lg:py-11">
+              <div className="max-w-[30rem]">
                 <p className="mc-meta">Our vision</p>
                 <blockquote className="mt-3 font-heading text-[1.25rem] sm:text-[1.5rem] lg:text-[1.1875rem] xl:text-[1.4375rem] font-medium leading-[1.3] tracking-[-0.01em] text-white">
                   <p>“{VISION}”</p>
                 </blockquote>
               </div>
-            </figure>
-          </div>
+            </div>
+          </figure>
         </HeroSection>
 
         {/* ---------------------------------------------------------- */}

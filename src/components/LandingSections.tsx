@@ -5,6 +5,7 @@ import { PROBLEM_CROSS_SECTIONS, AFRICA_REGIONS_DATA } from '../data/industryAnd
 import { SENIOR_AREAS, SENIOR_PROFILE } from '../data/seniorExpertise';
 import { BTN_PRIMARY, DeepDive, SectionHeader, TONES, Tone } from './ui/primitives';
 import { ArtImage } from './ui/ArtImage';
+import { Scrim } from './ui/Hero';
 
 /*
  * Overview page sections. Every claim below is traceable to
@@ -135,22 +136,24 @@ export const CapabilitiesSection: React.FC<SectionProps> = ({ setActiveTab }) =>
 );
 
 /* ------------------------------------------------------------------ */
-/* Industries: one contextual proof frame, then direct routes          */
+/* Industries: one contextual field, then direct routes                */
 /* ------------------------------------------------------------------ */
 export const IndustriesSection: React.FC<SectionProps & { onSelectIndustry: (id: string) => void }> = ({ setActiveTab }) => (
-  <section className="mc-section mc-editorial-band" id="industries-served" aria-labelledby="industries-title">
-    <div className="mc-container grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 lg:items-center">
-      <figure className="mc-evidence-frame lg:col-span-6 aspect-[4/3] sm:aspect-[16/10]">
-        <ArtImage
-          name="global"
-          alt="Conceptual illustration connecting health, industry and African market context."
-          sizes="(min-width: 1024px) 48vw, 100vw"
-          position="object-[48%_50%]"
-        />
-      </figure>
-      <div className="lg:col-span-6">
+  <section className="mc-art-bleed border-b border-white/[0.07] bg-[#0a0a0a]" id="industries-served" aria-labelledby="industries-title">
+    <div aria-hidden="true" className="absolute inset-0">
+      <ArtImage
+        name="corridor"
+        alt=""
+        sizes="100vw"
+        position="object-[52%_48%] lg:object-[58%_50%]"
+      />
+      <Scrim background="linear-gradient(90deg, #0a0a0a 0%, rgba(10,10,10,.96) 20%, rgba(10,10,10,.72) 42%, rgba(10,10,10,.28) 67%, rgba(10,10,10,.08) 100%)" />
+      <Scrim background="linear-gradient(180deg, rgba(10,10,10,.54) 0%, rgba(10,10,10,0) 25%, rgba(10,10,10,.12) 70%, #0a0a0a 100%)" />
+    </div>
+    <div className="mc-container mc-art-copy py-[clamp(4.5rem,10vw,8rem)]">
+      <div className="max-w-[35rem]">
         <h2 id="industries-title" className="mc-h2">Sector context changes the answer.</h2>
-        <p className="mc-lead mt-5">
+        <p className="mc-lead mt-5 !text-white/75">
           Life Sciences is our deepest specialism. Market context, local conditions and operating realities shape every engagement.
         </p>
         <div className="mt-7 flex flex-col items-start gap-1">
@@ -171,24 +174,25 @@ export const ExpertiseReachSection: React.FC<SectionProps> = ({ setActiveTab }) 
   const regionList = `${regions.slice(0, -1).join(', ')} and ${regions[regions.length - 1]}`;
 
   return (
-    <section className="mc-section" id="expertise" aria-labelledby="expertise-title">
-      <div className="mc-container">
+    <section className="mc-art-bleed border-b border-white/[0.07] bg-[#050505]" id="expertise" aria-labelledby="expertise-title">
+      <div aria-hidden="true" className="absolute inset-0">
+        <ArtImage
+          name="strategy"
+          alt=""
+          sizes="100vw"
+          position="object-[48%_48%] lg:object-[60%_48%]"
+        />
+        <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.94) 23%, rgba(5,5,5,.64) 47%, rgba(5,5,5,.21) 73%, rgba(5,5,5,.05) 100%)" />
+        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.52) 0%, rgba(5,5,5,0) 26%, rgba(5,5,5,.12) 72%, #050505 100%)" />
+      </div>
+      <div className="mc-container mc-art-copy py-[clamp(4.5rem,10vw,8rem)]">
         <SectionHeader
           title={<span id="expertise-title">Depth where context matters.</span>}
           lead="Sector, market and local knowledge shape what is possible."
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 lg:items-center">
-          <figure className="mc-evidence-frame lg:col-span-7 aspect-[4/3] sm:aspect-[16/10]">
-            <ArtImage
-              name="strategy"
-              alt="Conceptual illustration of a team reviewing a map of Africa alongside panels on healthcare, agriculture, logistics and energy."
-              sizes="(min-width: 1024px) 56vw, 100vw"
-              position="object-[40%_45%]"
-            />
-          </figure>
-
-          <article className="lg:col-span-5" aria-labelledby="expertise-geo-title">
+        <div className="max-w-[35rem]">
+          <article aria-labelledby="expertise-geo-title">
             <h3 id="expertise-geo-title" className="font-heading text-[1.5rem] sm:text-[1.75rem] font-medium tracking-[-0.015em] leading-tight text-white">
               African market knowledge, international delivery
             </h3>
@@ -285,9 +289,14 @@ export const ApproachSection: React.FC<SectionProps> = () => (
 /* Closing call to action                                               */
 /* ------------------------------------------------------------------ */
 export const ClosingSection: React.FC<SectionProps> = ({ onOpenIntake }) => (
-  <section className="mc-section !border-b-0" id="start" aria-labelledby="start-title">
-    <div className="mc-container grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 lg:items-center">
-      <div className="lg:col-span-6 py-2 lg:py-8">
+  <section className="mc-art-bleed !border-b-0 bg-[#0d0f17]" id="start" aria-labelledby="start-title">
+    <div aria-hidden="true" className="absolute inset-0">
+      <ArtImage name="office" alt="" sizes="100vw" position="object-[60%_50%]" />
+      <Scrim background="linear-gradient(90deg, #0d0f17 0%, rgba(13,15,23,.96) 21%, rgba(13,15,23,.69) 47%, rgba(13,15,23,.2) 74%, rgba(13,15,23,.04) 100%)" />
+      <Scrim background="linear-gradient(180deg, rgba(13,15,23,.58) 0%, rgba(13,15,23,0) 28%, rgba(13,15,23,.08) 72%, #0d0f17 100%)" />
+    </div>
+    <div className="mc-container mc-art-copy py-[clamp(4.5rem,10vw,8rem)]">
+      <div className="max-w-[35rem]">
           <h2 id="start-title" className="font-heading font-medium text-white tracking-[-0.025em] leading-[1.08] text-[1.875rem] sm:text-[2.5rem] lg:text-[2.875rem] max-w-[18ch]">
             Bring the question in front of you.
           </h2>
@@ -308,9 +317,6 @@ export const ClosingSection: React.FC<SectionProps> = ({ onOpenIntake }) => (
             </a>
           </div>
       </div>
-      <figure className="mc-evidence-frame lg:col-span-6 aspect-[4/3] sm:aspect-[16/10]">
-        <ArtImage name="office" alt="A worktable overlooking a city at dusk." sizes="(min-width: 1024px) 48vw, 100vw" position="object-[60%_50%]" />
-      </figure>
     </div>
   </section>
 );
