@@ -227,12 +227,11 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
             className="max-w-[39rem] lg:[&_h1]:text-[2.375rem] xl:[&_h1]:text-[3rem]"
             title={
               <>
-                <span className="sr-only">Life Sciences: </span>
-                Our deepest specialism, with <em>regulatory and commercial fluency</em> built in.
+                Life Sciences, with <em>regulatory and commercial fluency</em>.
               </>
             }
-            lead="Research, strategy, AI training and AI solutions for pharmaceutical, device, diagnostics and hospital organisations, with deepest focus on African markets."
-            note={<>One of the {UNIVERSAL_INDUSTRIES.length} industries we serve, and the one we know best.</>}
+            lead="Research, strategy and applied AI for pharmaceutical, device, diagnostics and hospital organisations."
+            note={<>One of the {UNIVERSAL_INDUSTRIES.length} industries we serve—and the one we know best.</>}
             actions={
               <>
                 <button type="button" onClick={onOpenIntake} className={`${BTN_PRIMARY} !px-6`}>

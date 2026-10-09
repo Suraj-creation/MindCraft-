@@ -281,8 +281,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
             id="ai-solutions-title"
             meta="AI enterprise solutions"
             title={<>Applied AI, <em className="font-normal text-emerald-300">responsibly.</em></>}
-            lead="AI strategy, analytics, automation and integration grounded in data governance and how teams actually work."
-            note="Engagements can range from use-case prioritisation to solution architecture and implementation support."
+            lead="AI strategy, analytics, automation and integration—grounded in governance and real work."
             actions={
               <>
                 <button type="button" onClick={onOpenIntake} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 text-sm font-semibold text-[#06150f] transition-[background-color,transform] hover:bg-emerald-300 active:scale-[0.98]">

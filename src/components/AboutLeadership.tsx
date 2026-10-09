@@ -140,9 +140,9 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
                 transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
               >
                 <p className="mc-lead">
-                  Founded in 2026, MindCraft brings business consulting, market research, AI training and AI enterprise solutions together, with specialist depth in Life Sciences. Africa is a deliberate focus, alongside Europe and the United States.
+                  Consulting, market intelligence and applied AI—with specialist Life Sciences depth and an African focus.
                 </p>
-                <p className="mt-4 text-[13px] leading-relaxed text-white/55">Headquartered in Nairobi, Kenya.</p>
+                <p className="mt-4 text-[13px] leading-relaxed text-white/55">Founded 2026 · Nairobi, Kenya · Africa, Europe and the United States.</p>
               </motion.div>
             </div>
 

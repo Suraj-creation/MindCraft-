@@ -150,8 +150,7 @@ export const AITrainingSimulation: React.FC<AITrainingSimulationProps> = ({ onOp
             id="ai-training-title"
             meta="AI training & digital literacy"
             title={<>AI confidence for <em className="font-normal text-amber-300">real work.</em></>}
-            lead="Practical AI learning for leaders and teams, shaped around the work they need to do."
-            note="Programmes can include readiness assessment, responsible-use guidance and train-the-trainer support."
+            lead="Practical AI learning, designed around the work teams need to do."
             actions={
               <>
                 <button type="button" onClick={onOpenIntake} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-5 text-sm font-semibold text-[#17120a] transition-[background-color,transform] hover:bg-amber-300 active:scale-[0.98]">
