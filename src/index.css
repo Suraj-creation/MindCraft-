@@ -186,6 +186,7 @@ html.lenis, html.lenis body { height: auto; }
 .mc-editorial-band { background-color: var(--mc-surface); }
 .mc-editorial-band--indigo { background-color: var(--mc-surface-indigo); }
 .mc-evidence-frame {
+  position: relative;
   overflow: hidden;
   background-color: var(--mc-surface-raised);
 }
