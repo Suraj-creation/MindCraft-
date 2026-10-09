@@ -12,11 +12,15 @@
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Plus Jakarta Sans', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --mc-canvas: #050505;
+    --mc-surface: #0a0a0a;
+    --mc-surface-raised: #0d0f17;
+    --mc-surface-indigo: #1e1b4b;
   }
 
   body {
     font-family: var(--font-body);
-    background-color: #050505;
+    background-color: var(--mc-canvas);
     color: #e0e0e0;
     overflow-x: hidden;
   }
@@ -176,9 +180,19 @@ html.lenis, html.lenis body { height: auto; }
   font-variant-numeric: tabular-nums;
 }
 
-/* Tonal rhythm between sections: canvas (#050505), surface (#0A0A0A), surface 2 (#0D0F17) */
-.mc-surface { background-color: #0a0a0a; }
-.mc-surface-2 { background-color: #0d0f17; }
+/* Tonal rhythm between sections: canvas, editorial field, raised evidence and indigo focus. */
+.mc-surface { background-color: var(--mc-surface); }
+.mc-surface-2 { background-color: var(--mc-surface-raised); }
+.mc-editorial-band { background-color: var(--mc-surface); }
+.mc-editorial-band--indigo { background-color: var(--mc-surface-indigo); }
+.mc-evidence-frame {
+  overflow: hidden;
+  background-color: var(--mc-surface-raised);
+}
+.mc-rule-list > * + * { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+
+/* Use a surface change at deliberate editorial moments, never as a site-wide gradient. */
+.mc-editorial-rhythm > :nth-child(even) { background-color: var(--mc-surface); }
 
 /* 44px minimum touch target */
 .mc-tap { min-height: 2.75rem; min-width: 2.75rem; }

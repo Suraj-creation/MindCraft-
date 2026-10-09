@@ -16,12 +16,12 @@ export const TONES: Record<Tone, { text: string; border: string; bg: string; chi
   teal:    { text: 'text-teal-400',    border: 'border-teal-500/30',    bg: 'bg-teal-500/10',    chip: 'border-teal-500/25 bg-teal-500/10 text-teal-200',        hoverBorder: 'hover:border-teal-500/50' }
 };
 
-/** Enter-on-view, once. Spread onto a motion element. A short, calm settle rather than a pop. */
+/** Enter-on-view, once. Reserve this for an orienting moment rather than repeated rows. */
 export const reveal = {
-  initial: { opacity: 0, y: 16 },
+  initial: { opacity: 0, y: 10 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '0px 0px -10% 0px' },
-  transition: { duration: 0.55, ease: EASE }
+  transition: { duration: 0.24, ease: EASE }
 };
 
 /** Current route and navigation, provided by App so page headers can show their section's pages. */
@@ -106,7 +106,7 @@ export const PageHeader: React.FC<{
       <motion.div
         initial={reduce ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: EASE }}
+        transition={{ duration: reduce ? 0 : 0.24, ease: EASE }}
       >
         <div className="max-w-3xl">
           <Heading id={id} className={as === 'h1' ? 'mc-h1' : 'mc-h2'}>{title}</Heading>
@@ -147,21 +147,23 @@ export const DeepDive: React.FC<{
   title: string;
   hint?: string;
   tone?: Tone;
+  /** Ruled reading is the default; use a panel only where data controls need containment. */
+  surface?: 'rule' | 'panel';
   defaultOpen?: boolean;
   children: React.ReactNode;
   className?: string;
-}> = ({ title, hint, tone = 'indigo', defaultOpen = false, children, className = '' }) => {
+}> = ({ title, hint, tone = 'indigo', surface = 'rule', defaultOpen = false, children, className = '' }) => {
   const [open, setOpen] = useState(defaultOpen);
   const reduce = useReducedMotion();
   const id = useId();
   return (
-    <div className={`rounded-xl border border-white/10 bg-[#0a0a0a] ${className}`}>
+    <div className={`${surface === 'panel' ? 'rounded-xl border border-white/10 bg-[#0a0a0a]' : 'border-t border-white/[0.12]'} ${className}`}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls={id}
-        className="mc-tap w-full px-4 py-3 flex items-center justify-between gap-3 text-left"
+        className={`mc-tap w-full ${surface === 'panel' ? 'px-4 py-3' : 'py-4'} flex items-center justify-between gap-3 text-left`}
       >
         <span className="min-w-0">
           <span className="block text-sm font-semibold text-white">{title}</span>
@@ -180,7 +182,7 @@ export const DeepDive: React.FC<{
             transition={{ duration: reduce ? 0 : 0.22, ease: EASE }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4 pt-1 border-t border-white/5">{children}</div>
+            <div className={`${surface === 'panel' ? 'px-4 pb-4 pt-1 border-t border-white/5' : 'pb-5 pr-8 text-white/70'}`}>{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

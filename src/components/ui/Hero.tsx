@@ -5,6 +5,7 @@ import { EASE, SectionTabs } from './primitives';
 /*
  * Building blocks for page openings. Each page composes its own hero from these
  * (split, opener, framed, panorama, type-led...) so pages share a voice without sharing a template.
+ * Page openings are type-first by default; supplied art is opt-in, not a background requirement.
  */
 
 /** The opening band of a page: section tabs on top, composition below. */
@@ -49,7 +50,7 @@ export const HeroCopy: React.FC<{
       className={className}
       initial={reduce ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.05, ease: EASE }}
+      transition={{ duration: reduce ? 0 : 0.24, delay: reduce ? 0 : 0.03, ease: EASE }}
     >
       {meta && <p className="mc-meta mb-5">{meta}</p>}
       <h1 id={id} className={size === 'display' ? 'mc-display' : 'mc-h1'}>
