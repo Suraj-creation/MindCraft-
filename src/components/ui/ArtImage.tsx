@@ -18,6 +18,7 @@ const files = {
 /** Intrinsic size of each original, so the browser can reserve space and pick a width. */
 const META = {
   // Overview
+  globe: { w: 4272, h: 2848 }, // hero: supplied photograph (src/assets/pexels-ian-panelo-4715450.jpg)
   global: { w: 1672, h: 941 },
   office: { w: 1672, h: 941 },
   corridor: { w: 1672, h: 941 },

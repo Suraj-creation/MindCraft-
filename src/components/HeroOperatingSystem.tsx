@@ -24,16 +24,20 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpen
 
   return (
     <section aria-labelledby="overview-title" className="mc-art-bleed min-h-[clamp(34rem,72vw,48rem)] border-b border-white/[0.1] bg-[#050505]">
-      <div aria-hidden="true" className="absolute inset-0">
+      {/* The globe sits left of centre in the photograph, so on desktop the photo takes the right of the hero
+          and its left edge dissolves into the canvas; the headline never covers Africa. */}
+      <div aria-hidden="true" className="absolute inset-0 lg:left-auto lg:w-[56%]">
         <ArtImage
-          name="global"
+          name="globe"
           alt=""
           priority
-          sizes="100vw"
-          position="object-[54%_42%] sm:object-[48%_45%] lg:object-[42%_48%]"
+          sizes="(min-width: 1024px) 90vw, 100vw"
+          position="object-[38%_45%] lg:object-[34%_48%]"
+          className="brightness-[0.8] saturate-[0.9]"
         />
-        <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.96) 17%, rgba(5,5,5,.74) 38%, rgba(5,5,5,.28) 63%, rgba(5,5,5,.06) 100%)" />
-        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.78) 0%, rgba(5,5,5,0) 24%, rgba(5,5,5,0) 72%, #050505 100%)" />
+        <Scrim className="hidden lg:block" background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.82) 12%, rgba(5,5,5,.3) 30%, rgba(5,5,5,0) 46%)" />
+        <Scrim className="lg:hidden" background="linear-gradient(180deg, rgba(5,5,5,.55) 0%, rgba(5,5,5,.6) 42%, rgba(5,5,5,.9) 70%, #050505 100%)" />
+        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.7) 0%, rgba(5,5,5,0) 22%, rgba(5,5,5,0) 70%, #050505 100%)" />
       </div>
 
       <div className="mc-container mc-art-copy flex min-h-[clamp(34rem,72vw,48rem)] flex-col justify-end pb-12 pt-28 sm:pb-16 sm:pt-32 lg:pb-14 lg:pt-36">
