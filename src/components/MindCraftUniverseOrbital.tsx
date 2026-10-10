@@ -130,6 +130,7 @@ const RingsMotif: React.FC<{ className?: string }> = ({ className = '' }) => {
 export const MindCraftUniverseOrbital: React.FC<Props> = ({ onNavigate, onSelectIndustry, headingLevel = 2 }) => {
   const [activeRing, setActiveRing] = useState<RingId>('capabilities');
   const isPage = headingLevel === 1;
+  const H = isPage ? 'h2' : 'h3';
 
   const ringsInfo: { id: RingId; label: string; name: string; desc: string; count: string }[] = [
     {
@@ -220,7 +221,7 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({ onNavigate, onSelect
                     x="200"
                     y={200 - ring.r + 15}
                     textAnchor="middle"
-                    fontSize="10"
+                    fontSize="11"
                     fontFamily="var(--font-mono)"
                     fill={on ? '#C7D2FE' : 'rgba(255,255,255,0.5)'}
                     style={{ textTransform: 'uppercase', letterSpacing: '0.12em' }}
@@ -263,11 +264,11 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({ onNavigate, onSelect
                   on ? 'bg-[#0d0f17]' : 'hover:bg-white/[0.03]'
                 }`}
               >
-                <span className={`font-mono text-[11px] uppercase tracking-[0.08em] ${on ? 'text-indigo-300' : 'text-white/45'}`}>{r.label}</span>
+                <span className={`font-mono text-xs uppercase tracking-[0.08em] ${on ? 'text-indigo-300' : 'text-white/55'}`}>{r.label}</span>
                 <span className={`font-heading text-[1.0625rem] font-medium tracking-[-0.01em] ${on ? 'text-white' : 'text-white/70 group-hover:text-white'}`}>
                   {r.name}
                 </span>
-                <span className={`font-mono text-[13px] tabular-nums ${on ? 'text-white' : 'text-white/45'}`}>{r.count}</span>
+                <span className={`font-mono text-[13px] tabular-nums ${on ? 'text-white' : 'text-white/55'}`}>{r.count}</span>
               </button>
             );
           })}
@@ -276,7 +277,7 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({ onNavigate, onSelect
         <div id="orbital-panel" role="tabpanel" aria-labelledby={`orbital-tab-${activeRing}`} className="mt-8">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={activeRing} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2, ease: EASE }}>
-              <h3 className="font-heading text-[1.375rem] sm:text-[1.5rem] font-medium leading-tight tracking-[-0.015em] text-white">{active.name}</h3>
+              <H className="font-heading text-[1.375rem] sm:text-[1.5rem] font-medium leading-tight tracking-[-0.015em] text-white">{active.name}</H>
               <p className="mt-2 text-[15px] leading-relaxed text-white/65">{active.desc}</p>
 
               {activeRing === 'center' && (
@@ -348,7 +349,7 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({ onNavigate, onSelect
                       <li key={r.name} className="border-b border-white/[0.08] py-3.5">
                         <div className="flex items-baseline justify-between gap-3">
                           <span className="text-[15px] font-medium text-white">{r.name}</span>
-                          <span className="font-mono text-[11px] tabular-nums text-white/50">{r.countries.length} countries</span>
+                          <span className="font-mono text-xs tabular-nums text-white/50">{r.countries.length} countries</span>
                         </div>
                         <p className="mt-1 text-[13px] leading-snug text-white/60 line-clamp-2">{r.countries.join(', ')}</p>
                       </li>
@@ -401,7 +402,7 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({ onNavigate, onSelect
               }
               lead={`At the centre, four capabilities. Around them, ${UNIVERSAL_INDUSTRIES.length} industries, Africa's ${AFRICA_REGIONS_DATA.length} regional clusters and the outcomes the work is for. Choose a layer below to explore it.`}
             >
-              <ol aria-label="Layers, from the centre out" className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+              <ol aria-label="Layers, from the centre out" className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs uppercase tracking-[0.08em] text-white/55">
                 <li>Core</li>
                 <li>
                   <span className="text-white/85 tabular-nums">{PILLARS.length}</span> capabilities

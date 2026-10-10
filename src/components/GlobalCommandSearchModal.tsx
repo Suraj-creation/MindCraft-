@@ -165,7 +165,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
     { tab: 'industries', label: 'Universal Industry Explorer', sub: '24 Sectors (Pharma, Devices, Telco, Energy...)', Icon: Building2, color: 'text-indigo-400' },
     { tab: 'africa-explorer', label: 'Africa Intelligence Hub', sub: '4 Regional Clusters & 45 Jurisdictions', Icon: Globe2, color: 'text-emerald-400' },
     { tab: 'market-entry', label: '9-Step Market Entry Framework', sub: 'De-risk entry into any African market', Icon: Compass, color: 'text-sky-400' },
-    { tab: 'localization', label: 'Market Localization', sub: 'Global strategy to local regulatory, commercial and partner execution', Icon: Globe2, color: 'text-emerald-400' },
+    { tab: 'localization', label: 'Market Localisation', sub: 'Global strategy to local regulatory, commercial and partner execution', Icon: Globe2, color: 'text-emerald-400' },
     { tab: 'senior-expertise', label: 'Senior Life Sciences Expertise', sub: 'Market access, regulatory strategy and commercial excellence', Icon: Building2, color: 'text-indigo-400' },
     { tab: 'matrix-3d', label: '3D Configuration Matrix', sub: 'Industry × Geography × Capability', Icon: Layers, color: 'text-amber-400' }
   ];
@@ -260,7 +260,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
                               <span className="text-sm font-semibold text-white group-hover:text-indigo-400">
                                 {res.title}
                               </span>
-                              <span className="text-[11px] tabular-nums px-1.5 py-0.5 rounded bg-white/5 text-neutral-400 border border-white/10">
+                              <span className="text-xs tabular-nums px-1.5 py-0.5 rounded bg-white/5 text-neutral-400 border border-white/10">
                                 {res.type}
                               </span>
                             </div>
@@ -328,7 +328,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
             </div>
 
             {/* Footer info bar */}
-            <div className="shrink-0 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-white/10 bg-[#050505] text-[11px] tabular-nums text-neutral-400 flex items-center justify-between gap-3">
+            <div className="shrink-0 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-white/10 bg-[#050505] text-xs tabular-nums text-neutral-400 flex items-center justify-between gap-3">
               <span>Arrow keys to move, Enter to open</span>
               <span className="hidden sm:inline">Press ESC to close</span>
             </div>

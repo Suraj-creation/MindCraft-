@@ -35,7 +35,7 @@ const selectClass =
 
 const StepLabel: React.FC<{ n: string; htmlFor?: string; id?: string; children: React.ReactNode }> = ({ n, htmlFor, id, children }) => (
   <label htmlFor={htmlFor} id={id} className="flex items-center gap-2 mb-2">
-    <span className="tabular-nums text-[11px] text-indigo-400 tabular-nums">{n}</span>
+    <span className="tabular-nums text-xs text-indigo-400 tabular-nums">{n}</span>
     <span className="text-xs text-white/60 font-medium">{children}</span>
   </label>
 );
@@ -141,7 +141,7 @@ export const PathwayExplorer: React.FC<PathwayExplorerProps> = ({ onNavigate, on
 
             <fieldset>
               <legend id={capLabelId} className="flex items-center gap-2 mb-2">
-                <span className="tabular-nums text-[11px] text-indigo-400 tabular-nums">03</span>
+                <span className="tabular-nums text-xs text-indigo-400 tabular-nums">03</span>
                 <span className="text-xs text-white/60 font-medium">Capability</span>
               </legend>
               <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby={capLabelId}>
@@ -199,15 +199,15 @@ export const PathwayExplorer: React.FC<PathwayExplorerProps> = ({ onNavigate, on
 
               <dl className="mt-5 space-y-3 text-sm">
                 <div className="grid grid-cols-[5.5rem_1fr] gap-3">
-                  <dt className="text-xs text-white/40 pt-0.5 font-medium">Industry</dt>
+                  <dt className="text-xs text-white/55 pt-0.5 font-medium">Industry</dt>
                   <dd className="text-white/70 leading-snug max-w-[62ch]">{industry.tagline}</dd>
                 </div>
                 <div className="grid grid-cols-[5.5rem_1fr] gap-3">
-                  <dt className="text-xs text-white/40 pt-0.5 font-medium">Geography</dt>
+                  <dt className="text-xs text-white/55 pt-0.5 font-medium">Geography</dt>
                   <dd className="text-white/70 leading-snug max-w-[62ch]">{geoContext}</dd>
                 </div>
                 <div className="grid grid-cols-[5.5rem_1fr] gap-3">
-                  <dt className="text-xs text-white/40 pt-0.5 font-medium">Capability</dt>
+                  <dt className="text-xs text-white/55 pt-0.5 font-medium">Capability</dt>
                   <dd className="text-white/70 leading-snug max-w-[62ch]">{pillar.tagline}</dd>
                 </div>
               </dl>

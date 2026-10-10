@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useId, useState } from 're
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import type { NavTab } from '../../types';
-import { navTabOf, sectionItemOf } from '../../data/navigation';
+import { isPlainClick, navTabOf, routePath, sectionItemOf } from '../../data/navigation';
 
 export const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -27,6 +27,31 @@ export const reveal = {
 /** Current route and navigation, provided by App so page headers can show their section's pages. */
 export const NavContext = createContext<{ activeTab: NavTab; navigate: (tab: NavTab) => void } | null>(null);
 
+/**
+ * A real link to a route: crawlable, shareable and opens in a new tab on modified clicks.
+ * Plain clicks route in-app through `onNavigate` (defaults to the app's navigate).
+ */
+export const RouteLink: React.FC<
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & { to: NavTab; onNavigate?: (tab: NavTab) => void }
+> = ({ to, onNavigate, onClick, children, ...rest }) => {
+  const nav = useContext(NavContext);
+  return (
+    <a
+      href={routePath(to)}
+      onClick={(e) => {
+        onClick?.(e);
+        const go = onNavigate ?? nav?.navigate;
+        if (e.defaultPrevented || !go || !isPlainClick(e)) return;
+        e.preventDefault();
+        go(to);
+      }}
+      {...rest}
+    >
+      {children}
+    </a>
+  );
+};
+
 /** Shared button looks so every page's actions match the Overview. */
 export const BTN_PRIMARY =
   'mc-tap px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white text-sm font-semibold flex items-center justify-center gap-2 transition-[background-color,transform] duration-150';
@@ -35,7 +60,7 @@ export const BTN_SECONDARY =
 
 /* ---------------------------------------------------------------- */
 /**
- * Tabs for the pages inside the current nav section (e.g. Africa Hub: regions, localization, entry, map).
+ * Tabs for the pages inside the current nav section (e.g. Africa Hub: regions, localisation, entry, map).
  * Replaces a decorative kicker with something you can use: where you are, and where else you can go.
  */
 export const SectionTabs: React.FC = () => {
@@ -50,7 +75,7 @@ export const SectionTabs: React.FC = () => {
       className="mb-10 sm:mb-14 -mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       <div className="flex items-end gap-x-6 sm:gap-x-8 border-b border-white/[0.08] min-w-max">
-        <span className="flex items-center gap-x-6 sm:gap-x-8 pb-3 text-[13px] font-medium text-white/40">
+        <span className="flex items-center gap-x-6 sm:gap-x-8 pb-3 text-[13px] font-medium text-white/55">
           {section.label}
           <span aria-hidden="true" className="h-3.5 w-px bg-white/15" />
         </span>
@@ -59,17 +84,16 @@ export const SectionTabs: React.FC = () => {
             const active = item.id === current;
             return (
               <li key={item.id}>
-                <button
-                  type="button"
-                  onClick={() => nav.navigate(item.id)}
+                <RouteLink
+                  to={item.id}
                   aria-current={active ? 'page' : undefined}
                   className={`relative min-h-11 flex items-end pb-3 text-[13px] font-medium whitespace-nowrap transition-colors duration-150 ${
-                    active ? 'text-white' : 'text-white/55 hover:text-white'
+                    active ? 'text-white' : 'text-white/60 hover:text-white'
                   }`}
                 >
                   {item.short}
                   {active && <span aria-hidden="true" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-indigo-400" />}
-                </button>
+                </RouteLink>
               </li>
             );
           })}
@@ -287,26 +311,33 @@ const ARROW_HOVER: Record<Tone, string> = {
 };
 export const RelatedLinks: React.FC<{
   title?: string;
-  items: { label: string; desc?: string; onClick: () => void; tone?: Tone }[];
+  /** `to` renders a real link to that route; `onClick` alone keeps an in-page action. */
+  items: { label: string; desc?: string; to?: NavTab; onClick?: () => void; tone?: Tone }[];
 }> = ({ title = 'Related', items }) => (
   <div>
-    <h2 className="text-[13px] font-medium text-white/45 mb-1">{title}</h2>
+    <h2 className="text-[13px] font-medium text-white/55 mb-1">{title}</h2>
     <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8">
-      {items.map((i) => (
-        <li key={i.label} className="border-t border-white/[0.08]">
-          <button
-            type="button"
-            onClick={i.onClick}
-            className="group mc-tap w-full text-left py-4 flex items-start justify-between gap-4"
-          >
+      {items.map((i) => {
+        const face = (
+          <>
             <span className="min-w-0">
               <span className="block text-[15px] font-medium text-white group-hover:text-indigo-200 transition-colors duration-150">{i.label}</span>
-              {i.desc && <span className="block text-[13px] text-white/50 mt-1 leading-snug">{i.desc}</span>}
+              {i.desc && <span className="block text-[13px] text-white/55 mt-1 leading-snug">{i.desc}</span>}
             </span>
-            <ArrowRight className={`mt-1 w-4 h-4 shrink-0 text-white/30 ${ARROW_HOVER[i.tone ?? 'indigo']} transition-colors duration-150`} />
-          </button>
-        </li>
-      ))}
+            <ArrowRight aria-hidden="true" className={`mt-1 w-4 h-4 shrink-0 text-white/35 ${ARROW_HOVER[i.tone ?? 'indigo']} transition-colors duration-150`} />
+          </>
+        );
+        const cls = 'group mc-tap w-full text-left py-4 flex items-start justify-between gap-4';
+        return (
+          <li key={i.label} className="border-t border-white/[0.08]">
+            {i.to ? (
+              <RouteLink to={i.to} className={cls}>{face}</RouteLink>
+            ) : (
+              <button type="button" onClick={i.onClick} className={cls}>{face}</button>
+            )}
+          </li>
+        );
+      })}
     </ul>
   </div>
 );
@@ -336,8 +367,8 @@ export const CapabilityCard: React.FC<{
     </h3>
     <p className="mt-3 text-[15px] text-white/75 leading-relaxed">{what}</p>
     <dl className="mt-5 space-y-3 text-[13px]">
-      <div className="hidden sm:block"><dt className="font-medium text-white/40">Why it matters</dt><dd className="text-white/65 mt-1 leading-snug">{why}</dd></div>
-      <div><dt className="font-medium text-white/40">Outcome</dt><dd className="text-white/85 mt-1 leading-snug">{outcome}</dd></div>
+      <div className="hidden sm:block"><dt className="font-medium text-white/55">Why it matters</dt><dd className="text-white/65 mt-1 leading-snug">{why}</dd></div>
+      <div><dt className="font-medium text-white/55">Outcome</dt><dd className="text-white/85 mt-1 leading-snug">{outcome}</dd></div>
     </dl>
     <span className={`mt-auto pt-6 inline-flex items-center gap-1.5 text-sm font-medium ${TONES[tone].text}`}>
       Explore {name} <ArrowRight className="w-4 h-4" />

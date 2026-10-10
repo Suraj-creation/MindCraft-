@@ -152,7 +152,7 @@ export const MindCraftMethod: React.FC<MindCraftMethodProps> = () => {
                       />
                     </span>
                     <span className="min-w-0 lg:mt-3">
-                      <span className={`font-mono text-[11px] tabular-nums ${current ? 'text-indigo-300' : 'text-white/45'}`}>{pad(i + 1)}</span>
+                      <span className={`font-mono text-xs tabular-nums ${current ? 'text-indigo-300' : 'text-white/55'}`}>{pad(i + 1)}</span>
                       <span
                         className={`ml-2.5 lg:ml-0 lg:mt-1 lg:block font-heading text-[1.0625rem] lg:text-[1.125rem] font-medium tracking-[-0.01em] transition-colors duration-150 ${
                           current ? 'text-white' : 'text-white/70 group-hover:text-white'
@@ -193,7 +193,7 @@ export const MindCraftMethod: React.FC<MindCraftMethodProps> = () => {
                   </p>
                   <h3 className="mt-3 font-heading text-[1.75rem] sm:text-[2.125rem] font-medium leading-tight tracking-[-0.02em] text-white">
                     {stage.title}
-                    <span className="text-white/45"> · {stage.tagline}</span>
+                    <span className="text-white/55"> · {stage.tagline}</span>
                   </h3>
                   <p className="mt-4 max-w-[36em] text-[15px] sm:text-base leading-relaxed text-white/75">{stage.process}</p>
                   <p className="mt-6 text-[13px] font-medium text-white/55">What this stage produces</p>

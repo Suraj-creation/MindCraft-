@@ -60,7 +60,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
     'Integrated Multi-Pillar (Strategy + Research + AI)',
     'Market Research & Commercial Evidence',
     'Business Consulting & Strategic Advisory',
-    'AI Training & Organizational Capability',
+    'AI Training & Organisational Capability',
     'AI Enterprise Solutions & Engineering'
   ];
 
@@ -68,8 +68,8 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
     'New Market Entry & Commercial Acceleration',
     'Regulatory Intelligence & Guideline Automation',
     'Digital Transformation & AI Readiness',
-    'Commercial Sales Force Optimization & CRM AI',
-    'Process Optimization, SOPs & Quality Systems',
+    'Commercial Sales Force Optimisation & CRM AI',
+    'Process Optimisation, SOPs & Quality Systems',
     'KOL Mapping & Medical Affairs Strategy'
   ];
 
@@ -125,13 +125,13 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
           phase: 'Phase 02',
           title: 'Evidence Gathering & Analysis',
           duration: 'Weeks 3-5',
-          activities: 'Stakeholder interviews, statistical modeling, regulatory scans, and AI use case prioritization.'
+          activities: 'Stakeholder interviews, statistical modelling, regulatory scans, and AI use case prioritisation.'
         },
         {
           phase: 'Phase 03',
           title: 'Strategy Formulation & Solution Architecture',
           duration: 'Weeks 6-8',
-          activities: 'Board-ready strategy synthesis, custom AI software build, and curriculum customization.'
+          activities: 'Board-ready strategy synthesis, custom AI software build, and curriculum customisation.'
         },
         {
           phase: 'Phase 04',
@@ -172,8 +172,8 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
         {/* Header: intent first */}
         <PageHeader
           className="mb-10 md:mb-14"
-          title={<>Build Your Engagement Blueprint</>}
-          lead="Select your industry, geographic market, core capability need, and strategic objective to instantly generate a tailored MindCraft engagement architecture."
+          title={<>Sketch an engagement before we talk.</>}
+          lead="Choose an industry, a market, the capability you need and your objective. The builder outlines an indicative brief you can send with your enquiry."
         />
 
         {/* Selectors: stepwise on phones, 4-up grid from md */}
@@ -190,7 +190,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
                   onClick={() => setMobileStep(i)}
                   className="w-6 h-11 flex items-center justify-center"
                 >
-                  <span className={`block h-1.5 rounded-full transition-all duration-200 ${mobileStep === i ? 'w-6 bg-indigo-500' : 'w-1.5 bg-white/25'}`} />
+                  <span className={`block h-1.5 rounded-full transition-[width,background-color] duration-200 ${mobileStep === i ? 'w-6 bg-indigo-500' : 'w-1.5 bg-white/25'}`} />
                 </button>
               ))}
             </div>
@@ -263,23 +263,23 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 <span className="text-xs px-2.5 py-1 rounded-md bg-[#0d0f17] border border-indigo-500/35 text-indigo-300 font-semibold">
-                  Custom engagement blueprint
+                  Indicative brief
                 </span>
                 <span className="text-xs px-2.5 py-1 rounded bg-[#050505] border border-white/10 text-white/70 tabular-nums break-words">
                   {blueprint.industry} · {blueprint.geography}
                 </span>
               </div>
-              <motion.h3
+              <motion.h2
                 key={blueprint.objective}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, ease: EASE }}
-                className="text-2xl sm:text-3xl font-medium text-white"
+                className="font-heading text-2xl sm:text-3xl font-medium tracking-[-0.015em] text-white"
               >
                 {blueprint.objective}
-              </motion.h3>
+              </motion.h2>
               <p className="text-sm text-indigo-400 mt-1">
-                Integrated delivery model spanning research, strategic consulting, AI enablement & enterprise architecture.
+                An indicative plan across research, consulting, AI enablement and training. We refine it with you.
               </p>
             </div>
 
@@ -290,7 +290,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
                 id="discuss-blueprint-btn"
                 className="mc-tap px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition-colors active:scale-[0.98] inline-flex items-center gap-2"
               >
-                <span>Discuss This Engagement</span>
+                <span>Discuss this engagement</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -315,13 +315,13 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <span className="text-sm font-bold text-white">{ws.pillar}</span>
-                      <span className="text-[11px] tabular-nums text-indigo-400 shrink-0">{ws.timeline}</span>
+                      <span className="text-xs tabular-nums text-indigo-400 shrink-0">{ws.timeline}</span>
                     </div>
                     <p className="text-sm text-white/70 leading-relaxed">
                       {ws.scope}
                     </p>
                   </div>
-                  <div className="mt-3 pt-2 border-t border-white/[0.08] text-[11px] text-white/50 tabular-nums">
+                  <div className="mt-3 pt-2 border-t border-white/[0.08] text-xs text-white/50 tabular-nums">
                     Lead: MindCraft Senior Practice
                   </div>
                 </div>
@@ -346,8 +346,8 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
               {blueprint.indicativePhases.map((ph, i) => (
                 <li key={i} className="p-4 sm:p-5 rounded-2xl bg-[#050505] border border-white/10">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="text-[11px] tabular-nums text-indigo-400 font-bold">{ph.phase}</span>
-                    <span className="text-[11px] text-white/60 tabular-nums">{ph.duration}</span>
+                    <span className="text-xs tabular-nums text-indigo-400 font-bold">{ph.phase}</span>
+                    <span className="text-xs text-white/60 tabular-nums">{ph.duration}</span>
                   </div>
                   <div className="text-sm font-bold text-white mb-1.5">{ph.title}</div>
                   <p className="text-sm text-white/70 leading-relaxed">{ph.activities}</p>

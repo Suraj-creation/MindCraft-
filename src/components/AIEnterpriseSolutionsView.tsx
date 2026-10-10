@@ -19,6 +19,7 @@ import {
   Microscope
 } from 'lucide-react';
 import { ContextualCTA, DeepDive, EASE, RelatedLinks, SectionHeader, reveal } from './ui/primitives';
+import { hasUnsourcedFigure } from '../lib/evidence';
 import { ArtImage } from './ui/ArtImage';
 import { ArtCaption, HeroCopy, HeroSection, Scrim } from './ui/Hero';
 import { MarkList, scrollToId } from './PillarParts';
@@ -118,9 +119,9 @@ const GROUPS = [
   {
     name: 'AI Strategy & Solution Architecture',
     icon: Compass,
-    what: 'Enterprise AI strategy and use-case prioritization, solution architecture, vendor and technology stack selection, and data strategy and governance advisory.',
+    what: 'Enterprise AI strategy and use-case prioritisation, solution architecture, vendor and technology stack selection, and data strategy and governance advisory.',
     why: 'Aligns every build to business value and data readiness before development starts.',
-    outcome: 'Prioritized use cases and an architecture ready to build.'
+    outcome: 'Prioritised use cases and an architecture ready to build.'
   },
   {
     name: 'Custom AI & Analytics Solutions',
@@ -132,8 +133,8 @@ const GROUPS = [
   {
     name: 'Conversational AI & Engagement Tools',
     icon: MessageSquare,
-    what: 'AI chatbots and virtual assistants for patient engagement, customer service and field-force support, plus call center and helpdesk augmentation.',
-    why: 'Extends reach to patients, customers and field teams in banking, healthcare and consumer-facing organizations.',
+    what: 'AI chatbots and virtual assistants for patient engagement, customer service and field-force support, plus call centre and helpdesk augmentation.',
+    why: 'Extends reach to patients, customers and field teams in banking, healthcare and consumer-facing organisations.',
     outcome: 'Assistants that serve patients, customers and field forces.'
   },
   {
@@ -170,7 +171,7 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
           <span className="rounded-md border border-white/[0.08] bg-[#050505] px-2 py-1 text-xs font-semibold text-[#9CA3AF]">
             {sol.category}
           </span>
-          <span className={`rounded-md border px-2 py-1 tabular-nums text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
+          <span className={`rounded-md border px-2 py-1 tabular-nums text-xs ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
             {STATUS_LABEL[sol.status] ?? sol.status}
           </span>
         </div>
@@ -178,14 +179,16 @@ const SolutionDetail: React.FC<{ sol: AISolutionItem; onOpenIntake: () => void }
         <p className="mt-2 text-sm leading-relaxed text-[#9CA3AF]">{sol.description}</p>
       </div>
 
-      <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
-        <h4 className="text-xs font-semibold text-emerald-400">Illustrative potential outcome</h4>
-        <p className="mt-1 text-sm font-medium leading-relaxed text-white">{sol.projectedOutcome}</p>
-      </div>
+      {!hasUnsourcedFigure(sol.projectedOutcome) && (
+        <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
+          <h4 className="text-xs font-semibold text-emerald-400">Illustrative potential outcome</h4>
+          <p className="mt-1 text-sm font-medium leading-relaxed text-white">{sol.projectedOutcome}</p>
+        </div>
+      )}
 
       <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
         <h4 className="text-xs font-semibold text-amber-400">01. Business problem</h4>
-        <p className="mt-1 text-sm leading-relaxed text-[#E0E0E0]">{sol.businessProblem}</p>
+        <p className="mt-1 max-w-[42em] text-sm leading-relaxed text-[#E0E0E0]">{sol.businessProblem}</p>
       </div>
 
       {/* Technical trio: collapsed on phones/tablets, open on desktop */}
@@ -281,7 +284,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
             id="ai-solutions-title"
             meta="AI enterprise solutions"
             title={<>Applied AI, <em className="font-normal text-emerald-300">responsibly.</em></>}
-            lead="AI strategy, analytics, automation and integration—grounded in governance and real work."
+            lead="AI strategy, analytics, automation and integration, grounded in governance and real work."
             actions={
               <>
                 <button type="button" onClick={onOpenIntake} className="mc-tap inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 text-sm font-semibold text-[#06150f] transition-[background-color,transform] hover:bg-emerald-300 active:scale-[0.98]">
@@ -405,11 +408,11 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                           }`}
                         >
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="hidden rounded-md border border-white/[0.08] bg-[#050505] px-2 py-0.5 tabular-nums text-[11px] text-[#9CA3AF] lg:inline">
+                            <span className="hidden rounded-md border border-white/[0.08] bg-[#050505] px-2 py-0.5 tabular-nums text-xs text-[#9CA3AF] lg:inline">
                               {/* category is shown in the filter rail and detail on phones */}
                               {sol.category}
                             </span>
-                            <span className={`rounded-md border px-2 py-0.5 tabular-nums text-[11px] ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
+                            <span className={`rounded-md border px-2 py-0.5 tabular-nums text-xs ${STATUS_STYLE[sol.status] ?? 'border-white/[0.08] text-[#9CA3AF]'}`}>
                               {STATUS_LABEL[sol.status] ?? sol.status}
                             </span>
                           </div>
@@ -487,7 +490,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                       <span className={`mt-0.5 shrink-0 rounded-lg border p-2 ${t.icon}`}>{tier.icon}</span>
                       <span className="min-w-0 flex-1">
                         <span className={`block tabular-nums text-xs font-bold leading-snug ${t.title}`}>{tier.title}</span>
-                        <span className={`mt-0.5 block tabular-nums text-[11px] ${t.tag}`}>{tier.tag}</span>
+                        <span className={`mt-0.5 block tabular-nums text-xs ${t.tag}`}>{tier.tag}</span>
                         <span className="mt-1.5 block text-xs leading-relaxed text-[#9CA3AF]">{tier.detail}</span>
                       </span>
                     </li>
@@ -515,7 +518,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
               <ol className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
                 {LIFECYCLE_STEPS.map((step, idx) => (
                   <li key={step} className="flex items-start gap-2.5 rounded-xl border border-white/[0.08] bg-[#050505] p-3">
-                    <span className="tabular-nums text-[11px] font-bold text-emerald-400">0{idx + 1}</span>
+                    <span className="tabular-nums text-xs font-bold text-emerald-400">0{idx + 1}</span>
                     <span className="text-xs leading-snug text-[#E0E0E0]">{step}</span>
                   </li>
                 ))}
@@ -533,7 +536,7 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
             <motion.div {...reveal}>
               <ContextualCTA
                 title="Put an AI system into production"
-                body="Start from a catalog architecture or a blank page. Every build rests on data privacy, ethics and governance."
+                body="Start from a catalogue architecture or a blank page. Every build rests on data privacy, ethics and governance."
                 primaryLabel="Deploy Solution Architecture"
                 onPrimary={onOpenIntake}
               />
@@ -541,10 +544,10 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
             <RelatedLinks
               title="Pairs with"
               items={[
-                { label: 'Market Research', desc: 'Turn periodic studies into continuous intelligence monitoring.', onClick: () => setActiveTab('market-research'), tone: 'sky' },
-                { label: 'AI Training & Literacy', desc: 'Make sure the people using the system adopt it.', onClick: () => setActiveTab('ai-training'), tone: 'amber' },
-                { label: 'Localization', desc: 'Adapt solutions to each country’s regulatory and market context.', onClick: () => setActiveTab('localization'), tone: 'emerald' },
-                { label: 'Senior expertise', desc: 'The Life Sciences experience behind these solutions.', onClick: () => setActiveTab('senior-expertise'), tone: 'indigo' }
+                { label: 'Market Research', desc: 'Turn periodic studies into continuous intelligence monitoring.', to: 'market-research', tone: 'sky' },
+                { label: 'AI Training & Literacy', desc: 'Make sure the people using the system adopt it.', to: 'ai-training', tone: 'amber' },
+                { label: 'Market localisation', desc: 'Adapt solutions to each country’s regulatory and market context.', to: 'localization', tone: 'emerald' },
+                { label: 'Senior expertise', desc: 'The Life Sciences experience behind these solutions.', to: 'senior-expertise', tone: 'indigo' }
               ]}
             />
           </div>

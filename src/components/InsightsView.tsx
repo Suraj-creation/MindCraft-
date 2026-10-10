@@ -5,6 +5,7 @@ import type { InsightArticle, NavTab } from '../types';
 import { INSIGHTS_REPOSITORY } from '../data/mindcraftData';
 import { EASE, ContextualCTA, RelatedLinks, reveal } from './ui/primitives';
 import { HeroCopy, HeroSection, Illumination } from './ui/Hero';
+import { withholdFigureSentences } from '../lib/evidence';
 
 /* ------------------------------------------------------------------ */
 /*
@@ -38,8 +39,8 @@ const HOLDS: Record<string, { find: string; replace: string }[]> = {
       replace: 'out-of-pocket payments still account for a large share of total healthcare spending, despite public health insurance expansions'
     },
     {
-      find: 'Through primary physician surveys and payer price-elasticity modeling, MindCraft demonstrates how tiered dual-branding, hospital patient-assistance co-pays, and localized packaging sizes preserve gross margins while expanding commercial volume.',
-      replace: 'Primary physician surveys and payer price-elasticity modeling can test whether tiered dual-branding, hospital patient-assistance co-pays, and localized packaging sizes would preserve gross margins while expanding commercial volume.'
+      find: 'Through primary physician surveys and payer price-elasticity modelling, MindCraft demonstrates how tiered dual-branding, hospital patient-assistance co-pays, and localised packaging sizes preserve gross margins while expanding commercial volume.',
+      replace: 'Primary physician surveys and payer price-elasticity modelling can test whether tiered dual-branding, hospital patient-assistance co-pays, and localised packaging sizes would preserve gross margins while expanding commercial volume.'
     },
     { find: '70% of specialty healthcare transactions occur in private tier-1/tier-2 clinics.', replace: '' },
     { find: 'reduce clinic inventory wastage by 18%.', replace: 'can reduce clinic inventory wastage.' },
@@ -47,8 +48,8 @@ const HOLDS: Record<string, { find: string; replace: string }[]> = {
   ],
   'ins-4': [
     {
-      find: 'MindCraft embeds zero-data-retention guarantees, cryptographic anonymization, and explainable decision trees into every AI training program and enterprise deployment.',
-      replace: 'MindCraft embeds data privacy, ethics and governance into every AI training program and enterprise solution.'
+      find: 'MindCraft embeds zero-data-retention guarantees, cryptographic anonymization, and explainable decision trees into every AI training programme and enterprise deployment.',
+      replace: 'MindCraft embeds data privacy, ethics and governance into every AI training programme and enterprise solution.'
     },
     { find: 'Zero client data is ever used to train underlying public foundational models.', replace: 'Client data should never be used to train public foundation models.' },
     { find: 'All AI inferences operate within private tenant enclosures with strict encryption.', replace: '' },
@@ -56,17 +57,11 @@ const HOLDS: Record<string, { find: string; replace: string }[]> = {
   ]
 };
 
-/** Safety net: any remaining sentence with a percentage is withheld until it carries a source. */
-const PERCENT = /\d\s?%/;
-const withholdPercents = (text: string) =>
-  text
-    .split(/(?<=[.!?])\s+/)
-    .filter((s) => !PERCENT.test(s))
-    .join(' ');
+/** Safety net: any remaining sentence with an unsourced figure is withheld until it carries a source. */
 
 const forDisplay = (a: InsightArticle): InsightArticle => {
   const edits = HOLDS[a.id] ?? [];
-  const fix = (s: string) => withholdPercents(edits.reduce((t, e) => t.split(e.find).join(e.replace), s)).trim();
+  const fix = (s: string) => withholdFigureSentences(edits.reduce((t, e) => t.split(e.find).join(e.replace), s)).trim();
   return {
     ...a,
     summary: fix(a.summary),
@@ -219,7 +214,7 @@ export const InsightsView: React.FC<{
 
           <HeroCopy
             id="insights-title"
-            className="relative mt-8 sm:mt-10 [&_h1]:max-w-[14em] lg:[&_h1]:text-[5.25rem]"
+            className="relative mt-8 sm:mt-10 [&_h1]:max-w-[14em]"
             title={
               <>
                 <span className="sr-only">Insights: </span>
@@ -233,7 +228,7 @@ export const InsightsView: React.FC<{
               className="mc-lead lg:col-span-7"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: EASE }}
+              transition={{ duration: 0.24, delay: 0.06, ease: EASE }}
             >
               Perspectives on regulation, market access and AI adoption, written for the people who have to make the decision.
             </motion.p>
@@ -241,7 +236,7 @@ export const InsightsView: React.FC<{
               className="lg:col-span-5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.25, ease: EASE }}
+              transition={{ duration: 0.24, delay: 0.1, ease: EASE }}
             >
               <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-medium text-amber-200">
                 <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-amber-300" />
@@ -314,9 +309,9 @@ export const InsightsView: React.FC<{
           <RelatedLinks
             title="Related"
             items={[
-              { label: 'About MindCraft', desc: 'Who we are and how we engage', onClick: () => onNavigate('about') },
-              { label: 'Africa Hub', desc: 'Market intelligence across Africa', onClick: () => onNavigate('africa-intelligence'), tone: 'emerald' },
-              { label: 'Responsible AI', desc: 'Governance and data principles', onClick: () => onNavigate('responsible-ai') }
+              { label: 'About MindCraft', desc: 'Who we are and how we engage', to: 'about' },
+              { label: 'Regulatory & market map', desc: 'African regulation and markets, country by country', to: 'africa-intelligence', tone: 'emerald' },
+              { label: 'Responsible AI', desc: 'Governance and data principles', to: 'responsible-ai' }
             ]}
           />
         </div>

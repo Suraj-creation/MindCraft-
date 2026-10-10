@@ -3,7 +3,7 @@ import { NavTab } from '../types';
 import { ArrowRight, BarChart3, Compass, Cpu, GraduationCap, Mail } from 'lucide-react';
 import { PROBLEM_CROSS_SECTIONS, AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { SENIOR_AREAS, SENIOR_PROFILE } from '../data/seniorExpertise';
-import { BTN_PRIMARY, DeepDive, SectionHeader, TONES, Tone } from './ui/primitives';
+import { BTN_PRIMARY, RouteLink, SectionHeader, TONES, Tone } from './ui/primitives';
 import { ArtImage } from './ui/ArtImage';
 import { Scrim } from './ui/Hero';
 
@@ -21,16 +21,16 @@ interface SectionProps {
 
 const CONTACT_EMAIL = 'info@mindcraftconsultancy.com';
 
-/** Quiet text link with an arrow, used for every "go deeper" action on the page. */
-const MoreLink: React.FC<{ onClick: () => void; tone?: Tone; children: React.ReactNode }> = ({ onClick, tone = 'indigo', children }) => (
-  <button
-    type="button"
-    onClick={onClick}
+/** Quiet text link with an arrow, used for every "go deeper" route on the page. */
+const MoreLink: React.FC<{ to: NavTab; onNavigate: (tab: NavTab) => void; tone?: Tone; children: React.ReactNode }> = ({ to, onNavigate, tone = 'indigo', children }) => (
+  <RouteLink
+    to={to}
+    onNavigate={onNavigate}
     className={`group mc-tap -ml-0.5 inline-flex items-center gap-1.5 text-sm font-medium ${TONES[tone].text} hover:text-white transition-colors duration-150`}
   >
     {children}
     <ArrowRight aria-hidden="true" className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-  </button>
+  </RouteLink>
 );
 
 /* ------------------------------------------------------------------ */
@@ -102,20 +102,22 @@ export const CapabilitiesSection: React.FC<SectionProps> = ({ setActiveTab }) =>
           return (
             <li
               key={c.tab}
-              className="py-7 sm:py-8 grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_auto] gap-x-8 gap-y-3 md:items-end"
+              className="py-7 sm:py-8 grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_15rem] gap-x-8 gap-y-3 md:items-end"
             >
               <div>
                 <p className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] font-semibold ${TONES[c.tone].text}`}>
                   <Icon aria-hidden="true" className="w-4 h-4" />
                   {c.verb}
-                  <span className="font-normal text-white/50">{c.question}</span>
+                  <span className="font-normal text-white/60">{c.question}</span>
                 </p>
                 <h3 className="mt-2 font-heading text-[1.375rem] sm:text-[1.5rem] font-medium tracking-[-0.015em] leading-tight text-white">
                   {c.name}
                 </h3>
               </div>
               <p className="text-[15px] text-white/70 leading-relaxed max-w-[34em]">{c.what}</p>
-              <MoreLink tone={c.tone} onClick={() => setActiveTab(c.tab)}>Explore {c.short}</MoreLink>
+              <div className="md:justify-self-end">
+                <MoreLink tone={c.tone} to={c.tab} onNavigate={setActiveTab}>Explore {c.short}</MoreLink>
+              </div>
             </li>
           );
         })}
@@ -126,7 +128,7 @@ export const CapabilitiesSection: React.FC<SectionProps> = ({ setActiveTab }) =>
           Start with a challenge if the route is not yet clear.
         </p>
         <div className="shrink-0">
-          <MoreLink tone="amber" onClick={() => setActiveTab('question-to-outcome')}>
+          <MoreLink tone="amber" to="question-to-outcome" onNavigate={setActiveTab}>
             Browse {PROBLEM_CROSS_SECTIONS.length} common challenges
           </MoreLink>
         </div>
@@ -157,9 +159,9 @@ export const IndustriesSection: React.FC<SectionProps & { onSelectIndustry: (id:
           Life Sciences is our deepest specialism. Market context, local conditions and operating realities shape every engagement.
         </p>
         <div className="mt-7 flex flex-col items-start gap-1">
-          <MoreLink onClick={() => setActiveTab('life-sciences')}>Explore Life Sciences</MoreLink>
-          <MoreLink onClick={() => setActiveTab('industries')}>Browse industry context</MoreLink>
-          <MoreLink tone="emerald" onClick={() => setActiveTab('africa-explorer')}>Explore African markets</MoreLink>
+          <MoreLink to="life-sciences" onNavigate={setActiveTab}>Explore Life Sciences</MoreLink>
+          <MoreLink to="industries" onNavigate={setActiveTab}>Browse all 24 industries</MoreLink>
+          <MoreLink tone="emerald" to="africa-explorer" onNavigate={setActiveTab}>Explore African markets</MoreLink>
         </div>
       </div>
     </div>
@@ -183,13 +185,11 @@ export const ExpertiseReachSection: React.FC<SectionProps> = ({ setActiveTab }) 
           position="object-[48%_48%] lg:object-[60%_48%]"
         />
         <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.94) 23%, rgba(5,5,5,.64) 47%, rgba(5,5,5,.21) 73%, rgba(5,5,5,.05) 100%)" />
-        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.52) 0%, rgba(5,5,5,0) 26%, rgba(5,5,5,.12) 72%, #050505 100%)" />
+        {/* The lower half carries the expertise list, so it sits on a near-solid field rather than the bright window */}
+        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.52) 0%, rgba(5,5,5,0) 24%, rgba(5,5,5,.5) 52%, rgba(5,5,5,.9) 70%, #050505 100%)" />
       </div>
       <div className="mc-container mc-art-copy py-[clamp(4.5rem,10vw,8rem)]">
-        <SectionHeader
-          title={<span id="expertise-title">Depth where context matters.</span>}
-          lead="Sector, market and local knowledge shape what is possible."
-        />
+        <SectionHeader title={<span id="expertise-title">Depth where context matters.</span>} />
 
         <div className="max-w-[35rem]">
           <article aria-labelledby="expertise-geo-title">
@@ -208,8 +208,8 @@ export const ExpertiseReachSection: React.FC<SectionProps> = ({ setActiveTab }) 
               ))}
             </ul>
             <div className="mt-6 flex flex-col items-start gap-1">
-              <MoreLink tone="emerald" onClick={() => setActiveTab('africa-explorer')}>Explore African markets</MoreLink>
-              <MoreLink tone="emerald" onClick={() => setActiveTab('localization')}>How we adapt strategy to local markets</MoreLink>
+              <MoreLink tone="emerald" to="africa-explorer" onNavigate={setActiveTab}>See the four African regions</MoreLink>
+              <MoreLink tone="emerald" to="localization" onNavigate={setActiveTab}>How we adapt strategy to local markets</MoreLink>
             </div>
           </article>
         </div>
@@ -227,7 +227,7 @@ export const ExpertiseReachSection: React.FC<SectionProps> = ({ setActiveTab }) 
               MindCraft draws on the independent pharmaceutical and healthcare consulting experience of {SENIOR_PROFILE.name}, based in {SENIOR_PROFILE.basedIn}.
             </p>
             <div className="mt-5">
-              <MoreLink onClick={() => setActiveTab('senior-expertise')}>View the expertise profile</MoreLink>
+              <MoreLink to="senior-expertise" onNavigate={setActiveTab}>View the expertise profile</MoreLink>
             </div>
           </div>
           <ul className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-x-8 border-t border-white/[0.08] self-start">
@@ -259,28 +259,32 @@ export const ApproachSection: React.FC<SectionProps> = () => (
   <section className="mc-section mc-editorial-band" id="approach" aria-labelledby="approach-title">
     <div className="mc-container">
       <SectionHeader
-        title={<span id="approach-title">A clear way through.</span>}
-        lead="Six documented steps, organised around three working phases."
+        title={<span id="approach-title">How an engagement works.</span>}
+        lead="The same six steps, from the first conversation to follow-up, whichever capability you start with."
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-10">
+      <ol className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-10">
         {[
           { title: 'Frame', steps: PROCESS.slice(0, 2) },
           { title: 'Develop', steps: PROCESS.slice(2, 4) },
           { title: 'Sustain', steps: PROCESS.slice(4, 6) }
-        ].map((phase) => (
-          <DeepDive key={phase.title} title={phase.title} hint={phase.steps.map((step) => step.stage).join(' · ')}>
-            <ol className="space-y-4">
-              {phase.steps.map((step) => (
-                <li key={step.stage}>
-                  <h3 className="text-sm font-semibold text-white">{step.stage}</h3>
-                  <p className="mt-1 text-sm leading-relaxed">{step.body}</p>
+        ].map((phase, p) => (
+          <li key={phase.title} className="border-t border-white/[0.14] pt-5">
+            <h3 className="font-heading text-[1.25rem] font-medium tracking-[-0.01em] text-white">{phase.title}</h3>
+            <ol className="mt-5 space-y-5">
+              {phase.steps.map((step, i) => (
+                <li key={step.stage} className="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-2">
+                  <span aria-hidden="true" className="pt-px font-mono text-xs tabular-nums text-indigo-300">{p * 2 + i + 1}</span>
+                  <div>
+                    <h4 className="text-[15px] font-semibold text-white">{step.stage}</h4>
+                    <p className="mt-1 text-[15px] leading-relaxed text-white/70">{step.body}</p>
+                  </div>
                 </li>
               ))}
             </ol>
-          </DeepDive>
+          </li>
         ))}
-      </div>
+      </ol>
     </div>
   </section>
 );

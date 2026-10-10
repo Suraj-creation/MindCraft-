@@ -173,7 +173,7 @@ export const IntegratedModelSection: React.FC<IntegratedModelSectionProps> = ({ 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+              transition={{ duration: 0.24, delay: 0.06, ease: EASE }}
               className="lg:col-span-8 xl:col-span-4 xl:self-end xl:pb-1.5"
             >
               <p className="mc-lead">
@@ -316,7 +316,7 @@ export const IntegratedModelSection: React.FC<IntegratedModelSectionProps> = ({ 
                         on ? `${ACCENT[c.accent].dot} border-transparent` : 'bg-[#050505] border-white/35'
                       }`}
                     />
-                    <span className={`hidden md:block font-mono text-[11px] tabular-nums ${on ? ACCENT[c.accent].text : 'text-white/45'}`}>
+                    <span className={`hidden md:block font-mono text-xs tabular-nums ${on ? ACCENT[c.accent].text : 'text-white/55'}`}>
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <h3

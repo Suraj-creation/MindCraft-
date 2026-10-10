@@ -44,8 +44,8 @@ const HIGHLIGHT_COPY: Record<string, string | null> = {
     'Gateway to North Africa and the Middle East, with a large domestic manufacturing base',
   'Stable economic environment with National Health Insurance Scheme (NHIS) coverage':
     'National Health Insurance Scheme (NHIS) coverage shaping medicine purchasing',
-  'Ghana FDA recognized for progressive regulatory oversight in ECOWAS': 'Ghana FDA oversight within the wider ECOWAS regulatory landscape',
-  'Second most populous nation in Africa (120M+) undergoing economic and healthcare modernization':
+  'Ghana FDA recognised for progressive regulatory oversight in ECOWAS': 'Ghana FDA oversight within the wider ECOWAS regulatory landscape',
+  'Second most populous nation in Africa (120M+) undergoing economic and healthcare modernisation':
     'One of Africa’s most populous countries, modernising its economy and health system',
   'Huge unmet clinical need and expanding domestic industrial parks': 'Significant unmet clinical need and expanding domestic industrial parks',
   'Over 90% population coverage through Community-Based Health Insurance (Mutuelle de Santé)':
@@ -197,7 +197,7 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: EASE }}
+              transition={{ duration: 0.24, delay: 0.06, ease: EASE }}
               className="lg:col-span-5"
             >
               <div role="group" aria-label="Show country dossiers by region" className="relative mx-auto grid aspect-square w-full max-w-[25rem] grid-cols-3 grid-rows-3">
@@ -225,7 +225,7 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
                         {pos.word}
                         <span className="sr-only"> Africa</span>
                       </span>
-                      <span className="mt-2 font-mono text-[11px] tabular-nums text-white/55">
+                      <span className="mt-2 font-mono text-xs tabular-nums text-white/55">
                         {r.countries.length}
                         <span aria-hidden="true"> · </span>
                         <span className="sr-only"> jurisdictions, </span>
@@ -387,11 +387,11 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
                             <span className={`block truncate text-[15px] font-medium ${on ? 'text-white' : 'text-white/75 group-hover:text-white'}`}>
                               {c.name}
                             </span>
-                            <span className="hidden lg:block truncate text-[12px] text-white/45">{c.keySectors.slice(0, 3).join(' · ')}</span>
+                            <span className="hidden lg:block truncate text-[12px] text-white/55">{c.keySectors.slice(0, 3).join(' · ')}</span>
                           </span>
                           <span className="flex shrink-0 items-center gap-2">
-                            {c.isHQ && <span className="font-mono text-[10px] text-white/50">HQ</span>}
-                            <span className="hidden sm:inline font-mono text-[11px] text-white/45">{c.region.replace(' Africa', '')}</span>
+                            {c.isHQ && <span className="font-mono text-[11px] text-white/50">HQ</span>}
+                            <span className="hidden sm:inline font-mono text-xs text-white/55">{c.region.replace(' Africa', '')}</span>
                             <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${on ? 'bg-emerald-400' : 'bg-transparent'}`} />
                           </span>
                         </button>
@@ -449,7 +449,7 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
                     ))}
                   </ul>
                   <p className="mt-4 text-[13px] text-white/55">
-                    <span className="text-white/45">Key sectors: </span>
+                    <span className="text-white/55">Key sectors: </span>
                     {dossier.sectors.join(', ')}
                   </p>
                 </div>
@@ -506,11 +506,11 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
             />
           </motion.div>
           <RelatedLinks
-            title="Elsewhere in the Africa Hub"
+            title="Elsewhere in Markets"
             items={[
-              { label: 'Regions and jurisdictions', desc: 'All four regions and 45 jurisdictions', tone: 'emerald', onClick: () => setActiveTab('africa-explorer') },
-              { label: 'Market Localization', desc: 'How a global strategy becomes a local result', tone: 'emerald', onClick: () => setActiveTab('localization') },
-              { label: 'Market Entry Framework', desc: 'A structured, nine-step approach', tone: 'amber', onClick: () => setActiveTab('market-entry') }
+              { label: 'Regions and jurisdictions', desc: 'All four regions and 45 jurisdictions', tone: 'emerald', to: 'africa-explorer' },
+              { label: 'Market localisation', desc: 'How a global strategy becomes a local result', tone: 'emerald', to: 'localization' },
+              { label: 'Market entry', desc: 'A structured, nine-step approach', tone: 'amber', to: 'market-entry' }
             ]}
           />
         </div>

@@ -16,17 +16,17 @@ export const SERVICE_PILLARS: ServicePillar[] = [
     name: 'Business Consulting',
     tagline: 'Strategic advisory grounded in Life Sciences and cross-industry best practice.',
     question: 'What should we do?',
-    description: 'Helping organizations make better decisions, restructure for sustainable growth, and execute change with confidence.',
+    description: 'Helping organisations make better decisions, restructure for sustainable growth, and execute change with confidence.',
     color: '#0D9488', // Teal
     iconName: 'Compass',
     capabilities: [
       {
         title: 'Corporate & Business Strategy',
-        description: 'Formulating growth blueprints, portfolio prioritization, and African/international market expansion.',
+        description: 'Formulating growth blueprints, portfolio prioritisation, and African/international market expansion.',
         bulletPoints: [
           'Corporate strategy formulation and business planning',
           'Market entry and expansion strategy (Africa, Europe, USA)',
-          'Portfolio strategy & product prioritization for pharma/devices',
+          'Portfolio strategy & product prioritisation for pharma/devices',
           'Competitive positioning and brand strategy support'
         ]
       },
@@ -35,24 +35,24 @@ export const SERVICE_PILLARS: ServicePillar[] = [
         description: 'Maturity assessments and AI-readiness diagnostics aligned to business budget realities.',
         bulletPoints: [
           'Digital maturity assessments & AI-readiness diagnostics',
-          'Prioritized transformation roadmaps with ROI models',
+          'Prioritised transformation roadmaps with ROI models',
           'Technology and vendor selection advisory for AI, CRM, ERP'
         ]
       },
       {
-        title: 'Organizational Design & Change Management',
+        title: 'Organisational Design & Change Management',
         description: 'Operating model redesign, role clarity, and cultural transition for technology rollouts.',
         bulletPoints: [
-          'Operating model redesign and organizational structure',
+          'Operating model redesign and organisational structure',
           'Change management execution for M&A and AI adoption',
           'Culture diagnostics and executive alignment'
         ]
       },
       {
         title: 'Process Improvement & Systems Design',
-        description: 'End-to-end process optimization across commercial, operations, supply chain, and quality.',
+        description: 'End-to-end process optimisation across commercial, operations, supply chain, and quality.',
         bulletPoints: [
-          'End-to-end business process mapping and optimization',
+          'End-to-end business process mapping and optimisation',
           'Standard Operating Procedure (SOP) design & compliance',
           'Workflow architecture to support scaling and efficiency'
         ]
@@ -69,8 +69,8 @@ export const SERVICE_PILLARS: ServicePillar[] = [
     ],
     deliverables: [
       'Strategy blueprints, business plans & board-ready presentations',
-      'Prioritized transformation roadmaps with owners & investment models',
-      'Process maps, SOP packages & organizational design blueprints'
+      'Prioritised transformation roadmaps with owners & investment models',
+      'Process maps, SOP packages & organisational design blueprints'
     ],
     intersections: [
       {
@@ -83,7 +83,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
       },
       {
         withPillar: 'AI Enterprise Solutions',
-        integratedValue: 'Operationalized strategy: Recommended operating models are directly automated via enterprise AI systems.'
+        integratedValue: 'Operationalised strategy: Recommended operating models are directly automated via enterprise AI systems.'
       }
     ]
   },
@@ -117,7 +117,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
         ]
       },
       {
-        title: 'Program & Impact Research',
+        title: 'Programme & Impact Research',
         description: 'Rigorous evaluation for corporate, donor-funded, and development initiatives.',
         bulletPoints: [
           'Baseline, midline, and endline evaluation surveys',
@@ -129,7 +129,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
         title: 'Data Analytics & Knowledge Products',
         description: 'AI-accelerated synthesis, data cleansing, and executive dashboard products.',
         bulletPoints: [
-          'Data cleaning, statistical modeling, and dashboarding',
+          'Data cleaning, statistical modelling, and dashboarding',
           'Custom whitepapers, toolkits, and sector dossiers',
           'AI-assisted literature & market data synthesis'
         ]
@@ -154,9 +154,9 @@ export const SERVICE_PILLARS: ServicePillar[] = [
   {
     id: 'ai-training',
     name: 'AI Training & Digital Literacy',
-    tagline: 'Practical, hands-on AI capability building for teams, executives, and organizations.',
+    tagline: 'Practical, hands-on AI capability building for teams, executives, and organisations.',
     question: 'Can our people use AI effectively?',
-    description: 'Transforming organizational capability to build real AI literacy and internal champions, not just theoretical awareness.',
+    description: 'Transforming organisational capability to build real AI literacy and internal champions, not just theoretical awareness.',
     color: '#F59E0B', // Amber
     iconName: 'GraduationCap',
     capabilities: [
@@ -165,7 +165,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
         description: 'Demystifying AI for boards and leadership teams with industry-specific application frameworks.',
         bulletPoints: [
           'Executive & board AI fundamentals and strategic literacy',
-          'Organizational AI-readiness assessments and use case mapping',
+          'Organisational AI-readiness assessments and use case mapping',
           'Sector briefings for Life Sciences, banking, and industry'
         ]
       },
@@ -184,22 +184,22 @@ export const SERVICE_PILLARS: ServicePillar[] = [
         description: 'Practical ethics, compliance guidelines, and privacy safeguards for regulated sectors.',
         bulletPoints: [
           'AI ethics, data privacy, and confidentiality safeguards',
-          'Organizational policy creation for regulated industries',
+          'Organisational policy creation for regulated industries',
           'Human-in-the-loop validation frameworks'
         ]
       },
       {
         title: 'Capability Multiplication & Champions',
-        description: 'Train-the-trainer programs and custom curricula to ensure lasting institutional ownership.',
+        description: 'Train-the-trainer programmes and custom curricula to ensure lasting institutional ownership.',
         bulletPoints: [
           'Train-the-trainer cohorts to establish internal AI champions',
           'Custom organization-specific curriculum development',
-          'On-the-job mentorship, coaching, and reinforcement programs'
+          'On-the-job mentorship, coaching, and reinforcement programmes'
         ]
       }
     ],
     deliverables: [
-      'Customized training curricula, facilitator guides & workbooks',
+      'Customised training curricula, facilitator guides & workbooks',
       'AI-readiness scorecards & function-by-function adoption roadmaps',
       'Certified internal cohort of AI champions driving daily usage'
     ],
@@ -217,17 +217,17 @@ export const SERVICE_PILLARS: ServicePillar[] = [
   {
     id: 'ai-solutions',
     name: 'AI Enterprise Solutions',
-    tagline: 'End-to-end design, build, and integration of AI systems operationalizing insights into workflows.',
-    question: 'How do we operationalize intelligence?',
+    tagline: 'End-to-end design, build, and integration of AI systems operationalising insights into workflows.',
+    question: 'How do we operationalise intelligence?',
     description: 'Bridging the gap from AI proof-of-concept to robust, governed production systems integrated into enterprise infrastructure.',
     color: '#10B981', // Emerald
     iconName: 'Cpu',
     capabilities: [
       {
         title: 'AI Strategy & Solution Architecture',
-        description: 'Prioritizing high-ROI use cases and architecting enterprise-grade data and model stacks.',
+        description: 'Prioritising high-ROI use cases and architecting enterprise-grade data and model stacks.',
         bulletPoints: [
-          'Enterprise use case discovery and feasibility prioritization',
+          'Enterprise use case discovery and feasibility prioritisation',
           'Solution architecture and modern AI stack selection',
           'Data strategy, governance, and enterprise data readiness'
         ]
@@ -281,7 +281,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
       },
       {
         withPillar: 'Business Consulting',
-        integratedValue: 'Translates strategic organizational redesign into automated software workflows.'
+        integratedValue: 'Translates strategic organisational redesign into automated software workflows.'
       }
     ]
   }
@@ -301,7 +301,7 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
       'Key Opinion Leader (KOL) identification & mapping',
       'Pharmacovigilance & adverse-event monitoring support',
       'Pan-African regulatory intelligence & submission tracking',
-      'Sales force effectiveness & territory optimization'
+      'Sales force effectiveness & territory optimisation'
     ],
     strategicChallenges: [
       'Fragmented regulatory pathways across 54 African countries',
@@ -329,11 +329,11 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
     ],
     workflowExample: {
       question: 'How should we price and position a new biologic across East and West Africa?',
-      method: 'Multi-country physician & payer research + price-elasticity modeling + competitor benchmarking.',
+      method: 'Multi-country physician & payer research + price-elasticity modelling + competitor benchmarking.',
       intelligence: 'Identified willingness-to-pay tiers and public tender inclusion criteria in Kenya, Ghana, and Nigeria.',
       decision: 'Formulated tiered dual-brand strategy: private hospital premium line + public institution volume tier.',
       aiSolution: 'Deployed a dynamic market pricing & competitor tracker with automated tender scraping.',
-      outcome: 'Achieved 38% faster hospital formulary adoption and optimized gross margin retention.'
+      outcome: 'Achieved 38% faster hospital formulary adoption and optimised gross margin retention.'
     }
   },
   {
@@ -386,25 +386,25 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
     description: 'Enabling molecular, rapid diagnostic, and clinical chemistry providers to expand laboratory access and diagnostic throughput.',
     focusAreas: [
       'Market sizing & testing-adoption studies',
-      'Laboratory network & reference center mapping',
+      'Laboratory network & reference centre mapping',
       'Regulatory pathway advisory for diagnostic kits',
       'Reagent rental model & placement economics',
-      'Public health screening program integration'
+      'Public health screening programme integration'
     ],
     strategicChallenges: [
       'Cold-chain logistics vulnerabilities for sensitive reagents',
-      'Fragmented private lab networks vs centralized national reference labs',
+      'Fragmented private lab networks vs centralised national reference labs',
       'Price sensitivity for self-pay diagnostic panels'
     ],
     researchMethods: [
       'Pathologist & lab director preference interviews',
-      'Laboratory test volume & capacity mapping across urban/rural centers',
+      'Laboratory test volume & capacity mapping across urban/rural centres',
       'National health ministry disease-screening priority audits'
     ],
     aiOpportunities: [
       'Automated diagnostic test demand forecasting by seasonal disease patterns',
       'Computer vision assistance for rapid test strip interpretation support',
-      'Laboratory workflow optimization and reagent inventory forecasting'
+      'Laboratory workflow optimisation and reagent inventory forecasting'
     ],
     exampleDeliverables: [
       'National Laboratory Capacity & Footprint Map',
@@ -436,7 +436,7 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
     strategicChallenges: [
       'Extended public tender procurement cycles (12-24 months)',
       'Financing constraints among private hospital chains',
-      'Shortage of specialized biomedical maintenance technicians'
+      'Shortage of specialised biomedical maintenance technicians'
     ],
     researchMethods: [
       'Installed base audits across public referral and private hospitals',
@@ -445,7 +445,7 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
     ],
     aiOpportunities: [
       'Automated government gazette & tender opportunity scraper and scoring',
-      'Predictive lifetime cost and utilization simulation models',
+      'Predictive lifetime cost and utilisation simulation models',
       'AI-assisted RFP/tender bid response drafting'
     ],
     exampleDeliverables: [
@@ -466,7 +466,7 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
     id: 'consumables',
     name: 'Surgical Consumables',
     category: 'devices-equipment',
-    tagline: 'Channel distribution, hospital formulary intelligence, and volume optimization.',
+    tagline: 'Channel distribution, hospital formulary intelligence, and volume optimisation.',
     description: 'Market research and supply chain strategy for surgical gloves, sutures, wound care, drapes, and disposable devices.',
     focusAreas: [
       'Distribution channel & wholesaler network studies',
@@ -487,7 +487,7 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
     ],
     aiOpportunities: [
       'Hospital surgical volume forecasting for proactive replenishment',
-      'Automated SKU rationalization and price optimization models',
+      'Automated SKU rationalization and price optimisation models',
       'Packaging verification & anti-counterfeit scanning pipelines'
     ],
     exampleDeliverables: [
@@ -511,9 +511,9 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
     tagline: 'Operational strategy, digital health transformation, and clinical workforce capacity.',
     description: 'Advising private hospital groups, faith-based networks, and public health systems on operational efficiency and patient experience.',
     focusAreas: [
-      'Operational strategy & clinical service line optimization',
+      'Operational strategy & clinical service line optimisation',
       'Digital health transformation & hospital information system (HIS) advisory',
-      'Patient experience research & clinical pathway optimization',
+      'Patient experience research & clinical pathway optimisation',
       'Workforce capacity building & clinical AI readiness',
       'Accreditation readiness & quality assurance framework design'
     ],
@@ -530,11 +530,11 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
     aiOpportunities: [
       'AI-assisted medical coding and pre-submission insurance claim validation',
       'Patient appointment scheduling & no-show prediction algorithms',
-      'Clinical documentation voice-to-text assistants customized for regional accents'
+      'Clinical documentation voice-to-text assistants customised for regional accents'
     ],
     exampleDeliverables: [
       'Hospital Digital Transformation Master Roadmap',
-      'Patient Journey Optimization & Quality Scorecard',
+      'Patient Journey Optimisation & Quality Scorecard',
       'Clinical Workforce AI Enablement & Training Curriculum'
     ],
     workflowExample: {
@@ -558,7 +558,7 @@ export const DIVERSIFIED_INDUSTRIES: DiversifiedIndustry[] = [
       'Industrial market studies & demand forecasting',
       'Environmental and chemical regulatory compliance tracking',
       'Supply chain, distributor, and storage logistics intelligence',
-      'Raw material pricing and import tariff optimization'
+      'Raw material pricing and import tariff optimisation'
     ],
     methodology: 'Cross-industry supply chain mapping + regulatory benchmarking + industrial buyer interviews.'
   },
@@ -581,7 +581,7 @@ export const DIVERSIFIED_INDUSTRIES: DiversifiedIndustry[] = [
     tagline: 'Dealer network research, aftermarket parts distribution, and customer experience.',
     description: 'Supporting vehicle OEMs, commercial fleet operators, and aftermarket parts distributors in navigating African vehicle markets.',
     focusAreas: [
-      'Authorized dealer network studies & territory optimization',
+      'Authorized dealer network studies & territory optimisation',
       'Aftermarket and spare parts distribution channel research',
       'Customer experience analytics & fleet buyer preference studies',
       'Electric vehicle (EV) infrastructure readiness and policy advisory'
@@ -619,7 +619,7 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
     ],
     capabilityCoverage: {
       marketResearch: 'Comprehensive primary field reach with over 500+ physician & pharmacist network contacts.',
-      regulatoryIntelligence: 'Real-time monitoring of PPB guidelines, fast-track pathways, and regional EAC harmonization.',
+      regulatoryIntelligence: 'Real-time monitoring of PPB guidelines, fast-track pathways, and regional EAC harmonisation.',
       marketEntrySupport: 'End-to-end entity setup, distributor identification, and hospital formulary listings.',
       localAssociateNetwork: 'Permanent senior consulting team and active field researcher network across 12 counties.',
       trainingDelivery: 'In-person workshops at MindCraft Nairobi facilities, client sites, and virtual hybrid delivery.'
@@ -648,7 +648,7 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
       regulatoryIntelligence: 'NAFDAC registration timelines, dossier requirements, and GMP inspection tracking.',
       marketEntrySupport: 'Tier-1 distributor qualification, open-market vs modern-trade strategy.',
       localAssociateNetwork: 'Established associate network of regulatory pharmacists and commercial researchers.',
-      trainingDelivery: 'Hybrid executive training and on-site corporate programs in Lagos & Abuja.'
+      trainingDelivery: 'Hybrid executive training and on-site corporate programmes in Lagos & Abuja.'
     },
     keySectors: ['Pharmaceuticals', 'Surgical Consumables', 'Diagnostics', 'Banking & Finance', 'Chemicals'],
     typicalQuestions: [
@@ -670,7 +670,7 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
       'Sophisticated medical scheme reimbursement and Single Exit Price (SEP) regulations'
     ],
     capabilityCoverage: {
-      marketResearch: 'KOL mapping, private hospital purchasing committee studies, and health economics modeling.',
+      marketResearch: 'KOL mapping, private hospital purchasing committee studies, and health economics modelling.',
       regulatoryIntelligence: 'SAHPRA submission tracking, Section 21 approvals, and SEP price monitoring.',
       marketEntrySupport: 'Private hospital group formulary submission strategy and BEE compliance advisory.',
       localAssociateNetwork: 'Specialist life sciences consultants and data analytics associates in Johannesburg & Cape Town.',
@@ -693,11 +693,11 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
       'Gateway to North Africa and the Middle East with massive domestic manufacturing capacity',
       'Egyptian Drug Authority (EDA) oversight and expanding Universal Health Insurance system',
       'High-volume government tenders via the Unified Procurement Authority (UPAH / UPA)',
-      'Major medical tourism and specialized tertiary hospital center'
+      'Major medical tourism and specialised tertiary hospital centre'
     ],
     capabilityCoverage: {
       marketResearch: 'UPA tender pricing analysis and private pharmacy chain benchmarking.',
-      regulatoryIntelligence: 'EDA registration pathways, localized clinical trial rules, and bioequivalence mandates.',
+      regulatoryIntelligence: 'EDA registration pathways, localised clinical trial rules, and bioequivalence mandates.',
       marketEntrySupport: 'Local manufacturing partner identification and tender bidding strategy.',
       localAssociateNetwork: 'Arabic- and English-fluent life sciences associates based in Cairo and Alexandria.',
       trainingDelivery: 'Virtual and in-person corporate AI enablement for North African leadership.'
@@ -707,7 +707,7 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
       'What are the historical win-rates and discount thresholds in UPA medical equipment tenders?',
       'How to structure a contract manufacturing agreement with local Egyptian pharmaceutical plants?'
     ],
-    engagementModels: ['Tender Intelligence Advisory', 'Localization Feasibility Study', 'Executive AI Briefings']
+    engagementModels: ['Tender Intelligence Advisory', 'Localisation Feasibility Study', 'Executive AI Briefings']
   },
   {
     id: 'ghana',
@@ -717,12 +717,12 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
     currency: 'GHS',
     marketHighlights: [
       'Stable economic environment with National Health Insurance Scheme (NHIS) coverage',
-      'Ghana FDA recognized for progressive regulatory oversight in ECOWAS',
+      'Ghana FDA recognised for progressive regulatory oversight in ECOWAS',
       'Hub for West African medical supply distribution and clinical trials'
     ],
     capabilityCoverage: {
       marketResearch: 'NHIS medicine reimbursement audits and community pharmacy surveys.',
-      regulatoryIntelligence: 'Ghana FDA fast-track pathways and ECOWAS regulatory harmonization.',
+      regulatoryIntelligence: 'Ghana FDA fast-track pathways and ECOWAS regulatory harmonisation.',
       marketEntrySupport: 'Distributor vetting and institutional hospital formulary navigation.',
       localAssociateNetwork: 'Accra-based researchers and health policy specialists.',
       trainingDelivery: 'Executive and functional AI training delivery.'
@@ -741,12 +741,12 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
     capital: 'Addis Ababa',
     currency: 'ETB',
     marketHighlights: [
-      'Second most populous nation in Africa (120M+) undergoing economic and healthcare modernization',
+      'Second most populous nation in Africa (120M+) undergoing economic and healthcare modernisation',
       'Ethiopian Food and Drug Authority (EFDA) and Ethiopian Pharmaceuticals Supply Service (EPSS)',
       'Huge unmet clinical need and expanding domestic industrial parks'
     ],
     capabilityCoverage: {
-      marketResearch: 'EPSS public tender analysis and private clinic purchasing behavior.',
+      marketResearch: 'EPSS public tender analysis and private clinic purchasing behaviour.',
       regulatoryIntelligence: 'EFDA registration requirements and foreign currency allocation mechanisms.',
       marketEntrySupport: 'Government agency liaison and development partner co-investment strategy.',
       localAssociateNetwork: 'Addis Ababa-based field research team.',
@@ -767,7 +767,7 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
     currency: 'TZS',
     marketHighlights: [
       'Fast-growing East African economy with Tanzania Medicines and Medical Devices Authority (TMDA)',
-      'Medical Stores Department (MSD) centralized public procurement system',
+      'Medical Stores Department (MSD) centralised public procurement system',
       'Expanding private healthcare infrastructure in Dar es Salaam, Arusha, and Mwanza'
     ],
     capabilityCoverage: {
@@ -782,7 +782,7 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
       'How does the TMDA fast-track process work for WHO-prequalified formulations?',
       'What is the market share of faith-based hospital networks (CSSC) vs government facilities?'
     ],
-    engagementModels: ['Market Landscape Study', 'Regulatory Advisory', 'AI Training Program']
+    engagementModels: ['Market Landscape Study', 'Regulatory Advisory', 'AI Training Programme']
   },
   {
     id: 'uganda',
@@ -798,7 +798,7 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
     capabilityCoverage: {
       marketResearch: 'NDA market audits, private clinic pricing studies, and JMS procurement scans.',
       regulatoryIntelligence: 'NDA compliance, local manufacturing incentives, and cross-border trade.',
-      marketEntrySupport: 'Distributor partnership modeling and regional re-export advisory.',
+      marketEntrySupport: 'Distributor partnership modelling and regional re-export advisory.',
       localAssociateNetwork: 'Kampala life sciences and research associates.',
       trainingDelivery: 'In-person and virtual workforce enablement.'
     },
@@ -829,10 +829,10 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
     },
     keySectors: ['Digital Health & Biotech', 'Pharmaceuticals', 'Medical Devices', 'Banking'],
     typicalQuestions: [
-      'How will the African Medicines Agency (AMA) headquarters in Kigali shape continent-wide harmonization?',
+      'How will the African Medicines Agency (AMA) headquarters in Kigali shape continent-wide harmonisation?',
       'What are the commercial requirements for integration into the national electronic medical record system?'
     ],
-    engagementModels: ['Innovation Pilot Advisory', 'Regulatory Policy Strategy', 'AI Center of Excellence Training']
+    engagementModels: ['Innovation Pilot Advisory', 'Regulatory Policy Strategy', 'AI Centre of Excellence Training']
   },
   {
     id: 'morocco',
@@ -897,7 +897,7 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
     ],
     capabilityCoverage: {
       marketResearch: 'NHIMA provider audits, mining-sector private hospital studies, and distributor scans.',
-      regulatoryIntelligence: 'ZAMRA registration procedures and SADC regional harmonization (ZAZIBONA).',
+      regulatoryIntelligence: 'ZAMRA registration procedures and SADC regional harmonisation (ZAZIBONA).',
       marketEntrySupport: 'Distributor appointment and ZAMMSA tender support.',
       localAssociateNetwork: 'Lusaka-based health economists and researchers.',
       trainingDelivery: 'Corporate strategy and applied AI workshops.'
@@ -907,14 +907,14 @@ export const AFRICAN_COUNTRIES: CountryDossier[] = [
       'How can a medical supplier leverage the ZAZIBONA collaborative regulatory procedure?',
       'What are the procurement requirements for copperbelt private hospital networks?'
     ],
-    engagementModels: ['Market Entry Assessment', 'ZAZIBONA Regulatory Support', 'AI Readiness Program']
+    engagementModels: ['Market Entry Assessment', 'ZAZIBONA Regulatory Support', 'AI Readiness Programme']
   }
 ];
 
 export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
   {
     id: 'market-entry',
-    title: 'We want to enter an African market with a specialized therapeutic portfolio.',
+    title: 'We want to enter an African market with a specialised therapeutic portfolio.',
     category: 'Market Entry & Commercial Strategy',
     clientType: 'Global / Regional Pharmaceutical Manufacturer',
     theChallenge: 'A multinational specialty pharma company needs to launch an oncology & autoimmune line across 4 African markets but lacks granular epidemiology, pricing transparency, and distributor credibility data.',
@@ -931,7 +931,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
       'Distributor audited balance sheets and warehouse inspection logs'
     ],
     analysisPerformed: [
-      'Price sensitivity waterfall modeling across private vs public sectors',
+      'Price sensitivity waterfall modelling across private vs public sectors',
       'Distributor capability multi-criteria scoring matrix',
       'Regulatory pathway critical-path timeline mapping (including EAC / ZAZIBONA options)',
       '5-year revenue and market-penetration financial forecast'
@@ -939,9 +939,9 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     strategicQuestions: [
       'Should we appoint one master distributor or separate hospital specialty partners?',
       'How do we set pricing to avoid parallel re-export while remaining accessible?',
-      'Which public institutions will pilot access programs with donor co-funding?'
+      'Which public institutions will pilot access programmes with donor co-funding?'
     ],
-    recommendedIntervention: 'Formulate a phased entry strategy starting with flagship private oncology centers, followed by a negotiated public access program backed by a tiered distributor governance model.',
+    recommendedIntervention: 'Formulate a phased entry strategy starting with flagship private oncology centres, followed by a negotiated public access programme backed by a tiered distributor governance model.',
     technologyAiLayer: 'Deploy an automated Pan-African Market Pricing & Competitor Scraping Monitor to alert commercial teams of gray-market price differentials.',
     peopleTrainingLayer: 'Deliver applied AI training for regional medical science liaisons (MSLs) on KOL mapping and clinical trial data synthesis.',
     expectedOutputs: [
@@ -975,15 +975,15 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     ],
     analysisPerformed: [
       'Brand equity vs price differential trade-off analysis',
-      'Pharmacist margin comparison modeling between originators and generics',
+      'Pharmacist margin comparison modelling between originators and generics',
       'Competitor supply chain vulnerability and stock-out probability mapping'
     ],
     strategicQuestions: [
       'Should we launch an authorized generic or maintain premium positioning?',
-      'Can we introduce loyalty/patient support programs to lock in chronic prescriptions?',
+      'Can we introduce loyalty/patient support programmes to lock in chronic prescriptions?',
       'How can we incentivize pharmacists without violating ethical guidelines?'
     ],
-    recommendedIntervention: 'Launch a dual-brand defense: retain the originator for specialist prescriptions while introducing a localized second-brand for high-volume retail chains, supported by a digital patient adherence program.',
+    recommendedIntervention: 'Launch a dual-brand defense: retain the originator for specialist prescriptions while introducing a localised second-brand for high-volume retail chains, supported by a digital patient adherence programme.',
     technologyAiLayer: 'Custom AI predictive model tracking retail pharmacy re-order patterns and flagging at-risk accounts prior to generic substitution.',
     peopleTrainingLayer: 'Upskilling commercial sales representatives in consultative selling and digital CRM territory intelligence.',
     expectedOutputs: [
@@ -993,7 +993,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     ],
     successMetrics: [
       'Retained 72% volume share 12 months post-generic launch',
-      'Grew direct-to-patient adherence program enrollment by 40%',
+      'Grew direct-to-patient adherence programme enrolment by 40%',
       'Maintained gross operating margin above 58%'
     ]
   },
@@ -1002,7 +1002,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     title: 'We want to assess our AI readiness and build an enterprise roadmap.',
     category: 'Digital & AI Transformation',
     clientType: 'Regional Hospital Group / Enterprise Bank',
-    theChallenge: 'Executive leadership wants to leverage AI to modernize operations but is overwhelmed by vendor hype, disjointed pilot projects, and severe internal data silos.',
+    theChallenge: 'Executive leadership wants to leverage AI to modernise operations but is overwhelmed by vendor hype, disjointed pilot projects, and severe internal data silos.',
     whatMindCraftInvestigates: [
       'Data architecture, cleanliness, integration, and security governance',
       'Executive & workforce digital literacy, cultural openness, and fear of displacement',
@@ -1017,7 +1017,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     ],
     analysisPerformed: [
       '8-Dimension AI Maturity Diagnostic Matrix scoring (Strategy, People, Data, Tech, etc.)',
-      'Use case ROI vs Implementation Complexity prioritization quadrant',
+      'Use case ROI vs Implementation Complexity prioritisation quadrant',
       'Data readiness and privacy vulnerability risk assessment'
     ],
     strategicQuestions: [
@@ -1026,11 +1026,11 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
       'What balance of internal capability building vs third-party SaaS is optimal?'
     ],
     recommendedIntervention: 'Establish an enterprise AI steering committee, build an integrated central data layer with strict role-based access, and execute 3 quick-win automated workflow pilots.',
-    technologyAiLayer: 'Implement a secure, private enterprise AI gateway with centralized audit logging and strict data anonymization.',
+    technologyAiLayer: 'Implement a secure, private enterprise AI gateway with centralised audit logging and strict data anonymization.',
     peopleTrainingLayer: 'Roll out executive briefings for C-suite leaders and a 4-week applied AI accelerator for functional department heads.',
     expectedOutputs: [
       'Comprehensive AI-Readiness Diagnostic Scorecard & Gap Analysis',
-      'Prioritized 24-Month Enterprise AI Transformation Roadmap',
+      'Prioritised 24-Month Enterprise AI Transformation Roadmap',
       'Enterprise AI Governance Policy & Responsible Use Guidelines'
     ],
     successMetrics: [
@@ -1057,7 +1057,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
       'Internal standard operating procedures (SOPs) for regulatory dossier submissions'
     ],
     analysisPerformed: [
-      'Regulatory change-frequency and impact categorization modeling',
+      'Regulatory change-frequency and impact categorization modelling',
       'Workflow bottleneck analysis highlighting avoidable submission delays',
       'Document parsing accuracy benchmarks for machine-assisted dossier extraction'
     ],
@@ -1068,7 +1068,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     ],
     recommendedIntervention: 'Design a unified Regulatory Intelligence Operating System that ingests multi-country gazettes, standardizes guideline changes, and triggers proactive compliance tasks.',
     technologyAiLayer: 'Custom NLP agent that monitors 14 national health authority portals, extracts document changes, and maps impact to active company SKUs.',
-    peopleTrainingLayer: 'Specialized training for regulatory officers on prompt-assisted dossier synthesis and automated query response drafting.',
+    peopleTrainingLayer: 'Specialised training for regulatory officers on prompt-assisted dossier synthesis and automated query response drafting.',
     expectedOutputs: [
       'Interactive Multi-Country Regulatory Intelligence Dashboard',
       'Automated Compliance & Renewal Alert Pipeline',
@@ -1100,7 +1100,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     analysisPerformed: [
       'Commercial team productivity bottleneck mapping',
       'Function-specific prompt library & template readiness evaluation',
-      'Pre- vs post-training capability matrix modeling'
+      'Pre- vs post-training capability matrix modelling'
     ],
     strategicQuestions: [
       'How do we avoid one-off workshop enthusiasm that fades within 2 weeks?',
@@ -1123,7 +1123,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
   },
   {
     id: 'commercial-intelligence',
-    title: 'We need better commercial intelligence and territory sales optimization.',
+    title: 'We need better commercial intelligence and territory sales optimisation.',
     category: 'Market Research & Analytics',
     clientType: 'Medical Device / Diagnostics Distributor',
     theChallenge: 'A regional medical device distributor has 40 sales representatives covering 800 hospital accounts but suffers from uneven territory productivity, blind spots in secondary cities, and unpredictable re-order cycles.',
@@ -1139,8 +1139,8 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
       'Primary research with 50 hospital procurement heads and surgical suite directors'
     ],
     analysisPerformed: [
-      'Territory workload and travel efficiency geospatial optimization',
-      'Account predictive lifetime value and churn probability modeling',
+      'Territory workload and travel efficiency geospatial optimisation',
+      'Account predictive lifetime value and churn probability modelling',
       'Sales representative detailing effectiveness and conversion analysis'
     ],
     strategicQuestions: [
@@ -1149,11 +1149,11 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
       'How can we equip reps with real-time account intelligence on their mobile devices?'
     ],
     recommendedIntervention: 'Redesign the commercial territory model into 5 regional clusters, re-align incentive structures to account retention, and deploy an automated sales intelligence assistant.',
-    technologyAiLayer: 'Mobile-friendly AI commercial intelligence assistant that generates customized pre-call briefs and predicts re-order dates for each hospital.',
+    technologyAiLayer: 'Mobile-friendly AI commercial intelligence assistant that generates customised pre-call briefs and predicts re-order dates for each hospital.',
     peopleTrainingLayer: 'Territory management workshops and consultative sales coaching for field representatives and area managers.',
     expectedOutputs: [
-      'Geospatially Optimized Territory Allocation Master Model',
-      'Hospital Account Prioritization & Potential Index',
+      'Geospatially Optimised Territory Allocation Master Model',
+      'Hospital Account Prioritisation & Potential Index',
       'Mobile-Ready Field Sales Intelligence Playbook & Assistant'
     ],
     successMetrics: [
@@ -1171,7 +1171,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     whatMindCraftInvestigates: [
       'End-to-end supply chain workflows from port customs clearance to farm-gate delivery',
       'Standard operating procedures (SOPs) across quality control, storage, and dispatch',
-      'ERP system utilization gaps and manual spreadsheet workarounds',
+      'ERP system utilisation gaps and manual spreadsheet workarounds',
       'Hazardous material storage and environmental regulatory compliance standards'
     ],
     dataRequired: [
@@ -1185,7 +1185,7 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
       'Compliance vulnerability audit against national pesticide control board regulations'
     ],
     strategicQuestions: [
-      'Which processes should be standardized into formal digital SOPs immediately?',
+      'Which processes should be standardised into formal digital SOPs immediately?',
       'How do we eliminate shadow IT spreadsheets without disrupting daily operations?',
       'What automated approval gates will ensure 100% regulatory compliance?'
     ],
@@ -1194,8 +1194,8 @@ export const PROBLEM_OUTCOME_SCENARIOS: ProblemOutcomeScenario[] = [
     peopleTrainingLayer: 'SOP compliance workshops and digital ERP workflow training for logistics, operations, and quality teams.',
     expectedOutputs: [
       'End-to-End Business Process Master Blueprint & RACI Matrix',
-      'Standardized Operational SOP Suite with Video & Visual Job Aids',
-      'Inventory Optimization & Warehouse Workflow Architecture'
+      'Standardised Operational SOP Suite with Video & Visual Job Aids',
+      'Inventory Optimisation & Warehouse Workflow Architecture'
     ],
     successMetrics: [
       'Order fulfillment turnaround time reduced from 5 days to 24 hours',
@@ -1255,14 +1255,14 @@ export const RESEARCH_WORKSPACE_SAMPLE: ResearchWorkspaceItem = {
   primaryEvidence: [
     {
       source: 'Key Medical Oncologist In-Depth Interviews (KOLs)',
-      sampleSize: 'n=48 Board-Certified Oncologists across 16 Tertiary Centers',
+      sampleSize: 'n=48 Board-Certified Oncologists across 16 Tertiary Centres',
       keySignal: 'High diagnostic willingness but severe access barriers due to lack of local next-generation sequencing (NGS) facilities and out-of-pocket patient cost constraints.',
       confidence: 'Very High'
     },
     {
       source: 'Hospital Formulary & Procurement Heads Audit',
       sampleSize: 'n=24 Major Private & Public Oncology Hospital Pharmacy Directors',
-      keySignal: 'Private centers list within 60-90 days if manufacturer provides patient-assistance co-pay support; public tenders require minimum 24-month local stability data.',
+      keySignal: 'Private centres list within 60-90 days if manufacturer provides patient-assistance co-pay support; public tenders require minimum 24-month local stability data.',
       confidence: 'High'
     },
     {
@@ -1275,7 +1275,7 @@ export const RESEARCH_WORKSPACE_SAMPLE: ResearchWorkspaceItem = {
   secondaryEvidence: [
     {
       source: 'WHO IARC GLOBOCAN & National Cancer Registries',
-      datasetType: 'Epidemiological Incidence & Mortality Modeling',
+      datasetType: 'Epidemiological Incidence & Mortality Modelling',
       keyFinding: 'Breast, cervical, and prostate cancers represent 62% of newly diagnosed solid tumors, with 70% diagnosed at Stage III or IV.'
     },
     {
@@ -1308,7 +1308,7 @@ export const RESEARCH_WORKSPACE_SAMPLE: ResearchWorkspaceItem = {
   ],
   recommendations: [
     {
-      action: 'Implement a tiered commercial model: establish direct supply to top-10 private cancer centers while negotiating national PPP access in Kenya and South Africa.',
+      action: 'Implement a tiered commercial model: establish direct supply to top-10 private cancer centres while negotiating national PPP access in Kenya and South Africa.',
       priority: 'Immediate',
       evidenceStrength: 94
     },
@@ -1334,7 +1334,7 @@ export const AI_SOLUTIONS_CATALOG: AISolutionItem[] = [
     businessProblem: 'Pharmaceutical safety teams are overwhelmed by unstructured clinical notes, local medical journals, and social mentions, risking non-compliance with mandatory reporting deadlines.',
     dataInputs: [
       'Local biomedical literature databases & clinical registries',
-      'Medical information inquiries & call center transcripts',
+      'Medical information inquiries & call centre transcripts',
       'Social media mentions & patient forum posts',
       'Spontaneous adverse event reporting forms'
     ],
@@ -1354,12 +1354,12 @@ export const AI_SOLUTIONS_CATALOG: AISolutionItem[] = [
     dataInputs: [
       'National health ministry & medicine regulatory authority websites',
       'Official government gazettes & regulatory circulars',
-      'Regional harmonization bulletins (EAC, ECOWAS, SADC/ZAZIBONA, AMA)',
+      'Regional harmonisation bulletins (EAC, ECOWAS, SADC/ZAZIBONA, AMA)',
       'Industry association policy briefs'
     ],
     aiAnalyticsLayer: 'Intelligent multi-source scraping agents with document diffing, semantic classification, and impact-scoring algorithms.',
     workflowIntegration: 'Enterprise Slack/Teams alert notifications, weekly executive digest emails, and automated updates to internal Regulatory Information Management Systems (RIMS).',
-    humanInteraction: 'Regulatory specialists receive prioritized impact summaries and verify actionable filing requirements.',
+    humanInteraction: 'Regulatory specialists receive prioritised impact summaries and verify actionable filing requirements.',
     governanceSafeguards: 'Cryptographic source verification, timestamped change tracking, and fallback manual verification queues.',
     projectedOutcome: 'Instant awareness of regulatory policy shifts, eliminating surprise compliance holds and accelerating multi-country submission planning.',
     status: 'Production Architecture Pattern'
@@ -1369,7 +1369,7 @@ export const AI_SOLUTIONS_CATALOG: AISolutionItem[] = [
     title: 'AI Key Opinion Leader (KOL) Discovery & Influence Graph',
     category: 'Life Sciences Core',
     description: 'Dynamic mapping of clinical specialists, clinical trial investigators, and academic leaders across African and global healthcare ecosystems.',
-    businessProblem: 'Commercial and medical affairs teams rely on outdated, anecdotal lists of influential physicians, missing emerging clinical leaders in regional medical centers.',
+    businessProblem: 'Commercial and medical affairs teams rely on outdated, anecdotal lists of influential physicians, missing emerging clinical leaders in regional medical centres.',
     dataInputs: [
       'Peer-reviewed biomedical publications (PubMed, African Journals Online)',
       'Clinical trial registries & conference abstract proceedings',
@@ -1377,7 +1377,7 @@ export const AI_SOLUTIONS_CATALOG: AISolutionItem[] = [
       'Hospital department chair listings & clinical guidelines panels'
     ],
     aiAnalyticsLayer: 'Graph neural networks and entity resolution models linking co-authorships, clinical trial sponsorships, and therapeutic area influence scores.',
-    workflowIntegration: 'Interactive 3D network visualization console embedded in commercial CRM systems (Veeva, Salesforce).',
+    workflowIntegration: 'Interactive 3D network visualisation console embedded in commercial CRM systems (Veeva, Salesforce).',
     humanInteraction: 'Medical Science Liaisons (MSLs) query the network to plan advisory boards, clinical studies, and speaker symposia.',
     governanceSafeguards: 'Strict reliance on public and consented professional data; adherence to healthcare compliance and ethical engagement standards.',
     projectedOutcome: '3x expansion in identified clinical influencers and 45% improvement in advisory board engagement quality.',
@@ -1395,7 +1395,7 @@ export const AI_SOLUTIONS_CATALOG: AISolutionItem[] = [
       'Hospital formulary status and tender contract details',
       'Competitor product comparison matrices'
     ],
-    aiAnalyticsLayer: 'Retrieval-Augmented Generation (RAG) agent operating strictly over approved enterprise compliance content with localized language understanding.',
+    aiAnalyticsLayer: 'Retrieval-Augmented Generation (RAG) agent operating strictly over approved enterprise compliance content with localised language understanding.',
     workflowIntegration: 'WhatsApp Enterprise / Mobile Web app integrated with enterprise single sign-on (SSO).',
     humanInteraction: 'Sales reps ask conversational questions (e.g. "Brief me on Dr. Ochieng\'s prescribing preferences and our key clinical endpoints vs Brand X") before entering meetings.',
     governanceSafeguards: 'Strict guardrails prohibiting medical claims outside approved product labels; automatic redaction of confidential pricing.',
@@ -1404,9 +1404,9 @@ export const AI_SOLUTIONS_CATALOG: AISolutionItem[] = [
   },
   {
     id: 'sol-market-access-analytics',
-    title: 'Market Access & Pricing Optimization Analytics',
+    title: 'Market Access & Pricing Optimisation Analytics',
     category: 'Intelligence Platforms',
-    description: 'Predictive modeling of payer reimbursement thresholds, out-of-pocket affordability curves, and tender bid pricing optimization.',
+    description: 'Predictive modelling of payer reimbursement thresholds, out-of-pocket affordability curves, and tender bid pricing optimisation.',
     businessProblem: 'Market access directors face extreme pricing pressure and lack predictive models to evaluate the volume-price trade-off across private insurance and public tenders.',
     dataInputs: [
       'Historical tender award outcomes and winning bid prices',
@@ -1414,11 +1414,11 @@ export const AI_SOLUTIONS_CATALOG: AISolutionItem[] = [
       'Medical insurance scheme coverage benefits and formulary co-pay rules',
       'Competitor international reference pricing databases'
     ],
-    aiAnalyticsLayer: 'Monte Carlo price elasticity simulation, game-theoretic tender bidding models, and multi-objective optimization algorithms.',
+    aiAnalyticsLayer: 'Monte Carlo price elasticity simulation, game-theoretic tender bidding models, and multi-objective optimisation algorithms.',
     workflowIntegration: 'Executive decision dashboard connected to commercial finance and supply planning systems.',
     humanInteraction: 'Market access executives run "what-if" pricing scenarios to test margin and volume impacts prior to government negotiations.',
-    governanceSafeguards: 'Role-based access control, cryptographic data encryption at rest and in transit, and full audit logging of financial modeling.',
-    projectedOutcome: 'Optimized gross margins by 4.5% while increasing public tender win rates by 22%.',
+    governanceSafeguards: 'Role-based access control, cryptographic data encryption at rest and in transit, and full audit logging of financial modelling.',
+    projectedOutcome: 'Optimised gross margins by 4.5% while increasing public tender win rates by 22%.',
     status: 'Illustrative Blueprint'
   },
   {
@@ -1481,7 +1481,7 @@ export const TRAINING_SIMULATION_STEPS: TrainingCurriculumStep[] = [
     duration: 'Week 2 · 6 Hours',
     learningObjectives: [
       'Build repeatable AI workflows to track competitor clinical trials and patent filings',
-      'Structure unstructured market rumors and field feedback into standardized intelligence logs',
+      'Structure unstructured market rumors and field feedback into standardised intelligence logs',
       'Formulate strategic counter-messaging playbooks'
     ],
     appliedExercises: [
@@ -1493,19 +1493,19 @@ export const TRAINING_SIMULATION_STEPS: TrainingCurriculumStep[] = [
   },
   {
     step: 4,
-    title: 'Territory Planning & Customer Account Prioritization',
+    title: 'Territory Planning & Customer Account Prioritisation',
     duration: 'Week 3 · 8 Hours',
     learningObjectives: [
       'Use AI to segment hospital accounts based on potential, access barriers, and historical volume',
-      'Optimize sales representative weekly call routes and contact frequency',
-      'Draft customized multi-stakeholder engagement strategies (KOL vs Pharmacist vs Hospital CFO)'
+      'Optimise sales representative weekly call routes and contact frequency',
+      'Draft customised multi-stakeholder engagement strategies (KOL vs Pharmacist vs Hospital CFO)'
     ],
     appliedExercises: [
       'Uploading mock hospital account data and generating optimal 30-day territory itineraries',
       'Creating account-specific pre-call strategic briefings in seconds'
     ],
-    practicalDeliverables: ['Optimized Territory Account Matrix & Pre-Call AI Briefing Bot'],
-    championMilestone: 'Commercial reps generate customized pre-call briefings for their top 20 accounts.'
+    practicalDeliverables: ['Optimised Territory Account Matrix & Pre-Call AI Briefing Bot'],
+    championMilestone: 'Commercial reps generate customised pre-call briefings for their top 20 accounts.'
   },
   {
     step: 5,
@@ -1520,7 +1520,7 @@ export const TRAINING_SIMULATION_STEPS: TrainingCurriculumStep[] = [
       'Role-playing complex physician objection handling with an AI clinical persona',
       'Generating compliant post-call CRM summaries from brief voice memos'
     ],
-    practicalDeliverables: ['Standardized CRM Post-Call Logging Assistant'],
+    practicalDeliverables: ['Standardised CRM Post-Call Logging Assistant'],
     championMilestone: 'Rep CRM documentation time reduced from 45 minutes to 8 minutes daily.'
   },
   {
@@ -1601,14 +1601,14 @@ export const TRAINING_SIMULATION_STEPS: TrainingCurriculumStep[] = [
       'Managing the internal enterprise prompt library and quarterly audits'
     ],
     practicalDeliverables: ['Certified AI Champion Credentials & Peer Coaching Toolkit'],
-    championMilestone: 'Self-sustaining internal AI Center of Excellence established.'
+    championMilestone: 'Self-sustaining internal AI Centre of Excellence established.'
   }
 ];
 
 export const INSIGHTS_REPOSITORY: InsightArticle[] = [
   {
     id: 'ins-1',
-    title: 'The Pan-African Life Sciences Convergence: Harmonizing Regulation, Supply Chains, and AI',
+    title: 'The Pan-African Life Sciences Convergence: Harmonising Regulation, Supply Chains, and AI',
     category: 'Life Sciences',
     readTime: '6 min read',
     date: 'February 2026',
@@ -1617,23 +1617,23 @@ export const INSIGHTS_REPOSITORY: InsightArticle[] = [
     content: [
       'For decades, multinational pharmaceutical manufacturers treated Africa as 54 isolated, high-friction regulatory islands. The average lag between global regulatory approval (FDA/EMA) and commercial availability across African markets routinely exceeded 4 to 7 years.',
       'Today, three converging forces are rewriting this reality: the operationalization of the African Medicines Agency (AMA) headquartered in Kigali, the expansion of regional work-sharing initiatives (such as EAC and ZAZIBONA), and the application of automated regulatory intelligence systems.',
-      'Organizations that embrace structured regulatory tracking and harmonize their submission dossiers across regional economic communities are achieving 40% faster time-to-market while slashing redundant local testing expenditure.'
+      'Organisations that embrace structured regulatory tracking and harmonise their submission dossiers across regional economic communities are achieving 40% faster time-to-market while slashing redundant local testing expenditure.'
     ],
     keyTakeaways: [
       'Regional work-sharing (EAC, ZAZIBONA) cuts registration timelines by up to 50%.',
       'Automated guideline tracking eliminates sudden compliance stoppages.',
-      'Dual-tier private vs public market access strategies maximize revenue without sacrificing public health impact.'
+      'Dual-tier private vs public market access strategies maximise revenue without sacrificing public health impact.'
     ],
     isFeatured: true
   },
   {
     id: 'ins-2',
-    title: 'Beyond the Chatbot: Operationalizing Enterprise AI in African Financial Services and Healthcare',
+    title: 'Beyond the Chatbot: Operationalising Enterprise AI in African Financial Services and Healthcare',
     category: 'AI & Transformation',
     readTime: '8 min read',
     date: 'January 2026',
     author: 'MindCraft Enterprise AI Directorate',
-    summary: 'Why 85% of corporate AI pilots fail to reach production — and the architectural blueprint required to bridge data governance, model safety, and organizational adoption.',
+    summary: 'Why 85% of corporate AI pilots fail to reach production — and the architectural blueprint required to bridge data governance, model safety, and organisational adoption.',
     content: [
       'Across Nairobi, Johannesburg, Lagos, and Cairo, boardrooms are enthusiastic about artificial intelligence. Yet behind the headlines lies a pervasive frustration: hundreds of proof-of-concepts, thousands of individual ChatGPT subscriptions, but virtually zero measurable impact on core balance sheets.',
       'The gap is not algorithmic; it is architectural and human. True enterprise AI requires a robust data readiness layer, strict role-based access control to prevent proprietary IP leakage, deterministic validation checks, and intensive workforce enablement.',
@@ -1653,11 +1653,11 @@ export const INSIGHTS_REPOSITORY: InsightArticle[] = [
     readTime: '7 min read',
     date: 'February 2026',
     author: 'MindCraft Market Research Team',
-    summary: 'An empirical analysis of patient affordability, private insurance penetration, and innovative tiered pricing models across East and West African commercial centers.',
+    summary: 'An empirical analysis of patient affordability, private insurance penetration, and innovative tiered pricing models across East and West African commercial centres.',
     content: [
       'In major African economies, out-of-pocket health expenditure still accounts for 40% to 70% of total healthcare spending, despite commendable public health insurance expansions like Kenya’s Social Health Authority and Ghana’s NHIS.',
       'For medical device and specialty pharmaceutical companies, standard Western pricing models lead either to prohibitive patient attrition or brand-eroding gray market arbitrage.',
-      'Through primary physician surveys and payer price-elasticity modeling, MindCraft demonstrates how tiered dual-branding, hospital patient-assistance co-pays, and localized packaging sizes preserve gross margins while expanding commercial volume.'
+      'Through primary physician surveys and payer price-elasticity modelling, MindCraft demonstrates how tiered dual-branding, hospital patient-assistance co-pays, and localised packaging sizes preserve gross margins while expanding commercial volume.'
     ],
     keyTakeaways: [
       '70% of specialty healthcare transactions occur in private tier-1/tier-2 clinics.',
@@ -1677,7 +1677,7 @@ export const INSIGHTS_REPOSITORY: InsightArticle[] = [
     content: [
       'As African nations enact and enforce rigorous Data Protection Acts (including Kenya DPA 2019, Nigeria NDPR/NDPA, South Africa POPIA, and Egypt Data Protection Law), the era of unregulated data ingestion is firmly over.',
       'Enterprises adopting AI must establish clear data sovereignty boundaries: sensitive customer records, patient diagnostics, and proprietary financial ledgers must never be transmitted into open consumer model training pools.',
-      'MindCraft embeds zero-data-retention guarantees, cryptographic anonymization, and explainable decision trees into every AI training program and enterprise deployment.'
+      'MindCraft embeds zero-data-retention guarantees, cryptographic anonymization, and explainable decision trees into every AI training programme and enterprise deployment.'
     ],
     keyTakeaways: [
       'Zero client data is ever used to train underlying public foundational models.',

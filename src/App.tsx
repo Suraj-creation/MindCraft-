@@ -1,21 +1,16 @@
-import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef, lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { NavTab, RoleLens, EngagementBlueprint } from './types';
 import { Header } from './components/Header';
-import { HeroOperatingSystem } from './components/HeroOperatingSystem';
 import { Footer } from './components/Footer';
-import { CapabilitiesSection, IndustriesSection, ExpertiseReachSection, ApproachSection, ClosingSection } from './components/LandingSections';
-import { InsightsStrip } from './components/InsightsStrip';
 import { NavContext } from './components/ui/primitives';
-import { UNIVERSAL_INDUSTRIES } from './data/industryAndAfricaData';
-import { tabFromHash } from './data/navigation';
+import { routePath, tabFromHash, tabFromPath } from './data/navigation';
+import { applyHead } from './lib/seo';
 import { glideToTop, scrollToTop as jumpToTop, startSmoothScroll } from './lib/smoothScroll';
-
-// New Advanced Bento Components
-
 import { ArrowUp } from 'lucide-react';
 
-// Inner pages load on demand so the landing page ships a much smaller bundle
+// Every page loads on demand (prerendered HTML covers first paint), so the shared bundle stays small
+const OverviewPage = lazy(() => import('./components/OverviewPage').then(m => ({ default: m.OverviewPage })));
 const IntegratedModelSection = lazy(() => import('./components/IntegratedModelSection').then(m => ({ default: m.IntegratedModelSection })));
 const LifeSciencesEcosystem = lazy(() => import('./components/LifeSciencesEcosystem').then(m => ({ default: m.LifeSciencesEcosystem })));
 const AfricaIntelligenceMap = lazy(() => import('./components/AfricaIntelligenceMap').then(m => ({ default: m.AfricaIntelligenceMap })));
@@ -37,34 +32,35 @@ const Matrix3DView = lazy(() => import('./components/Matrix3DView').then(m => ({
 const MindCraftUniverseOrbital = lazy(() => import('./components/MindCraftUniverseOrbital').then(m => ({ default: m.MindCraftUniverseOrbital })));
 const GlobalCommandSearchModal = lazy(() => import('./components/GlobalCommandSearchModal').then(m => ({ default: m.GlobalCommandSearchModal })));
 
-export default function App() {
-  const [activeTab, setActiveTab] = useState<NavTab>(() => tabFromHash(window.location.hash) ?? 'home');
+/** `initialTab` comes from the URL in the browser and from the route being prerendered at build time. */
+export default function App({ initialTab = 'home' }: { initialTab?: NavTab }) {
+  const [activeTab, setActiveTab] = useState<NavTab>(initialTab);
   const [activeRole, setActiveRole] = useState<RoleLens>('all');
   const [isIntakeOpen, setIsIntakeOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [activeBlueprint, setActiveBlueprint] = useState<EngagementBlueprint | null>(null);
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
-  
-  // Cross-component selected entities
+
+  // Cross-component selected entities (an industry id or display name)
   const [preselectedIndustry, setPreselectedIndustry] = useState<string | undefined>(undefined);
-  // Callers pass either an industry id or its display name; the explorer needs the id
-  const preselectedIndustryId = UNIVERSAL_INDUSTRIES.find(
-    (i) => i.id === preselectedIndustry || i.name === preselectedIndustry
-  )?.id;
 
   /** The single navigation path for menus, contextual links, search and direct URLs. */
   const navigate = useCallback((tab: NavTab) => {
     setActiveTab(tab);
-    const hash = `#${encodeURIComponent(tab)}`;
-    if (window.location.hash !== hash) window.history.pushState(null, '', hash);
+    const path = routePath(tab);
+    if (window.location.pathname !== path || window.location.hash) window.history.pushState(null, '', path);
   }, []);
 
-  // Direct entry, browser history and manually edited hashes resolve through the same route validation.
+  // Browser history and legacy `#tab` links resolve through the same route validation.
   useEffect(() => {
     const syncFromLocation = () => {
-      const tab = tabFromHash(window.location.hash);
-      if (tab) setActiveTab(tab);
-      else if (!window.location.hash) setActiveTab('home');
+      const legacy = tabFromHash(window.location.hash);
+      if (legacy) {
+        window.history.replaceState(null, '', routePath(legacy));
+        setActiveTab(legacy);
+      } else {
+        setActiveTab(tabFromPath(window.location.pathname) ?? 'home');
+      }
     };
     window.addEventListener('hashchange', syncFromLocation);
     window.addEventListener('popstate', syncFromLocation);
@@ -89,8 +85,14 @@ export default function App() {
   // Smooth wheel scrolling for the whole site (skipped for reduced motion)
   useEffect(() => startSmoothScroll(), []);
 
-  // Every navigation starts at the top of the new view
+  // Every navigation starts at the top of the new view, with the title and canonical for that route.
+  // After the first render, focus moves to the new page so screen readers announce it.
+  const mainRef = useRef<HTMLElement>(null);
+  const shownTab = useRef(activeTab);
   useEffect(() => {
+    applyHead(activeTab);
+    if (shownTab.current !== activeTab) mainRef.current?.focus({ preventScroll: true });
+    shownTab.current = activeTab;
     if (activeTab !== 'senior-expertise') {
       jumpToTop();
       return;
@@ -218,14 +220,14 @@ export default function App() {
       />
 
       {/* Main View Router */}
-      <main id="main-content" tabIndex={-1} className="pt-16 lg:pt-20">
+      <main ref={mainRef} id="main-content" tabIndex={-1} className="pt-16 lg:pt-20">
         <Suspense fallback={<div className="min-h-[60dvh]" aria-busy="true" />}>
         {/* Role Lens Active Notice Banner (if filtered) */}
       {activeRole !== 'all' && (
         <div className="bg-[#0a0a0a] border-b border-indigo-500/20 py-2.5">
           <div className="mc-container flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div className="flex items-center space-x-2">
-              <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+              <span aria-hidden="true" className="w-2 h-2 rounded-full bg-indigo-400" />
               <span className="text-xs font-semibold text-indigo-300">
                 {roleSummaries[activeRole].title}:
               </span>
@@ -251,23 +253,12 @@ export default function App() {
         >
         {/* 1. Overview / Home */}
         {(view === 'home' || view === 'overview') && (
-          <div>
-            <HeroOperatingSystem
-              onOpenIntake={handleOpenIntakeGeneric}
-              setActiveTab={navigate}
-              roleLens={activeRole}
-            />
-            <CapabilitiesSection setActiveTab={navigate} onOpenIntake={handleOpenIntakeGeneric} />
-            <IndustriesSection
-              setActiveTab={navigate}
-              onOpenIntake={handleOpenIntakeGeneric}
-              onSelectIndustry={(id) => setPreselectedIndustry(id)}
-            />
-            <ApproachSection setActiveTab={navigate} onOpenIntake={handleOpenIntakeGeneric} />
-            <ExpertiseReachSection setActiveTab={navigate} onOpenIntake={handleOpenIntakeGeneric} />
-            <InsightsStrip onNavigate={navigate} />
-            <ClosingSection setActiveTab={navigate} onOpenIntake={handleOpenIntakeGeneric} />
-          </div>
+          <OverviewPage
+            navigate={navigate}
+            onOpenIntake={handleOpenIntakeGeneric}
+            roleLens={activeRole}
+            onSelectIndustry={(id) => setPreselectedIndustry(id)}
+          />
         )}
 
         {/* 2. 24 Industry Verticals Explorer */}
@@ -275,7 +266,7 @@ export default function App() {
           <div>
             <IndustryIntelligenceExplorer
               headingLevel={1}
-              initialIndustryId={preselectedIndustryId}
+              initialIndustryId={preselectedIndustry}
               onNavigate={navigate}
               onSelectIndustryForEngagement={(ind) => setPreselectedIndustry(ind)}
             />

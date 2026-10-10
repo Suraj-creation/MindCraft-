@@ -104,5 +104,5 @@ export const FactRow: React.FC<{ items: { value: React.ReactNode; label: string 
 
 /** A short caption for an illustration. Honest about what the picture is. */
 export const ArtCaption: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <figcaption className={`mc-meta !text-[11px] !text-white/50 ${className}`}>{children}</figcaption>
+  <figcaption className={`mc-meta !text-xs !text-white/50 ${className}`}>{children}</figcaption>
 );

@@ -187,9 +187,12 @@ export const SeniorExpertiseProfile: React.FC<{
       <Illumination tone="indigo" strength={0.55} className="-left-48 -top-40 h-[34rem] w-[34rem]" />
 
       <div className="mc-container relative">
-        {/* Opening: the real portrait, at its own size, beside who he is */}
+        {/* Opening: the label spans the row, so the real portrait and his name share one top edge */}
+        <p className="mc-meta mb-6 sm:mb-8" aria-hidden="true">
+          Senior expertise
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-[11rem_1fr] lg:grid-cols-[13.75rem_1fr] gap-8 sm:gap-10 lg:gap-16 items-start">
-          <motion.figure {...reveal} className="w-44 sm:w-full">
+          <motion.div {...reveal} className="w-44 sm:w-full">
             <img
               src={portrait}
               width={220}
@@ -199,14 +202,10 @@ export const SeniorExpertiseProfile: React.FC<{
               decoding="async"
               className="block h-auto w-full rounded-xl border border-white/10"
             />
-            <figcaption className="mt-3 text-[12px] leading-snug text-white/50">Photograph from his consultant profile</figcaption>
-          </motion.figure>
+          </motion.div>
 
           <motion.div {...reveal} transition={{ ...reveal.transition, delay: 0.05 }} className="min-w-0">
-            <p className="mc-meta" aria-hidden="true">
-              Senior expertise
-            </p>
-            <h2 id="se-title" className="mc-h1 mt-4">
+            <h2 id="se-title" className="mc-h1">
               <span className="sr-only">Senior expertise: </span>
               {SENIOR_PROFILE.name}
             </h2>

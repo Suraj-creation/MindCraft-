@@ -61,4 +61,4 @@ export const MarkList: React.FC<{ items: string[]; marker: string; className?: s
 export const IllustrativeTag: React.FC<{ children?: React.ReactNode; className?: string }> = ({
   children = 'Illustrative example',
   className = ''
-}) => <span className={`mc-meta !text-[11px] !text-white/50 ${className}`}>{children}</span>;
+}) => <span className={`mc-meta !text-xs !text-white/50 ${className}`}>{children}</span>;

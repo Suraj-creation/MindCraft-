@@ -79,7 +79,7 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                   }`}
                 >
                   {r.name}
-                  <span className="ml-2 tabular-nums text-[11px] text-white/40 tabular-nums">{r.countries.length}</span>
+                  <span className="ml-2 tabular-nums text-xs text-white/55 tabular-nums">{r.countries.length}</span>
                 </button>
               );
             })}
@@ -221,10 +221,10 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
           <RelatedLinks
             title="Continue exploring"
             items={[
-              { label: 'Africa Explorer', desc: 'Regions and jurisdictions', tone: 'emerald', onClick: () => onNavigate('africa-explorer') },
-              { label: 'Market entry framework', desc: 'Nine steps into a new market', tone: 'emerald', onClick: () => onNavigate('market-entry') },
-              { label: 'Africa intelligence', desc: 'Country-level market context', tone: 'sky', onClick: () => onNavigate('africa-intelligence') },
-              { label: 'Senior expertise', desc: 'The people behind the work', tone: 'indigo', onClick: () => onNavigate('senior-expertise') }
+              { label: 'African regions', desc: 'Regions and jurisdictions', tone: 'emerald', to: 'africa-explorer' },
+              { label: 'Market entry', desc: 'Nine steps into a new market', tone: 'emerald', to: 'market-entry' },
+              { label: 'Regulatory & market map', desc: 'Country-level market context', tone: 'sky', to: 'africa-intelligence' },
+              { label: 'Senior expertise', desc: 'The people behind the work', tone: 'indigo', to: 'senior-expertise' }
             ]}
           />
           <ContextualCTA

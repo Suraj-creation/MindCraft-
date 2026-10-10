@@ -121,12 +121,11 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
               <HeroCopy
                 id="about-title"
                 className="lg:col-span-7"
-                meta={<span aria-hidden="true">About MindCraft</span>}
                 title={
                   <>
                     <span className="sr-only">About MindCraft: </span>
-                    <span className="block">Sector depth.</span>
-                    <span className="block">African context.</span>
+                    <span className="block">Sector depth.</span>{' '}
+                    <span className="block">African context.</span>{' '}
                     <span className="block">
                       <em>Global standard.</em>
                     </span>
@@ -137,10 +136,10 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
                 className="lg:col-span-5 lg:pb-2"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+                transition={{ duration: 0.24, delay: 0.06, ease: EASE }}
               >
                 <p className="mc-lead">
-                  Consulting, market intelligence and applied AI—with specialist Life Sciences depth and an African focus.
+                  Consulting, market intelligence and applied AI, with specialist Life Sciences depth and an African focus.
                 </p>
                 <p className="mt-4 text-[13px] leading-relaxed text-white/55">Founded 2026 · Nairobi, Kenya · Africa, Europe and the United States.</p>
               </motion.div>
@@ -304,8 +303,7 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
         <section id="about-approach" className="mc-section" aria-labelledby="about-approach-title">
           <div className="mc-container">
             <motion.div {...reveal} className="max-w-2xl">
-              <p className="mc-meta">6 stages</p>
-              <h2 id="about-approach-title" className="mc-h2 mt-3">
+              <h2 id="about-approach-title" className="mc-h2">
                 How an engagement works
               </h2>
               <p className="mc-lead mt-4">Shaped around your operating context, from the first conversation to optional follow-up.</p>
@@ -369,9 +367,9 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
             <RelatedLinks
               title="Explore next"
               items={[
-                { label: 'Life Sciences', desc: 'Our core sector practice', onClick: () => setActiveTab('life-sciences'), tone: 'indigo' },
-                { label: 'Localization', desc: 'From global strategy to local result', onClick: () => setActiveTab('localization'), tone: 'emerald' },
-                { label: 'Insights', desc: 'Perspectives on Life Sciences, Africa and applied AI', onClick: () => setActiveTab('insights'), tone: 'teal' }
+                { label: 'Life Sciences', desc: 'Our core sector practice', to: 'life-sciences', tone: 'indigo' },
+                { label: 'Market localisation', desc: 'From global strategy to local result', to: 'localization', tone: 'emerald' },
+                { label: 'Insights', desc: 'Perspectives on Life Sciences, Africa and applied AI', to: 'insights', tone: 'teal' }
               ]}
             />
           </div>

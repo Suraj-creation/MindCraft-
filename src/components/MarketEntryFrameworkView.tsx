@@ -6,6 +6,7 @@ import { NavTab } from '../types';
 import { BTN_PRIMARY, PageHeader } from './ui/primitives';
 import { ArtImage } from './ui/ArtImage';
 import { ArtCaption, Scrim } from './ui/Hero';
+import { useMediaQuery } from '../lib/useMediaQuery';
 
 interface Props {
   onNavigate: (tab: NavTab) => void;
@@ -15,19 +16,6 @@ interface Props {
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches
-  );
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const handler = () => setMatches(mq.matches);
-    handler();
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, [query]);
-  return matches;
-}
 
 const primaryBtn =
   'mc-tap inline-flex items-center justify-center gap-2 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition-[background-color,transform] duration-200 active:scale-[0.98] w-full sm:w-auto shrink-0';
@@ -283,7 +271,7 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
             <div className="space-y-6">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold text-white">Complete 9-Step Roadmap</h2>
-                <span className="text-[11px] tabular-nums text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30 truncate max-w-[60%]">
+                <span className="text-xs tabular-nums text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30 truncate max-w-[60%]">
                   {selectedCountry} • {selectedIndustry}
                 </span>
               </div>

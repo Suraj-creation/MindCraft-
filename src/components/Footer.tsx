@@ -2,16 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { NavTab } from '../types';
 import { BrandLogo } from './ui/BrandLogo';
-import {
-  Sparkles,
-  MapPin,
-  ShieldCheck,
-  ArrowRight,
-  Compass,
-  BarChart3,
-  GraduationCap,
-  Cpu
-} from 'lucide-react';
+import { RouteLink } from './ui/primitives';
+import { MapPin, ShieldCheck, ArrowRight, Compass, BarChart3, GraduationCap, Cpu } from 'lucide-react';
 
 interface FooterProps {
   setActiveTab: (tab: NavTab) => void;
@@ -21,14 +13,51 @@ interface FooterProps {
 }
 
 const linkClass =
-  'min-h-11 py-2 text-left text-[13px] text-white/60 hover:text-white active:text-white transition-colors inline-flex items-center gap-2';
+  'min-h-11 py-2 text-left text-[13px] text-white/65 hover:text-white active:text-white transition-colors inline-flex items-center gap-2';
+
+type FooterLink = { to: NavTab; label: string; icon?: React.ComponentType<{ className?: string }>; color?: string };
+
+/** The footer mirrors the primary navigation, so every page is one link away from anywhere on the site. */
+const COLUMNS: { title: string; links: FooterLink[] }[] = [
+  {
+    title: 'Capabilities',
+    links: [
+      { to: 'consulting', label: 'Business Consulting', icon: Compass, color: 'text-teal-400' },
+      { to: 'market-research', label: 'Market Research', icon: BarChart3, color: 'text-sky-400' },
+      { to: 'ai-training', label: 'AI Training & Literacy', icon: GraduationCap, color: 'text-amber-400' },
+      { to: 'ai-solutions', label: 'AI Enterprise Solutions', icon: Cpu, color: 'text-emerald-400' },
+      { to: 'operating-model', label: 'The MindCraft Model' },
+      { to: 'responsible-ai', label: 'Responsible AI', icon: ShieldCheck, color: 'text-emerald-400' }
+    ]
+  },
+  {
+    title: 'Markets',
+    links: [
+      { to: 'industries', label: 'Industry Explorer' },
+      { to: 'africa-explorer', label: 'African Regions' },
+      { to: 'africa-intelligence', label: 'Regulatory & Market Map' },
+      { to: 'localization', label: 'Market Localisation' },
+      { to: 'market-entry', label: 'Market Entry' }
+    ]
+  },
+  {
+    title: 'Life Sciences',
+    links: ['Pharmaceuticals', 'Medical Devices', 'Medical Diagnostics', 'Medical Equipment', 'Surgical Consumables', 'Hospitals & Healthcare Providers'].map(
+      (label) => ({ to: 'life-sciences' as NavTab, label })
+    )
+  },
+  {
+    title: 'About',
+    links: [
+      { to: 'about', label: 'About MindCraft' },
+      { to: 'senior-expertise', label: 'Senior Expertise' },
+      { to: 'insights', label: 'Insights' },
+      { to: 'engagement-builder', label: 'Engagement Builder' }
+    ]
+  }
+];
 
 export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake, showClosingCta = false }) => {
-  const go = (tab: NavTab) => {
-    setActiveTab(tab);
-    window.scrollTo({ top: 0 });
-  };
-
   return (
     <footer className="bg-[#050505] border-t border-white/10 text-white/60 text-sm">
       {/* Closing CTA */}
@@ -42,10 +71,10 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake, show
           className="rounded-2xl bg-[#0a0a0a] border border-indigo-500/25 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6"
         >
           <div className="max-w-2xl">
-            <h3 className="mc-h2">
+            <h2 className="mc-h2">
               Start a conversation with MindCraft
-            </h3>
-            <p className="mt-3 text-sm text-white/60 leading-relaxed max-w-[34em]">
+            </h2>
+            <p className="mt-3 text-sm text-white/65 leading-relaxed max-w-[34em]">
               Tell us about the challenge in front of your organisation. We&rsquo;ll suggest the consulting, research, training or AI support that fits.
             </p>
           </div>
@@ -62,66 +91,47 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake, show
       )}
 
       {/* Link columns */}
-      <div className="mc-container py-10 sm:py-14">
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-10">
+      <div className="mc-container py-12 sm:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-10">
 
           {/* Brand & mission */}
-          <div className="col-span-2 space-y-4">
+          <div className="col-span-2 md:col-span-4 lg:col-span-2 space-y-4 lg:pr-8">
             <BrandLogo height={96} className="h-20 sm:h-24" sizes="(min-width: 640px) 130px, 108px" />
 
-            <p className="text-[13px] text-white/60 leading-relaxed max-w-md">
+            <p className="text-[13px] text-white/65 leading-relaxed max-w-md">
               Business Consulting, Market Research, AI Training and AI Enterprise Solutions, delivered as one integrated engagement. Core expertise in Life Sciences, with a deliberate focus on African markets.
             </p>
 
-            <div className="flex items-start gap-2 text-xs text-white/60 tabular-nums leading-relaxed">
-              <MapPin className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-              <span>Headquarters: Nairobi, Kenya · Africa (primary focus) · Europe · United States</span>
-            </div>
+            <p className="flex items-start gap-2 text-[13px] text-white/65 leading-relaxed">
+              <MapPin aria-hidden="true" className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+              <span>Headquartered in Nairobi, Kenya. Africa is our primary focus; we also work with clients in Europe and the United States.</span>
+            </p>
+
+            <a href="mailto:info@mindcraftconsultancy.com" className="inline-flex min-h-11 items-center text-[13px] font-medium text-white hover:text-indigo-200 transition-colors">
+              info@mindcraftconsultancy.com
+            </a>
           </div>
 
-          {/* Pillars */}
-          <div>
-            <div className="mc-eyebrow !text-white mb-2">Core Pillars</div>
-            <ul>
-              <li><button onClick={() => go('consulting')} className={linkClass}><Compass className="w-3.5 h-3.5 text-teal-400 shrink-0" />Business Consulting</button></li>
-              <li><button onClick={() => go('market-research')} className={linkClass}><BarChart3 className="w-3.5 h-3.5 text-sky-400 shrink-0" />Market Research</button></li>
-              <li><button onClick={() => go('ai-training')} className={linkClass}><GraduationCap className="w-3.5 h-3.5 text-amber-400 shrink-0" />AI Training &amp; Literacy</button></li>
-              <li><button onClick={() => go('ai-solutions')} className={linkClass}><Cpu className="w-3.5 h-3.5 text-emerald-400 shrink-0" />AI Enterprise Solutions</button></li>
-            </ul>
-          </div>
-
-          {/* Life sciences */}
-          <div className="hidden lg:block">
-            <div className="mc-eyebrow !text-white mb-2">Life Sciences</div>
-            <ul>
-              {['Pharmaceuticals', 'Medical Devices', 'Medical Diagnostics', 'Medical Equipment', 'Surgical Consumables', 'Hospitals & Healthcare Providers'].map((label) => (
-                <li key={label}><button onClick={() => go('life-sciences')} className={linkClass}>{label}</button></li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Explore + contact */}
-          <div className="col-span-2 lg:col-span-1">
-            <div className="mc-eyebrow !text-white mb-2">Explore</div>
-            <ul>
-              <li><button onClick={() => go('localization')} className={linkClass}>Market Localization</button></li>
-              <li><button onClick={() => go('senior-expertise')} className={linkClass}>Senior Expertise</button></li>
-              <li><button onClick={() => go('insights')} className={linkClass}>Insights</button></li>
-              <li><button onClick={() => go('responsible-ai')} className={linkClass}><ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />Responsible AI</button></li>
-            </ul>
-            <div className="mt-3 space-y-1 text-xs tabular-nums text-white/60">
-              <a href="mailto:info@mindcraftconsultancy.com" className="block min-h-11 py-2.5 hover:text-white">info@mindcraftconsultancy.com</a>
-            </div>
-          </div>
+          {COLUMNS.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <h2 className="text-[13px] font-semibold text-white mb-2">{col.title}</h2>
+              <ul>
+                {col.links.map(({ to, label, icon: Icon, color }) => (
+                  <li key={label}>
+                    <RouteLink to={to} onNavigate={setActiveTab} className={linkClass}>
+                      {Icon && <Icon aria-hidden="true" className={`w-3.5 h-3.5 shrink-0 ${color}`} />}
+                      {label}
+                    </RouteLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
         </div>
 
         {/* Bottom strip */}
-        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-white/50 tabular-nums">
-          <div>© 2026 MindCraft Consultancy Services. All rights reserved.</div>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6">
-            <span>Nairobi, Kenya · Africa · Europe · United States</span>
-            <span className="text-white/50">www.mindcraftconsultancy.com</span>
-          </div>
+        <div className="mt-12 pt-6 border-t border-white/10 text-xs text-white/55">
+          © 2026 MindCraft Consultancy Services. All rights reserved.
         </div>
       </div>
     </footer>

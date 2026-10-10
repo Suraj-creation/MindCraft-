@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useMediaQuery } from '../lib/useMediaQuery';
+import { withholdFigures } from '../lib/evidence';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   Building2,
@@ -80,19 +82,6 @@ const renderIcon = (iconName: string, className = 'w-5 h-5') => {
   return <Icon className={className} />;
 };
 
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches
-  );
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const handler = () => setMatches(mq.matches);
-    handler();
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, [query]);
-  return matches;
-}
 
 /** Collapsible section: accordion on phones/tablets, always open on desktop. */
 const Disclosure: React.FC<{
@@ -121,7 +110,7 @@ const Disclosure: React.FC<{
           <span className="min-w-0">{title}</span>
         </span>
         <span className="flex items-center gap-2 shrink-0">
-          {meta && <span className="tabular-nums text-[11px] text-gray-400">{meta}</span>}
+          {meta && <span className="tabular-nums text-xs text-gray-400">{meta}</span>}
           <ChevronDown
             aria-hidden="true"
             className={`w-4 h-4 text-gray-400 lg:hidden transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
@@ -159,8 +148,12 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
   initialIndustryId,
   headingLevel = 2
 }) => {
+  // Sub-headings follow the page heading so the outline never skips a level
+  const H = headingLevel === 1 ? 'h2' : 'h3';
+  const HSub = headingLevel === 1 ? 'h3' : 'h4';
+  // Callers pass either an industry id or its display name
   const [selectedIndustryId, setSelectedIndustryId] = useState<string>(
-    initialIndustryId || UNIVERSAL_INDUSTRIES[0].id
+    () => UNIVERSAL_INDUSTRIES.find((i) => i.id === initialIndustryId || i.name === initialIndustryId)?.id ?? UNIVERSAL_INDUSTRIES[0].id
   );
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<CategoryFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -261,7 +254,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
     { value: String(totalCount), label: 'Industry sectors' },
     { value: String(coreCount), label: 'Core Life Sciences' },
     { value: String(diversifiedCount), label: 'Diversified verticals' },
-    { value: '4', label: 'Service pillars' }
+    { value: '4', label: 'Capabilities' }
   ];
 
   const chipClass = (active: boolean) =>
@@ -288,7 +281,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
           className={chipClass(activeCategoryFilter === chip.id)}
         >
           {chip.label}
-          <span className="tabular-nums text-[11px] opacity-70">{chip.count}</span>
+          <span className="tabular-nums text-xs opacity-70">{chip.count}</span>
         </button>
       ))}
     </div>
@@ -327,8 +320,8 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
           className="grid grid-cols-2 gap-1 p-1 bg-[#0A0A0A] border border-white/[0.08] rounded-xl sm:inline-grid sm:grid-cols-[auto_auto]"
         >
           {([
-            { id: 'dossier', label: 'Industry Dossiers', icon: <FileText className="w-4 h-4 hidden sm:block" aria-hidden="true" /> },
-            { id: 'matrix', label: '24 × 4 Capability Matrix', icon: <TableProperties className="w-4 h-4 hidden sm:block" aria-hidden="true" /> }
+            { id: 'dossier', label: 'Industry dossiers', icon: <FileText className="w-4 h-4 hidden sm:block" aria-hidden="true" /> },
+            { id: 'matrix', label: 'Capability matrix', icon: <TableProperties className="w-4 h-4 hidden sm:block" aria-hidden="true" /> }
           ] as const).map(tab => (
             <button
               key={tab.id}
@@ -350,16 +343,16 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
           /* ===================== CAPABILITY MATRIX ===================== */
           <div className="space-y-5">
             <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+              <H className="text-xl font-semibold text-white flex items-center gap-2">
                 <TableProperties className="w-5 h-5 text-indigo-400 shrink-0" aria-hidden="true" />
                 Cross-Industry Capability Coverage Matrix
-              </h3>
+              </H>
               <p className="text-sm text-gray-400 max-w-3xl">
                 Select any industry to inspect how MindCraft’s 4 pillars (Consulting, Research, AI Training, Enterprise Solutions) integrate for that vertical.
               </p>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 {filterBar}
-                <div className="flex items-center gap-4 text-[11px] tabular-nums text-gray-400">
+                <div className="flex items-center gap-4 text-xs tabular-nums text-gray-400">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" /> Core Life Sciences
                   </span>
@@ -525,7 +518,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                           {renderIcon(activeMatrixIndustry.designMetaphor.icon, 'w-5 h-5')}
                         </div>
                         <div className="min-w-0">
-                          <h3 className="text-lg font-semibold text-white leading-tight">{activeMatrixIndustry.name}</h3>
+                          <H className="text-lg font-semibold text-white leading-tight">{activeMatrixIndustry.name}</H>
                           <p className="text-[13px] text-gray-400 mt-0.5">{activeMatrixIndustry.tagline}</p>
                         </div>
                       </div>
@@ -642,7 +635,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                           <span className="flex items-center justify-between gap-2">
                             <span className="font-semibold text-sm text-white truncate">{ind.name}</span>
                             {isCore && (
-                              <span className="text-[11px] tabular-nums px-1.5 rounded bg-indigo-500/15 text-indigo-400 border border-indigo-500/35 shrink-0">
+                              <span className="text-xs tabular-nums px-1.5 rounded bg-indigo-500/15 text-indigo-400 border border-indigo-500/35 shrink-0">
                                 Core
                               </span>
                             )}
@@ -673,10 +666,10 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                         ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/35'
                         : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
                     }`}>
-                      {isCoreSel ? 'Core Life Sciences Sector' : 'Diversified Industry Vertical'}
+                      {isCoreSel ? 'Core Life Sciences sector' : 'Diversified industry'}
                     </span>
                     {selectedIndustry.heritageNote && (
-                      <span className="text-[11px] text-gray-400 tabular-nums">• {selectedIndustry.heritageNote}</span>
+                      <span className="text-xs text-gray-400 tabular-nums">• {selectedIndustry.heritageNote}</span>
                     )}
                   </div>
 
@@ -685,20 +678,18 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                       {renderIcon(selectedIndustry.designMetaphor.icon, 'w-7 h-7')}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight">
+                      <H className="font-heading text-2xl md:text-3xl font-medium text-white tracking-[-0.02em] leading-tight">
                         {selectedIndustry.name}
-                      </h3>
+                      </H>
                       <p className="text-indigo-400 text-sm md:text-base font-medium mt-1">
                         {selectedIndustry.tagline}
                       </p>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08]">
-                    <div className="text-xs text-gray-400 mb-1.5 font-medium">
-                      Industry Context &amp; Structural Dynamics
-                    </div>
-                    <p className="text-sm text-[#E0E0E0] leading-relaxed">{selectedIndustry.context}</p>
+                  <div className="border-t border-white/[0.08] pt-4">
+                    <div className="text-[13px] text-white/60 mb-1.5 font-medium">Industry context</div>
+                    <p className="max-w-[42em] text-[15px] text-[#E0E0E0] leading-relaxed">{selectedIndustry.context}</p>
                   </div>
 
                   <button
@@ -706,40 +697,40 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                     onClick={() => handleStartEngagement(selectedIndustry.name)}
                     className="mc-tap w-full sm:w-auto px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-[13px] font-semibold text-white transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
                   >
-                    Build Engagement in {selectedIndustry.name} <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    Build an engagement for {selectedIndustry.name} <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                   </button>
                 </div>
 
                 {/* Key questions + research */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                   <Disclosure
-                    title="Key Strategic & Operational Questions"
+                    title="Key questions"
                     icon={<HelpCircle className="w-4 h-4" />}
                     tone="indigo"
                     meta={String(selectedIndustry.keyQuestions.length)}
                     defaultOpen
                     isDesktop={isDesktop}
                   >
-                    <div className="space-y-2">
+                    <ol className="divide-y divide-white/[0.06]">
                       {selectedIndustry.keyQuestions.map((q, idx) => (
-                        <div key={idx} className="p-3 rounded-xl bg-[#050505] border border-white/[0.08] text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
-                          <span className="tabular-nums text-indigo-400 font-bold shrink-0">Q{idx + 1}</span>
+                        <li key={idx} className="py-2.5 first:pt-0 last:pb-0 text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
+                          <span aria-hidden="true" className="tabular-nums text-indigo-400 font-semibold shrink-0">Q{idx + 1}</span>
                           <span className="min-w-0">{q}</span>
-                        </div>
+                        </li>
                       ))}
-                    </div>
+                    </ol>
                   </Disclosure>
 
                   <Disclosure
-                    title="Primary Research & Intelligence Methods"
+                    title="Research and intelligence methods"
                     icon={<Search className="w-4 h-4" />}
                     tone="sky"
                     meta={String(selectedIndustry.researchAndIntelligence.length)}
                     isDesktop={isDesktop}
                   >
-                    <ul className="space-y-2">
+                    <ul className="divide-y divide-white/[0.06]">
                       {selectedIndustry.researchAndIntelligence.map((item, idx) => (
-                        <li key={idx} className="p-3 rounded-xl bg-[#050505] border border-white/[0.08] text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
+                        <li key={idx} className="py-2.5 first:pt-0 last:pb-0 text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2.5">
                           <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" aria-hidden="true" />
                           <span className="min-w-0">{item}</span>
                         </li>
@@ -751,7 +742,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                 {/* Consulting, AI, Capability */}
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-4 items-start">
                   <Disclosure
-                    title="Strategic Consulting"
+                    title="Strategic consulting"
                     icon={<Compass className="w-4 h-4" />}
                     tone="indigo"
                     meta={String(selectedIndustry.consultingAndStrategy.length)}
@@ -761,7 +752,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                   </Disclosure>
 
                   <Disclosure
-                    title="AI & Automation"
+                    title="AI and automation"
                     icon={<Sparkles className="w-4 h-4" />}
                     tone="emerald"
                     meta={String(selectedIndustry.aiOpportunities.length)}
@@ -771,7 +762,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                   </Disclosure>
 
                   <Disclosure
-                    title="Capability & Enterprise"
+                    title="Capability and enterprise"
                     icon={<GraduationCap className="w-4 h-4" />}
                     tone="amber"
                     meta={String(selectedIndustry.capabilityBuilding.length + selectedIndustry.enterpriseSolutions.length)}
@@ -800,16 +791,16 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                   className="!border-indigo-500/35"
                 >
                   <div className="space-y-5">
-                    <span className="inline-block text-xs text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/35 font-medium">
-                      Illustrative Capability • Example Engagement • Potential Solution
-                    </span>
+                    <p className="text-[13px] leading-relaxed text-indigo-200/90">
+                      A hypothetical scenario showing how the capabilities could combine in this sector. It is not a client engagement.
+                    </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {([
-                        { n: '01. The Client Challenge', tone: 'amber', text: selectedIndustry.illustrativeEngagement.challenge },
-                        { n: '02. Primary Investigation', tone: 'sky', text: selectedIndustry.illustrativeEngagement.investigation },
-                        { n: '03. Strategic Intervention', tone: 'indigo', text: selectedIndustry.illustrativeEngagement.strategicDecision },
-                        { n: '04. AI & Systems Layer', tone: 'emerald', text: selectedIndustry.illustrativeEngagement.aiLayer }
+                        { n: 'The challenge', tone: 'amber', text: selectedIndustry.illustrativeEngagement.challenge },
+                        { n: 'Investigation', tone: 'sky', text: selectedIndustry.illustrativeEngagement.investigation },
+                        { n: 'Intervention', tone: 'indigo', text: selectedIndustry.illustrativeEngagement.strategicDecision },
+                        { n: 'AI and systems', tone: 'emerald', text: selectedIndustry.illustrativeEngagement.aiLayer }
                       ] as { n: string; tone: Tone; text: string }[]).map(step => (
                         <div key={step.n} className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1.5">
                           <div className={`text-xs font-medium${TONE_TEXT[step.tone]}`}>{step.n}</div>
@@ -821,16 +812,17 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-white/[0.08]">
                       <div>
                         <div className="text-[13px] font-semibold text-[#E0E0E0] mb-2.5 flex items-center gap-1.5">
-                          <FileText className="w-4 h-4 text-indigo-400" aria-hidden="true" /> Typical Engagement Deliverables
+                          <FileText className="w-4 h-4 text-indigo-400" aria-hidden="true" /> Typical deliverables
                         </div>
                         <BulletList items={selectedIndustry.illustrativeEngagement.deliverables} tone="indigo" />
                       </div>
+                      {withholdFigures(selectedIndustry.illustrativeEngagement.outcomeFramework).length > 0 && (
                       <div>
                         <div className="text-[13px] font-semibold text-[#E0E0E0] mb-2.5 flex items-center gap-1.5">
-                          <TrendingUp className="w-4 h-4 text-emerald-400" aria-hidden="true" /> Measured Business Impact
+                          <TrendingUp className="w-4 h-4 text-emerald-400" aria-hidden="true" /> Outcomes the work would target
                         </div>
                         <ul className="space-y-2.5 text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed">
-                          {selectedIndustry.illustrativeEngagement.outcomeFramework.map((out, idx) => (
+                          {withholdFigures(selectedIndustry.illustrativeEngagement.outcomeFramework).map((out, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
                               <span className="min-w-0">{out}</span>
@@ -838,6 +830,7 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                           ))}
                         </ul>
                       </div>
+                      )}
                     </div>
                   </div>
                 </Disclosure>
@@ -872,9 +865,9 @@ export const IndustryIntelligenceExplorer: React.FC<Props> = ({
                 {/* Closing CTA */}
                 <div className="p-5 md:p-6 rounded-2xl bg-[#0D0F17] border border-indigo-500/35 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="min-w-0">
-                    <h4 className="font-semibold text-white text-base">
+                    <HSub className="font-semibold text-white text-base">
                       Ready to activate a project in {selectedIndustry.name}?
-                    </h4>
+                    </HSub>
                     <p className="text-[13px] text-gray-400 mt-1">
                       Configure an engagement combining research, strategy, AI training, and custom systems.
                     </p>

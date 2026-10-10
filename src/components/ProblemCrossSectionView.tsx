@@ -12,6 +12,7 @@ import {
   X
 } from 'lucide-react';
 import { PROBLEM_CROSS_SECTIONS } from '../data/industryAndAfricaData';
+import { hasUnsourcedFigure } from '../lib/evidence';
 import { NavTab, ProblemCrossSection } from '../types';
 import { BTN_PRIMARY, PageHeader } from './ui/primitives';
 
@@ -66,12 +67,12 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
       <div className="mc-container space-y-10 md:space-y-14">
         {/* Header: intent first */}
         <PageHeader
-          title="What Are You Trying to Solve?"
-          lead="Start directly from your core business objective. Explore how MindCraft weaves primary research, strategic advisory, AI enablement, and capability building to deliver concrete outcomes."
-          meta="10 Archetypal Business Challenges"
+          title="What are you trying to solve?"
+          lead="Start from the challenge in front of you. Each one shows how research, strategy, AI and training combine to address it."
+          meta={`${PROBLEM_CROSS_SECTIONS.length} common business challenges`}
           actions={
             <button type="button" onClick={() => handleStartEngagement(selectedProblem.problemTitle)} className={BTN_PRIMARY}>
-              <span>Build Engagement for this Challenge</span>
+              <span>Build a brief for this challenge</span>
             </button>
           }
         />
@@ -121,7 +122,7 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
                         : 'bg-[#0a0a0a] border-white/10 hover:border-white/25'
                     }`}
                   >
-                    <span className={`text-[11px] tabular-nums font-bold shrink-0 ${isSelected ? 'text-indigo-400' : 'text-neutral-400'}`}>
+                    <span className={`text-xs tabular-nums font-bold shrink-0 ${isSelected ? 'text-indigo-400' : 'text-neutral-400'}`}>
                       {String(idx + 1).padStart(2, '0')}
                     </span>
                     <span className="min-w-0">
@@ -218,22 +219,24 @@ export const ProblemCrossSectionView: React.FC<Props> = ({
                     ))}
                   </ol>
 
-                  {/* 05 outcome */}
-                  <div className="p-4 rounded-xl bg-[#0d0f17] border border-emerald-500/30 space-y-1.5">
-                    <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
-                      <TrendingUp className="w-4 h-4 shrink-0" aria-hidden="true" />
-                      05. Measurable Business Outcome
+                  {/* 05 outcome: shown only when it carries no unsourced figure */}
+                  {!hasUnsourcedFigure(selectedProblem.mindcraftApproach.measurableOutcome) && (
+                    <div className="p-4 rounded-xl bg-[#0d0f17] border border-emerald-500/30 space-y-1.5">
+                      <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
+                        <TrendingUp className="w-4 h-4 shrink-0" aria-hidden="true" />
+                        05. Outcome to work towards
+                      </div>
+                      <p className="text-sm text-white leading-relaxed">
+                        {selectedProblem.mindcraftApproach.measurableOutcome}
+                      </p>
                     </div>
-                    <p className="text-sm text-white leading-relaxed">
-                      {selectedProblem.mindcraftApproach.measurableOutcome}
-                    </p>
-                  </div>
+                  )}
                 </section>
 
                 {/* Illustrative engagement + single CTA */}
                 <section className="p-5 md:p-6 rounded-2xl bg-[#0a0a0a] border border-indigo-500/35 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1 min-w-0">
-                    <div className="text-xs text-indigo-400 font-medium">Illustrative Client Engagement</div>
+                    <div className="text-xs text-indigo-400 font-medium">Illustrative engagement (hypothetical)</div>
                     <div className="text-sm font-semibold text-white">{selectedProblem.illustrativeEngagement}</div>
                   </div>
                   <button

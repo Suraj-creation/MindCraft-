@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { NavTab, RoleLens } from '../types';
 import { ArrowRight } from 'lucide-react';
-import { UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
+import { AFRICA_REGIONS_DATA, UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
 import { BTN_PRIMARY, BTN_SECONDARY, EASE } from './ui/primitives';
 import { ArtImage } from './ui/ArtImage';
 import { Scrim } from './ui/Hero';
@@ -16,6 +16,7 @@ interface HeroOperatingSystemProps {
 export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpenIntake }) => {
   const reduce = useReducedMotion();
   const lifeSciences = UNIVERSAL_INDUSTRIES.filter((i) => i.category === 'core-lifesciences').length;
+  const regions = AFRICA_REGIONS_DATA.map((r) => r.name.replace(' Africa', ''));
 
   const goCapabilities = () => {
     document.getElementById('capabilities')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
@@ -42,10 +43,7 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpen
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: reduce ? 0 : 0.24, delay: reduce ? 0 : 0.03, ease: EASE }}
         >
-          <h1
-            id="overview-title"
-            className="font-heading font-medium text-white tracking-[-0.03em] leading-[1.02] text-[2.5rem] sm:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] max-w-[13ch]"
-          >
+          <h1 id="overview-title" className="mc-display max-w-[13ch]">
             Turn complexity into meaningful business progress.
           </h1>
 
@@ -69,15 +67,15 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpen
           {[
             {
               term: 'One team, four capabilities',
-              desc: 'One focused requirement or a programme across disciplines.'
+              desc: 'Start with one focused need, or run research, strategy, training and AI as one programme.'
             },
             {
-              term: `${UNIVERSAL_INDUSTRIES.length} industries, specialist depth in Life Sciences`,
-              desc: `Cross-sector context, with depth across ${lifeSciences} Life Sciences sectors.`
+              term: `${UNIVERSAL_INDUSTRIES.length} industries, led by Life Sciences`,
+              desc: `Specialist depth across ${lifeSciences} Life Sciences sub-sectors, from pharmaceuticals to hospitals.`
             },
             {
-              term: 'African insight, international reach',
-              desc: 'African-market focus, with international delivery.'
+              term: 'Africa first, international reach',
+              desc: `${regions.slice(0, -1).join(', ')} and ${regions[regions.length - 1]} Africa, with clients in Europe and the United States.`
             }
           ].map((f, i) => (
             <div

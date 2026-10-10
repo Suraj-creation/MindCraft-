@@ -200,11 +200,6 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
     selectSector(next, true);
   };
 
-  const jumpToSector = (i: number) => {
-    selectSector(i);
-    scrollToId('ls-subsectors');
-  };
-
   const details: { term: string; dot: string; items: string[] }[] = [
     { term: 'Challenges we often hear', dot: 'bg-amber-400', items: sector.strategicChallenges },
     { term: 'How we research it', dot: 'bg-sky-400', items: sector.researchMethods },
@@ -223,15 +218,14 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
         <div className="mc-container mc-art-copy flex min-h-[40rem] flex-col justify-end py-14 sm:py-20 lg:min-h-[min(48rem,calc(100dvh-5rem))] lg:py-24">
           <HeroCopy
             id="lifesciences-title"
-            size="title"
-            className="max-w-[39rem] lg:[&_h1]:text-[2.375rem] xl:[&_h1]:text-[3rem]"
+            className="max-w-[44rem] [&_h1]:max-w-[15ch]"
             title={
               <>
                 Life Sciences, with <em>regulatory and commercial fluency</em>.
               </>
             }
             lead="Research, strategy and applied AI for pharmaceutical, device, diagnostics and hospital organisations."
-            note={<>One of the {UNIVERSAL_INDUSTRIES.length} industries we serve—and the one we know best.</>}
+            note={<>One of the {UNIVERSAL_INDUSTRIES.length} industries we serve, and the one we know best.</>}
             actions={
               <>
                 <button type="button" onClick={onOpenIntake} className={`${BTN_PRIMARY} !px-6`}>
@@ -244,19 +238,6 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
               </>
             }
           />
-          <div className="hidden max-w-[44rem] lg:block lg:mt-10">
-            <p id="ls-hero-index" className="mc-meta">{total} sub-sectors</p>
-            <ul aria-labelledby="ls-hero-index" className="mt-3 grid grid-cols-2 gap-x-6 border-t border-white/[0.12]">
-              {LIFE_SCIENCES_SECTORS.map((s, i) => (
-                <li key={s.id} className="border-b border-white/[0.12]">
-                  <button type="button" onClick={() => jumpToSector(i)} className="group mc-tap w-full flex items-center gap-3 py-2 text-left text-[13px] leading-snug text-white/70 hover:text-white transition-colors duration-150">
-                    <span aria-hidden="true" className="font-mono text-[11px] tabular-nums text-white/45 group-hover:text-indigo-300 transition-colors duration-150">{pad(i + 1)}</span>
-                    {s.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </HeroSection>
 
@@ -296,12 +277,12 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
                     className={`group mc-tap shrink-0 flex items-center gap-2.5 rounded-full border px-4 text-left text-[14px] font-medium whitespace-nowrap transition-colors duration-150 lg:w-full lg:items-baseline lg:gap-5 lg:rounded-none lg:border-0 lg:border-b lg:border-white/[0.08] lg:px-0 lg:py-4 lg:whitespace-normal ${
                       selected
                         ? 'border-indigo-500/40 bg-indigo-500/10 text-white lg:bg-transparent'
-                        : 'border-white/10 text-white/65 hover:text-white lg:text-white/45'
+                        : 'border-white/10 text-white/65 hover:text-white lg:text-white/55'
                     }`}
                   >
                     <span
                       aria-hidden="true"
-                      className={`font-mono text-[11px] tabular-nums transition-colors duration-150 ${selected ? 'text-indigo-300' : 'text-white/40 group-hover:text-white/60'}`}
+                      className={`font-mono text-xs tabular-nums transition-colors duration-150 ${selected ? 'text-indigo-300' : 'text-white/55 group-hover:text-white/60'}`}
                     >
                       {pad(i + 1)}
                     </span>
@@ -375,7 +356,7 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
                       ].map((step, i) => (
                         <li key={step.label} className="border-t border-white/[0.1] pt-4">
                           <span className="flex items-baseline gap-2 text-[13px] font-medium text-white/80">
-                            <span aria-hidden="true" className="font-mono text-[11px] text-white/45 tabular-nums">{pad(i + 1)}</span>
+                            <span aria-hidden="true" className="font-mono text-xs text-white/55 tabular-nums">{pad(i + 1)}</span>
                             {step.label}
                           </span>
                           <p className="mt-2 text-[14px] leading-relaxed text-white/65">{step.text}</p>
@@ -426,7 +407,7 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
                 transition={{ ...reveal.transition, delay: Math.min(i, 4) * 0.05 }}
                 className="min-w-0 border-t border-white/[0.14] pt-5"
               >
-                <span aria-hidden="true" className="font-mono text-[11px] tabular-nums text-indigo-300">{pad(i + 1)}</span>
+                <span aria-hidden="true" className="font-mono text-xs tabular-nums text-indigo-300">{pad(i + 1)}</span>
                 <h3 className="mt-3 font-heading text-[1.1875rem] font-medium leading-snug tracking-[-0.01em] text-white">{m.title}</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-white/65">{m.desc}</p>
                 <ul className="mt-4 space-y-2.5">
@@ -459,7 +440,7 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
           <div className="relative mt-12 grid grid-cols-1 sm:grid-cols-2 border-t border-white/[0.1]">
             <span
               aria-hidden="true"
-              className="hidden sm:block absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-indigo-500/30 bg-[#050505] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-indigo-200"
+              className="hidden sm:block absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-indigo-500/30 bg-[#050505] px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-indigo-200"
             >
               Life Sciences
             </span>
@@ -577,10 +558,10 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
           <RelatedLinks
             title="Continue"
             items={[
-              { label: 'Senior expertise', desc: 'The independent consultant whose experience we draw on', onClick: () => setActiveTab('senior-expertise') },
-              { label: 'Industries we serve', desc: `All ${UNIVERSAL_INDUSTRIES.length} sectors and their dossiers`, onClick: () => setActiveTab('industries') },
-              { label: 'Localization', desc: 'From global strategy to local result', onClick: () => setActiveTab('localization'), tone: 'emerald' },
-              { label: 'Market entry', desc: 'A stepwise route into African markets', onClick: () => setActiveTab('market-entry'), tone: 'emerald' }
+              { label: 'Senior expertise', desc: 'The independent consultant whose experience we draw on', to: 'senior-expertise' },
+              { label: 'Industries we serve', desc: `All ${UNIVERSAL_INDUSTRIES.length} sectors and their dossiers`, to: 'industries' },
+              { label: 'Market localisation', desc: 'From global strategy to local result', to: 'localization', tone: 'emerald' },
+              { label: 'Market entry', desc: 'A stepwise route into African markets', to: 'market-entry', tone: 'emerald' }
             ]}
           />
         </div>

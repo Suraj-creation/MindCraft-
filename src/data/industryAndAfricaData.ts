@@ -37,7 +37,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     consultingAndStrategy: [
       'Pan-African market access and dual-branding pricing strategy',
-      'Commercial territory design and sales force effectiveness optimization',
+      'Commercial territory design and sales force effectiveness optimisation',
       'Local manufacturing feasibility and contract packaging advisory',
       'Public-private partnership (PPP) and national health scheme inclusion strategy'
     ],
@@ -45,7 +45,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'AI-assisted literature screening for adverse events and pharmacovigilance triage',
       'Regulatory change-detection agent monitoring gazettes and regional health agencies',
       'Territory sales intelligence copilot assisting medical representatives with pre-call planning',
-      'Predictive tender demand modeling based on disease burden and public budget cycles'
+      'Predictive tender demand modelling based on disease burden and public budget cycles'
     ],
     capabilityBuilding: [
       'Applied AI for Medical Affairs & Pharmacovigilance teams',
@@ -78,7 +78,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       market: 'Rapidly shifting toward chronic and non-communicable disease treatments alongside anti-infectives.',
       competitors: 'High competition between European/US originators and Indian/Chinese generic manufacturers.',
       customers: 'Clinicians, hospital pharmacy directors, state procurement agencies, and out-of-pocket patients.',
-      regulators: 'National medicines regulatory authorities (NMRAs) moving toward continental AMA harmonization.',
+      regulators: 'National medicines regulatory authorities (NMRAs) moving toward continental AMA harmonisation.',
       operations: 'Cold-chain management, batch serialization, and anti-counterfeiting verification.',
       technology: 'Digital detailing, e-prescriptions, and AI-enabled pharmacovigilance.',
       people: 'Need for high-science medical science liaisons (MSLs) equipped with commercial data literacy.',
@@ -131,7 +131,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     illustrativeEngagement: {
       title: 'Illustrative Capability: Southern Africa Minimally Invasive Device Launch',
       challenge: 'A medical device manufacturer struggled with low surgeon adoption and distributor service latency across provincial hospitals.',
-      investigation: 'Audited 18 distributor branches, surveyed 45 orthopedic surgeons, and analyzed hospital operating theater utilization logs.',
+      investigation: 'Audited 18 distributor branches, surveyed 45 orthopedic surgeons, and analysed hospital operating theater utilisation logs.',
       strategicDecision: 'Shifted from transactional hardware sales to a bundled training + consumable subscription model with strict uptime SLAs.',
       aiLayer: 'Built a field telemetry logger tracking device cycles and generating automated service alerts.',
       deliverables: [
@@ -152,8 +152,8 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       regulators: 'Device registration rules tightening with increased scrutiny on electrical and clinical safety.',
       operations: 'After-sales maintenance, replacement part stocking, and surgeon simulation training.',
       technology: 'Connected IoT diagnostics, cloud-linked imaging suites, and remote service dashboards.',
-      people: 'High reliance on specialized clinical application specialists and field service engineers.',
-      aiOpportunities: 'Computer-vision assisted surgical workflow optimization and predictive maintenance.'
+      people: 'High reliance on specialised clinical application specialists and field service engineers.',
+      aiOpportunities: 'Computer-vision assisted surgical workflow optimisation and predictive maintenance.'
     }
   },
   {
@@ -170,7 +170,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       icon: 'Activity',
       keyMetricType: 'Turnaround Time & Test Volume Throughput'
     },
-    context: 'Balancing centralized reference laboratory capacity with decentralized rural point-of-care (POC) testing, power stability, and reagent cold chains.',
+    context: 'Balancing centralised reference laboratory capacity with decentralised rural point-of-care (POC) testing, power stability, and reagent cold chains.',
     keyQuestions: [
       'What is the viable reagent-rental placement model for secondary hospitals vs private lab chains?',
       'How can point-of-care rapid molecular diagnostics achieve national public screening inclusion?',
@@ -179,24 +179,24 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     researchAndIntelligence: [
       'National laboratory capacity, analyzer footprint, and sample courier route mapping',
       'Pathologist, lab technologist, and clinical biochemist analyzer preference studies',
-      'Public health screening priority audits with national AIDS/TB/Malaria and oncology programs'
+      'Public health screening priority audits with national AIDS/TB/Malaria and oncology programmes'
     ],
     consultingAndStrategy: [
-      'Reagent-rental financial modeling and analyzer placement optimization',
+      'Reagent-rental financial modelling and analyzer placement optimisation',
       'Public-private partnership (PPP) diagnostic concession structuring',
       'Laboratory quality management system (QMS) and ISO 15189 accreditation advisory'
     ],
     aiOpportunities: [
-      'Predictive reagent inventory optimization based on seasonal disease patterns',
+      'Predictive reagent inventory optimisation based on seasonal disease patterns',
       'Computer-vision assistance for microfluidic and rapid test strip image interpretation',
-      'Automated laboratory workflow scheduling and specimen batching optimization'
+      'Automated laboratory workflow scheduling and specimen batching optimisation'
     ],
     capabilityBuilding: [
       'Lab technologist digital SOP training and quality control data literacy',
       'Commercial diagnostic sales teams training on total-cost-of-testing consulting'
     ],
     enterpriseSolutions: [
-      'Decentralized Point-of-Care Data Sync & Quality Control Platform',
+      'Decentralised Point-of-Care Data Sync & Quality Control Platform',
       'Laboratory Reagent Inventory & Expiry Forecast Dashboard'
     ],
     illustrativeEngagement: {
@@ -217,7 +217,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       ]
     },
     sectorEcosystem: {
-      market: 'Transitioning from centralized reference labs to robust point-of-care testing and screening.',
+      market: 'Transitioning from centralised reference labs to robust point-of-care testing and screening.',
       competitors: 'Multinational molecular giants alongside rapid diagnostic test (RDT) low-cost makers.',
       customers: 'Private lab networks, public central medical stores, pathologists, and NGOs.',
       regulators: 'Strict validation protocols for in-vitro diagnostic (IVD) performance and batch release.',
@@ -268,12 +268,12 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     enterpriseSolutions: [
       'Capital Healthcare Tender Pipeline & Competitor Pricing Radar',
-      'Hospital Asset Lifecycle & Utilization Intelligence Platform'
+      'Hospital Asset Lifecycle & Utilisation Intelligence Platform'
     ],
     illustrativeEngagement: {
       title: 'Illustrative Capability: Pan-African Imaging Tender & Financing Advisory',
       challenge: 'An imaging systems manufacturer was repeatedly disqualified from public hospital tenders due to rigid financing models and misaligned technical specifications.',
-      investigation: 'Analyzed 35 historical public tenders across 4 countries and audited 42 hospital imaging suites.',
+      investigation: 'Analysed 35 historical public tenders across 4 countries and audited 42 hospital imaging suites.',
       strategicDecision: 'Formulated a flexible Managed Equipment Services (MES) leasing model backed by local development finance institutions.',
       aiLayer: 'Built a tender intelligence dashboard tracking public health capital budget allocations.',
       deliverables: [
@@ -288,14 +288,14 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       ]
     },
     sectorEcosystem: {
-      market: 'Rapid expansion of oncology centers, cardiac cath labs, and modernized trauma suites.',
+      market: 'Rapid expansion of oncology centres, cardiac cath labs, and modernized trauma suites.',
       competitors: 'High-end American/European OEMs competing against value-tier Asian manufacturers.',
       customers: 'Hospital trustees, ministries of health, development finance institutions, and private equity owners.',
       regulators: 'Radiation safety boards, atomic energy commissions, and health infrastructure inspectors.',
       operations: 'Site planning, lead shielding, heavy rigging, calibration, and power conditioning.',
       technology: 'Digital radiography, low-helium MRI, and cloud PACS network integration.',
-      people: 'Biomedical engineers, medical physicists, and specialized radiology technicians.',
-      aiOpportunities: 'AI image reconstruction optimization and automated downtime prediction.'
+      people: 'Biomedical engineers, medical physicists, and specialised radiology technicians.',
+      aiOpportunities: 'AI image reconstruction optimisation and automated downtime prediction.'
     }
   },
   {
@@ -303,7 +303,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     name: 'Surgical Consumables',
     category: 'core-lifesciences',
     tier: 'core',
-    tagline: 'Channel distribution, hospital formulary intelligence, and volume optimization.',
+    tagline: 'Channel distribution, hospital formulary intelligence, and volume optimisation.',
     description: 'Market research and supply chain strategy for surgical gloves, sutures, wound care, drapes, and disposable devices.',
     heritageNote: 'Established Core Sector Heritage',
     designMetaphor: {
@@ -312,11 +312,11 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       icon: 'Boxes',
       keyMetricType: 'Re-order Velocity & Stockout Mitigation'
     },
-    context: 'High-volume margin pressures, hospital formulary switching behavior, central medical store tenders, and low-cost unbranded import competition.',
+    context: 'High-volume margin pressures, hospital formulary switching behaviour, central medical store tenders, and low-cost unbranded import competition.',
     keyQuestions: [
       'Why are secondary hospitals switching from established brand sutures to unbranded imports?',
       'What distributor rebate and consignment structures prevent stockouts in high-volume theater units?',
-      'How can a brand achieve standardized formulary inclusion across private hospital consortiums?'
+      'How can a brand achieve standardised formulary inclusion across private hospital consortiums?'
     ],
     researchAndIntelligence: [
       'Operating theater nurse, scrub technician, and surgeon usage preference surveys',
@@ -330,7 +330,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     aiOpportunities: [
       'Hospital surgical volume forecasting for proactive consumable replenishment triggers',
-      'Automated price optimization and margin waterfall models for distributor tiers',
+      'Automated price optimisation and margin waterfall models for distributor tiers',
       'Computer vision packaging verification for anti-counterfeit mobile authentication'
     ],
     capabilityBuilding: [
@@ -366,7 +366,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       operations: 'High-turnover warehousing, sterile barrier integrity, and consignment inventory.',
       technology: 'RFID inventory tracking, procedure kit assembly, and barcoded replenishment.',
       people: 'Operating theater nurses and hospital inventory clerks.',
-      aiOpportunities: 'Predictive surgical tray optimization and demand forecasting from theater schedules.'
+      aiOpportunities: 'Predictive surgical tray optimisation and demand forecasting from theater schedules.'
     }
   },
   {
@@ -378,7 +378,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     description: 'Advising private hospital groups, faith-based health networks, and public health systems on operational efficiency, revenue cycle, and patient experience.',
     heritageNote: 'Established Core Sector Heritage (Life Sciences Core)',
     designMetaphor: {
-      theme: 'Clinical Workflow & Revenue Cycle Modernization',
+      theme: 'Clinical Workflow & Revenue Cycle Modernisation',
       accentColor: '#10b981',
       icon: 'Building2',
       keyMetricType: 'Claim Adjudication Speed & Bed Occupancy Yield'
@@ -387,7 +387,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     keyQuestions: [
       'How can a multi-facility hospital network reduce insurance claim rejection rates from 20%+ to under 5%?',
       'What digital health and hospital information system (HIS) architecture supports clinical quality and billing accuracy?',
-      'How do we optimize patient journey wait times and bed turnaround efficiency?'
+      'How do we optimise patient journey wait times and bed turnaround efficiency?'
     ],
     researchAndIntelligence: [
       'Patient satisfaction journey mapping and outpatient wait-time time-and-motion studies',
@@ -395,14 +395,14 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Insurance claim submission, rejection, and dispute root-cause analysis'
     ],
     consultingAndStrategy: [
-      'Hospital operating model redesign and clinical service line prioritization',
-      'Revenue cycle management (RCM) optimization and admission-to-billing gate redesign',
+      'Hospital operating model redesign and clinical service line prioritisation',
+      'Revenue cycle management (RCM) optimisation and admission-to-billing gate redesign',
       'Quality assurance, clinical pathway governance, and international accreditation (JCI/COHSASA)'
     ],
     aiOpportunities: [
       'AI-assisted medical coding and pre-submission insurance claim verification',
       'Patient appointment scheduling, triage support, and no-show prediction algorithms',
-      'Clinical documentation speech-to-text assistants customized for regional physician accents'
+      'Clinical documentation speech-to-text assistants customised for regional physician accents'
     ],
     capabilityBuilding: [
       'Hospital leadership AI literacy and digital transformation governance masterclasses',
@@ -411,7 +411,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     enterpriseSolutions: [
       'AI Pre-Submission Claim Validation & Revenue Cycle Engine',
-      'Hospital Operational Throughput & Bed Occupancy Optimization Portal'
+      'Hospital Operational Throughput & Bed Occupancy Optimisation Portal'
     ],
     illustrativeEngagement: {
       title: 'Illustrative Capability: Hospital Network Revenue Cycle & Claims Transformation',
@@ -431,11 +431,11 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       ]
     },
     sectorEcosystem: {
-      market: 'Consolidation of private hospitals and expansion of national health insurance programs.',
-      competitors: 'Independent facilities competing against regional corporate hospital chains and academic centers.',
+      market: 'Consolidation of private hospitals and expansion of national health insurance programmes.',
+      competitors: 'Independent facilities competing against regional corporate hospital chains and academic centres.',
       customers: 'Patients, corporate employers, private medical insurers, and government health schemes.',
       regulators: 'Medical councils, radiation boards, pharmacy boards, and health facility inspectors.',
-      operations: 'Inpatient bed management, operating theater utilization, triage, and pharmacy dispensing.',
+      operations: 'Inpatient bed management, operating theater utilisation, triage, and pharmacy dispensing.',
       technology: 'Electronic medical records (EMR/EHR), PACS, laboratory information systems, and billing ERPs.',
       people: 'Multidisciplinary clinical specialists, nursing personnel, billing coders, and administrators.',
       aiOpportunities: 'Automated claim triage, patient wait-time prediction, and clinical documentation support.'
@@ -450,7 +450,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     name: 'Chemicals',
     category: 'diversified-vertical',
     tier: 'cross-sector',
-    tagline: 'Industrial supply chain intelligence, environmental regulation, and raw material demand modeling.',
+    tagline: 'Industrial supply chain intelligence, environmental regulation, and raw material demand modelling.',
     description: 'Advising industrial chemical manufacturers and raw material importers on regulatory compliance, distributor channels, and industrial manufacturing demand.',
     heritageNote: 'Cross-Sector Application of MindCraft Consulting & Research Methodologies',
     designMetaphor: {
@@ -472,7 +472,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     consultingAndStrategy: [
       'Industrial market entry and distributor network rationalization',
-      'Raw material pricing, tariff optimization, and import-substitution strategy',
+      'Raw material pricing, tariff optimisation, and import-substitution strategy',
       'Environmental sustainability and circular economy transition roadmaps'
     ],
     aiOpportunities: [
@@ -492,7 +492,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       title: 'Illustrative Capability: Regional Specialty Chemicals Market Entry & Distributor Strategy',
       challenge: 'An international chemical producer needed to enter the East African industrial manufacturing supply chain without intermediary margin erosion.',
       investigation: 'Audited 34 industrial chemical distributors and conducted structured interviews with 50 manufacturing plant managers.',
-      strategicDecision: 'Established a direct-to-enterprise key account strategy for top manufacturers while appointing specialized regional distributors for tier-2 buyers.',
+      strategicDecision: 'Established a direct-to-enterprise key account strategy for top manufacturers while appointing specialised regional distributors for tier-2 buyers.',
       aiLayer: 'Engineered an automated commodity price tracker and regulatory import dossier index.',
       deliverables: [
         'Regional Industrial Chemical Market Sizing Dossier',
@@ -510,7 +510,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       competitors: 'Global chemical conglomerates competing against regional blenders and raw material importers.',
       customers: 'Manufacturing plants, paint producers, agricultural processors, and water utilities.',
       regulators: 'Environmental management authorities (NEMA, NESREA) and standards bureaus.',
-      operations: 'Hazardous storage, specialized tanker logistics, bulk decanting, and quality testing.',
+      operations: 'Hazardous storage, specialised tanker logistics, bulk decanting, and quality testing.',
       technology: 'SCADA process control, batch traceability, and automated ERP inventory.',
       people: 'Chemical engineers, safety officers, and technical sales specialists.',
       aiOpportunities: 'Predictive maintenance for blending machinery and automated formulation matching.'
@@ -542,7 +542,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Pesticide registration and maximum residue limit (MRL) regulatory benchmarking'
     ],
     consultingAndStrategy: [
-      'Last-mile rural distribution strategy and agro-dealer loyalty program structuring',
+      'Last-mile rural distribution strategy and agro-dealer loyalty programme structuring',
       'Smallholder product packaging right-sizing and pricing strategy',
       'Cooperative and contract-farming partnership frameworks'
     ],
@@ -577,14 +577,14 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       ]
     },
     sectorEcosystem: {
-      market: 'High growth potential driven by food security imperatives and agricultural commercialization.',
+      market: 'High growth potential driven by food security imperatives and agricultural commercialisation.',
       competitors: 'Multinational crop science leaders alongside local generic formulators and organic bio-input makers.',
       customers: 'Commercial estates, smallholder farmer cooperatives, outgrower schemes, and rural agro-dealers.',
       regulators: 'Pest control products boards, ministries of agriculture, and export standard authorities.',
       operations: 'Seasonal packaging runs, rural hub distribution, and cold/dry chemical storage.',
       technology: 'Mobile money agronomy apps, satellite NDVI monitoring, and weather forecasting.',
       people: 'Agronomists, extension officers, and rural distributor sales agents.',
-      aiOpportunities: 'Crop pest image classification and localized rainfall-linked application recommendations.'
+      aiOpportunities: 'Crop pest image classification and localised rainfall-linked application recommendations.'
     }
   },
   {
@@ -614,13 +614,13 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     consultingAndStrategy: [
       'Authorized dealer network expansion and territory standard operating procedures',
-      'Aftermarket parts supply chain optimization and distributor anti-counterfeit strategies',
+      'Aftermarket parts supply chain optimisation and distributor anti-counterfeit strategies',
       'Commercial fleet telematics adoption and lifecycle management blueprints'
     ],
     aiOpportunities: [
       'Predictive vehicle maintenance algorithms utilizing IoT telematics and diagnostic trouble codes',
-      'Automated spare parts catalog matching and inventory re-order forecasting',
-      'Fleet route optimization and fuel anomaly detection systems'
+      'Automated spare parts catalogue matching and inventory re-order forecasting',
+      'Fleet route optimisation and fuel anomaly detection systems'
     ],
     capabilityBuilding: [
       'Dealer service managers training on digital customer retention and warranty workflows',
@@ -631,11 +631,11 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Commercial Fleet Telematics & Maintenance Intelligence Hub'
     ],
     illustrativeEngagement: {
-      title: 'Illustrative Capability: Commercial Vehicle Aftermarket Parts Supply Chain Optimization',
+      title: 'Illustrative Capability: Commercial Vehicle Aftermarket Parts Supply Chain Optimisation',
       challenge: 'A heavy commercial vehicle OEM suffered loss of aftermarket parts revenue to unbranded imports after vehicle warranty expiration.',
       investigation: 'Audited 60 fleet operators and mapped 40 spare parts retailers across transit corridors.',
       strategicDecision: 'Launched a second-line certified value parts brand paired with fast-track dealer maintenance packages.',
-      aiLayer: 'Created an automated parts catalog search engine for local mechanics.',
+      aiLayer: 'Created an automated parts catalogue search engine for local mechanics.',
       deliverables: [
         'Aftermarket Channel Landscape & Competitor Pricing Dossier',
         'Second-Line Parts Commercial Launch Strategy',
@@ -655,7 +655,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       operations: 'Complete knock-down (CKD) assembly, dealer network servicing, and spare parts warehousing.',
       technology: 'Telematics, GPS tracking, electronic fare collection, and battery swapping stations.',
       people: 'Certified automotive technicians, fleet managers, and dealer sales executives.',
-      aiOpportunities: 'Predictive component failure modeling and AI-driven insurance risk scoring from telematics.'
+      aiOpportunities: 'Predictive component failure modelling and AI-driven insurance risk scoring from telematics.'
     }
   },
   {
@@ -704,7 +704,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     illustrativeEngagement: {
       title: 'Illustrative Capability: Tier-1 Commercial Bank SME Credit & Onboarding Automation',
       challenge: 'A regional bank struggled with a 14-day manual SME loan approval cycle that depressed conversion and inflated operational cost.',
-      investigation: 'Mapped 28 handoff steps in loan processing, analyzing root causes of file delays and verification errors.',
+      investigation: 'Mapped 28 handoff steps in loan processing, analysing root causes of file delays and verification errors.',
       strategicDecision: 'Redesigned the credit approval gate to introduce automated bank statement parsing and tiered risk escalation.',
       aiLayer: 'Deployed an intelligent document parsing pipeline that extracts cash flow metrics from mobile money and bank statements.',
       deliverables: [
@@ -745,8 +745,8 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     },
     context: 'Navigating post-harvest losses, outgrower scheme management, cold storage deficits, and strict international phytosanitary export standards.',
     keyQuestions: [
-      'How can an agribusiness stabilize raw material procurement volumes across 10,000 outgrower smallholders?',
-      'What processing and packaging investments maximize local retail shelf-life vs export market margins?',
+      'How can an agribusiness stabilise raw material procurement volumes across 10,000 outgrower smallholders?',
+      'What processing and packaging investments maximise local retail shelf-life vs export market margins?',
       'How will regional trade agreements (AfCFTA) alter staple food trade and commodity pricing?'
     ],
     researchAndIntelligence: [
@@ -756,7 +756,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     consultingAndStrategy: [
       'Outgrower supply chain integration and digital farmer payment structuring',
-      'Food processing plant operational workflow and yield optimization',
+      'Food processing plant operational workflow and yield optimisation',
       'Export market entry and certified value-chain structuring'
     ],
     aiOpportunities: [
@@ -773,7 +773,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Fresh Produce Traceability & Export Compliance Portal'
     ],
     illustrativeEngagement: {
-      title: 'Illustrative Capability: Commercial Food Processor Outgrower & Sourcing Optimization',
+      title: 'Illustrative Capability: Commercial Food Processor Outgrower & Sourcing Optimisation',
       challenge: 'A major food processor experienced 35% raw material variance due to outgrower side-selling and erratic harvest timing.',
       investigation: 'Audited 1,200 outgrowers across 4 collection hubs, evaluating pricing transparency and input delivery cycles.',
       strategicDecision: 'Restructured outgrower contracts to include guaranteed minimum pricing, input advances, and mobile transparency.',
@@ -796,7 +796,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       regulators: 'Food and drug authorities, ministries of agriculture, and export development agencies.',
       operations: 'Contract farming management, post-harvest drying, cold-chain haulage, and factory packaging.',
       technology: 'Mobile payment integration, digital weighing scales, and moisture sensing IoT probes.',
-      people: 'Agronomists, factory production managers, quality inspectors, and collection center agents.',
+      people: 'Agronomists, factory production managers, quality inspectors, and collection centre agents.',
       aiOpportunities: 'Computer-vision grain grading and satellite-enabled harvest volume forecasting.'
     }
   },
@@ -805,8 +805,8 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     name: 'Beverages',
     category: 'diversified-vertical',
     tier: 'cross-sector',
-    tagline: 'Beverage trade channel mapping, route-to-market optimization, and brand perception intelligence.',
-    description: 'Supporting alcoholic, non-alcoholic, dairy, and beverage manufacturers in optimizing distribution routes, retailer margins, and brand positioning.',
+    tagline: 'Beverage trade channel mapping, route-to-market optimisation, and brand perception intelligence.',
+    description: 'Supporting alcoholic, non-alcoholic, dairy, and beverage manufacturers in optimising distribution routes, retailer margins, and brand positioning.',
     heritageNote: 'Cross-Sector Application of MindCraft Consulting & Research Methodologies',
     designMetaphor: {
       theme: 'Route-to-Market Velocity & Cooler Penetration',
@@ -826,12 +826,12 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Distributor route efficiency and distributor vehicle drop-density analysis'
     ],
     consultingAndStrategy: [
-      'Route-to-market redesign and key distributor territory boundary optimization',
+      'Route-to-market redesign and key distributor territory boundary optimisation',
       'Promotional spend effectiveness and trade margin waterfall structuring',
-      'Excise tax pass-through modeling and pack-price architecture strategy'
+      'Excise tax pass-through modelling and pack-price architecture strategy'
     ],
     aiOpportunities: [
-      'AI-driven daily delivery route optimization for distributor truck fleets',
+      'AI-driven daily delivery route optimisation for distributor truck fleets',
       'Computer-vision analysis of retail cooler shelves for planogram compliance and out-of-stock detection',
       'Predictive demand forecasting linked to local weather, holidays, and pay-day cycles'
     ],
@@ -845,14 +845,14 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     illustrativeEngagement: {
       title: 'Illustrative Capability: National Beverage Brand Route-to-Market & Retail Penetration',
-      challenge: 'A beverage manufacturer was losing retail shelf space and suffering frequent stockouts in fast-growing peri-urban trading centers.',
-      investigation: 'Audited 800 retail outlets, analyzed distributor truck routes, and evaluated point-of-sale cooler uptime.',
+      challenge: 'A beverage manufacturer was losing retail shelf space and suffering frequent stockouts in fast-growing peri-urban trading centres.',
+      investigation: 'Audited 800 retail outlets, analysed distributor truck routes, and evaluated point-of-sale cooler uptime.',
       strategicDecision: 'Re-engineered the route-to-market model around dedicated high-density micro-distributors with smaller replenishment cycles.',
-      aiLayer: 'Introduced an automated delivery route optimization and digital order-taking application.',
+      aiLayer: 'Introduced an automated delivery route optimisation and digital order-taking application.',
       deliverables: [
         'Trade Channel Census & Retail Density Dossier',
         'Micro-Distributor Route-to-Market Playbook',
-        'Distributor Fleet Route Optimization Portal'
+        'Distributor Fleet Route Optimisation Portal'
       ],
       outcomeFramework: [
         'Increased retail on-shelf availability from 68% to 91%',
@@ -868,7 +868,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       operations: 'High-speed bottling lines, returnable bottle logistics, warehouse staging, and van distribution.',
       technology: 'Mobile order entry, handheld POS devices, and cooler temperature telemetry.',
       people: 'Route sales reps, delivery drivers, trade marketing managers, and merchandising teams.',
-      aiOpportunities: 'Automated cooler shelf image recognition and localized demand spikes prediction.'
+      aiOpportunities: 'Automated cooler shelf image recognition and localised demand spikes prediction.'
     }
   },
   {
@@ -894,12 +894,12 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     researchAndIntelligence: [
       'Enterprise B2B digital transformation needs and cloud adoption surveys',
       'Consumer subscriber journey, mobile app usability, and churn driver analytics',
-      'Regional spectrum policy, roaming regulations, and data localization requirement scans'
+      'Regional spectrum policy, roaming regulations, and data localisation requirement scans'
     ],
     consultingAndStrategy: [
       'Telco-to-TechCo operating model redesign and B2B enterprise service structuring',
       'Mobile financial services ecosystem expansion and merchant acquisition strategy',
-      'Enterprise AI and cloud commercialization roadmaps'
+      'Enterprise AI and cloud commercialisation roadmaps'
     ],
     aiOpportunities: [
       'Predictive subscriber churn prevention algorithms with automated retention micro-incentives',
@@ -951,7 +951,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     description: 'Supporting luxury safari lodges, boutique hotels, tour operators, and tourism boards in driving international guest acquisition and operational excellence.',
     heritageNote: 'Cross-Sector Application of MindCraft Consulting & Research Methodologies',
     designMetaphor: {
-      theme: 'Guest Journey Topology & RevPAR Optimization',
+      theme: 'Guest Journey Topology & RevPAR Optimisation',
       accentColor: '#f97316',
       icon: 'Palmtree',
       keyMetricType: 'Direct Booking Share & RevPAR Growth'
@@ -968,12 +968,12 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Sustainability and community conservation impact audits'
     ],
     consultingAndStrategy: [
-      'Direct-to-consumer digital revenue and guest loyalty program strategy',
+      'Direct-to-consumer digital revenue and guest loyalty programme strategy',
       'Hospitality revenue management and dynamic pricing framework design',
-      'Eco-lodge operational workflow optimization and staff service excellence standards'
+      'Eco-lodge operational workflow optimisation and staff service excellence standards'
     ],
     aiOpportunities: [
-      'Dynamic revenue management algorithms predicting room demand and optimizing nightly rates',
+      'Dynamic revenue management algorithms predicting room demand and optimising nightly rates',
       'Conversational AI concierge handling guest itinerary inquiries and pre-arrival preferences',
       'Automated guest review sentiment analysis and service recovery triggers'
     ],
@@ -982,13 +982,13 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Front-of-house hospitality teams training on digital guest preference tracking'
     ],
     enterpriseSolutions: [
-      'Hospitality Dynamic Pricing & RevPAR Optimization Engine',
+      'Hospitality Dynamic Pricing & RevPAR Optimisation Engine',
       'Luxury Travel Guest Itinerary & Conversational Concierge Vault'
     ],
     illustrativeEngagement: {
-      title: 'Illustrative Capability: Luxury Safari Group Direct Booking & Yield Optimization',
+      title: 'Illustrative Capability: Luxury Safari Group Direct Booking & Yield Optimisation',
       challenge: 'A luxury lodge portfolio paid over 22% in OTA commissions while struggling with erratic low-season occupancy.',
-      investigation: 'Analyzed 12,000 past guest booking flows, website drop-off points, and competitor pricing elasticity.',
+      investigation: 'Analysed 12,000 past guest booking flows, website drop-off points, and competitor pricing elasticity.',
       strategicDecision: 'Re-engineered the digital booking experience, launched an exclusive alumni club, and introduced seasonal private-charter bundles.',
       aiLayer: 'Built a dynamic pricing engine adjusting room rates based on real-time flight search volumes from key feeder markets.',
       deliverables: [
@@ -1022,7 +1022,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     description: 'Advising independent power producers (IPPs), off-grid solar providers, battery storage developers, and utilities on project viability and customer analytics.',
     heritageNote: 'Cross-Sector Application of MindCraft Consulting & Research Methodologies',
     designMetaphor: {
-      theme: 'Grid Transition & Decentralized Energy Telemetry',
+      theme: 'Grid Transition & Decentralised Energy Telemetry',
       accentColor: '#eab308',
       icon: 'SunMedium',
       keyMetricType: 'Levelized Cost of Energy & Customer Repayment Reliability'
@@ -1035,17 +1035,17 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     researchAndIntelligence: [
       'Commercial & industrial power reliability, diesel-spend, and renewable energy willingness-to-pay audits',
-      'Pay-as-you-go (PAYG) rural household energy consumption and repayment behavior research',
+      'Pay-as-you-go (PAYG) rural household energy consumption and repayment behaviour research',
       'Energy regulatory commission tariff policies, wheeling regulations, and mini-grid licensing scans'
     ],
     consultingAndStrategy: [
-      'C&I renewable energy project financial modeling and PPA structuring',
+      'C&I renewable energy project financial modelling and PPA structuring',
       'PAYG customer credit risk management and portfolio quality improvement strategy',
       'Mini-grid operational sustainability and community stakeholder engagement models'
     ],
     aiOpportunities: [
       'Predictive customer credit scoring for PAYG solar lease applications based on mobile money usage',
-      'Solar irradiance and battery state-of-charge optimization algorithms for off-grid systems',
+      'Solar irradiance and battery state-of-charge optimisation algorithms for off-grid systems',
       'Automated utility meter data anomaly detection and energy theft identification'
     ],
     capabilityBuilding: [
@@ -1057,9 +1057,9 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'C&I Solar Project Viability & Energy Yield Simulation Hub'
     ],
     illustrativeEngagement: {
-      title: 'Illustrative Capability: Decentralized Solar Provider Credit Risk & Repayment Optimization',
+      title: 'Illustrative Capability: Decentralised Solar Provider Credit Risk & Repayment Optimisation',
       challenge: 'An off-grid solar company suffered rising non-performing loan rates across 40,000 rural solar home system customers.',
-      investigation: 'Analyzed 1.2M historical repayment events, agricultural harvest seasonality, and agent network incentive structures.',
+      investigation: 'Analysed 1.2M historical repayment events, agricultural harvest seasonality, and agent network incentive structures.',
       strategicDecision: 'Restructured credit underwriting gates and introduced harvest-aligned flexible repayment schedules.',
       aiLayer: 'Built a machine-learning credit risk model that predicts default probability at the point of customer onboarding.',
       deliverables: [
@@ -1078,7 +1078,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       competitors: 'Multinational renewable IPPs, local EPC contractors, and venture-backed PAYG solar startups.',
       customers: 'Off-grid rural households, industrial manufacturers, commercial buildings, and national grid utilities.',
       regulators: 'Energy and petroleum regulatory authorities, ministries of energy, and environmental agencies.',
-      operations: 'Solar PV installation, battery storage maintenance, meter billing, and customer call centers.',
+      operations: 'Solar PV installation, battery storage maintenance, meter billing, and customer call centres.',
       technology: 'GSM-enabled smart meters, IoT inverters, lithium battery management systems, and SCADA.',
       people: 'Electrical engineers, solar PV installers, credit risk analysts, and customer care agents.',
       aiOpportunities: 'Solar generation forecasting and automated load shedding management.'
@@ -1115,9 +1115,9 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Affordable housing public-private partnership (PPP) structuring'
     ],
     aiOpportunities: [
-      'Predictive construction material price inflation and project schedule risk modeling',
+      'Predictive construction material price inflation and project schedule risk modelling',
       'Automated building permit and environmental compliance document verification',
-      'AI-driven tenant occupancy forecasting and commercial lease optimization'
+      'AI-driven tenant occupancy forecasting and commercial lease optimisation'
     ],
     capabilityBuilding: [
       'Real estate development teams training on financial feasibility and market validation',
@@ -1130,8 +1130,8 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     illustrativeEngagement: {
       title: 'Illustrative Capability: Master-Planned Mixed-Use Development Feasibility & Market Validation',
       challenge: 'An institutional investor required rigorous market validation before committing $45M to a 100-acre mixed-use urban development.',
-      investigation: 'Conducted 350 demographic interviews, surveyed 80 corporate tenants, and analyzed competitive residential pipeline data.',
-      strategicDecision: 'Recommended downsizing speculative office space in favor of middle-income residential units and convenience retail.',
+      investigation: 'Conducted 350 demographic interviews, surveyed 80 corporate tenants, and analysed competitive residential pipeline data.',
+      strategicDecision: 'Recommended downsizing speculative office space in favour of middle-income residential units and convenience retail.',
       aiLayer: 'Created a financial simulation model evaluating cash flow under varying construction inflation and absorption rates.',
       deliverables: [
         'Comprehensive 100-Acre Master Plan Feasibility Dossier',
@@ -1150,9 +1150,9 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       customers: 'Homebuyers, corporate tenants, industrial logistics firms, and government infrastructure agencies.',
       regulators: 'National construction authorities, county planning departments, and environmental bodies.',
       operations: 'Site excavation, concrete casting, structural steel erection, MEP installation, and finishing.',
-      technology: 'Building Information Modeling (BIM), drone site surveys, and construction management software.',
+      technology: 'Building Information Modelling (BIM), drone site surveys, and construction management software.',
       people: 'Civil engineers, architects, quantity surveyors, project managers, and site supervisors.',
-      aiOpportunities: 'Computer-vision drone inspection for site safety and predictive schedule delay modeling.'
+      aiOpportunities: 'Computer-vision drone inspection for site safety and predictive schedule delay modelling.'
     }
   },
   {
@@ -1160,7 +1160,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     name: 'Transport, Logistics & Warehousing',
     category: 'diversified-vertical',
     tier: 'cross-sector',
-    tagline: 'Corridor freight intelligence, warehousing efficiency, fleet optimization, and trade compliance.',
+    tagline: 'Corridor freight intelligence, warehousing efficiency, fleet optimisation, and trade compliance.',
     description: 'Advising 3PL logistics providers, freight forwarders, port authorities, and warehouse operators on transit efficiency, customs clearance, and cold chains.',
     heritageNote: 'Cross-Sector Application of MindCraft Consulting & Research Methodologies',
     designMetaphor: {
@@ -1171,14 +1171,14 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     },
     context: 'Managing border post clearance delays, road freight infrastructure bottlenecks, cargo pilferage, and pharmaceutical/food cold-chain breaks.',
     keyQuestions: [
-      'What route and cross-docking models minimize transit dwell times along major regional trade corridors?',
+      'What route and cross-docking models minimise transit dwell times along major regional trade corridors?',
       'How can a logistics firm build certified GDP (Good Distribution Practice) pharmaceutical cold-chain capacity?',
       'What digital platforms streamline customs clearance and single-window cargo tracking?'
     ],
     researchAndIntelligence: [
       'Trade corridor transit time, border post delay, and transport tariff benchmarking',
       'Shipper and cargo-owner logistics provider selection criteria surveys',
-      'Customs harmonization, AfCFTA rules of origin, and transport policy scans'
+      'Customs harmonisation, AfCFTA rules of origin, and transport policy scans'
     ],
     consultingAndStrategy: [
       'Logistics network redesign and regional hub-and-spoke warehousing strategy',
@@ -1187,7 +1187,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     aiOpportunities: [
       'Predictive cross-border transit time and customs dwell delay estimation models',
-      'AI-driven warehouse slotting, order batching, and inventory space optimization',
+      'AI-driven warehouse slotting, order batching, and inventory space optimisation',
       'Fleet fuel consumption anomaly detection and predictive driver safety scoring'
     ],
     capabilityBuilding: [
@@ -1199,7 +1199,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Good Distribution Practice (GDP) Cold-Chain Quality Radar'
     ],
     illustrativeEngagement: {
-      title: 'Illustrative Capability: Regional Logistics Provider Cold-Chain & Corridor Optimization',
+      title: 'Illustrative Capability: Regional Logistics Provider Cold-Chain & Corridor Optimisation',
       challenge: 'A 3PL logistics company suffered high transit delays and temperature excursions on pharmaceutical shipments between coastal ports and inland capitals.',
       investigation: 'Audited 120 freight journeys, evaluated reefer truck telematics, and mapped 6 border post customs checkpoints.',
       strategicDecision: 'Established a dedicated pre-cleared green-lane protocol and instituted strict reefer truck IoT monitoring SLAs.',
@@ -1217,7 +1217,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     },
     sectorEcosystem: {
       market: 'High growth driven by regional trade integration, e-commerce, and expanding retail supply chains.',
-      competitors: 'Global freight forwarders competing with regional trucking firms and localized clearing agents.',
+      competitors: 'Global freight forwarders competing with regional trucking firms and localised clearing agents.',
       customers: 'Importers, exporters, manufacturers, pharmaceutical distributors, and agricultural estates.',
       regulators: 'Revenue authorities (customs), port authorities, transport safety boards, and corridor agencies.',
       operations: 'Container handling, customs bonded warehousing, long-haul trucking, and last-mile dispatch.',
@@ -1258,8 +1258,8 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     aiOpportunities: [
       'Computer-vision assisted real-time automated quality defect detection on high-speed lines',
-      'Predictive machine maintenance algorithms analyzing vibration, temperature, and power draw',
-      'AI-driven production schedule optimization balancing batch sizes with customer order deadlines'
+      'Predictive machine maintenance algorithms analysing vibration, temperature, and power draw',
+      'AI-driven production schedule optimisation balancing batch sizes with customer order deadlines'
     ],
     capabilityBuilding: [
       'Plant managers and supervisors training on OEE calculation, root-cause problem solving, and lean tools',
@@ -1294,7 +1294,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       operations: 'Raw material mixing, extrusion, stamping, assembly, quality inspection, and warehousing.',
       technology: 'PLC machine controllers, SCADA industrial networks, ERP systems, and IoT vibration sensors.',
       people: 'Plant managers, production line operators, maintenance fitters, and quality assurance inspectors.',
-      aiOpportunities: 'Computer-vision defect detection on moving conveyor lines and automated energy optimization.'
+      aiOpportunities: 'Computer-vision defect detection on moving conveyor lines and automated energy optimisation.'
     }
   },
   {
@@ -1323,8 +1323,8 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Mining code, royalty structures, and environmental sustainability regulatory scans'
     ],
     consultingAndStrategy: [
-      'Local content supplier development and procurement capacity building programs',
-      'Mine site supply chain resilience and strategic spares inventory optimization',
+      'Local content supplier development and procurement capacity building programmes',
+      'Mine site supply chain resilience and strategic spares inventory optimisation',
       'Environmental, Social, and Governance (ESG) strategy and community stakeholder engagement'
     ],
     aiOpportunities: [
@@ -1344,7 +1344,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       title: 'Illustrative Capability: Gold Mining Operation Local Content & Supply Chain Strategy',
       challenge: 'A commercial mining operation struggled to meet mandatory 60% local content procurement targets due to supplier capacity deficits.',
       investigation: 'Audited 110 local suppliers, evaluating quality certifications, delivery reliability, and working capital constraints.',
-      strategicDecision: 'Created a tiered supplier development program offering technical mentorship, safety training, and early invoice payment.',
+      strategicDecision: 'Created a tiered supplier development programme offering technical mentorship, safety training, and early invoice payment.',
       aiLayer: 'Engineered a digital supplier discovery and compliance tracking portal.',
       deliverables: [
         'Local Content Supplier Landscape & Capability Dossier',
@@ -1363,7 +1363,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       customers: 'Global commodity trading houses, metal refiners, and battery manufacturers.',
       regulators: 'Ministries of mines, geological surveys, environmental protection agencies, and revenue boards.',
       operations: 'Drilling, blasting, haulage, crushing, flotation, smelting, and tailings management.',
-      technology: 'Fleet management telemetry, geological 3D modeling, drone surveys, and automated weighbridges.',
+      technology: 'Fleet management telemetry, geological 3D modelling, drone surveys, and automated weighbridges.',
       people: 'Mining engineers, geologists, heavy equipment operators, metallurgists, and community liaisons.',
       aiOpportunities: 'Ore grade prediction from drilling telemetry and automated tailings dam monitoring.'
     }
@@ -1373,7 +1373,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     name: 'Healthcare & Wellness',
     category: 'diversified-vertical',
     tier: 'cross-sector',
-    tagline: 'Consumer health trends, corporate wellness programs, nutrition, and preventive digital health advisory.',
+    tagline: 'Consumer health trends, corporate wellness programmes, nutrition, and preventive digital health advisory.',
     description: 'Advising consumer health brands, nutraceutical makers, wellness platforms, and corporate employee health initiatives across African consumer markets.',
     heritageNote: 'Cross-Sector Wellness & Consumer Health (Distinct from Life Sciences Core Hospitals & Clinical Providers)',
     designMetaphor: {
@@ -1384,18 +1384,18 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     },
     context: 'Rising middle-class focus on preventive health, fitness, nutrition, mental health awareness, and over-the-counter (OTC) wellness products.',
     keyQuestions: [
-      'What are consumer attitudes toward preventive nutraceuticals, vitamins, and functional foods across urban centers?',
-      'How can corporate employers structure measurable wellness programs that reduce employee absenteeism and healthcare claims?',
+      'What are consumer attitudes toward preventive nutraceuticals, vitamins, and functional foods across urban centres?',
+      'How can corporate employers structure measurable wellness programmes that reduce employee absenteeism and healthcare claims?',
       'What digital health wellness apps achieve high daily active user engagement in African markets?'
     ],
     researchAndIntelligence: [
       'Urban consumer health, fitness, and nutritional supplement purchasing habit surveys',
       'Over-the-counter (OTC) wellness brand perception and retail pharmacy shelf audits',
-      'Corporate employee health risk assessments and insurance utilization diagnostics'
+      'Corporate employee health risk assessments and insurance utilisation diagnostics'
     ],
     consultingAndStrategy: [
       'Consumer health and nutraceutical brand positioning and retail channel strategy',
-      'Corporate employee wellness program design with measurable health outcomes',
+      'Corporate employee wellness programme design with measurable health outcomes',
       'Preventive digital health app product strategy and engagement mechanics'
     ],
     aiOpportunities: [
@@ -1404,7 +1404,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       'Aggregated corporate wellness analytics predicting health risk trends while preserving employee privacy'
     ],
     capabilityBuilding: [
-      'Wellness program managers training on health outcome measurement and behavioral nudge design',
+      'Wellness programme managers training on health outcome measurement and behavioural nudge design',
       'Corporate HR teams training on digital employee wellbeing tools'
     ],
     enterpriseSolutions: [
@@ -1453,10 +1453,10 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       icon: 'ShoppingBag',
       keyMetricType: 'Basket Size & General Trade On-Shelf Availability'
     },
-    context: 'Dominance of informal general trade (dukasa/spazas/kiosks) over modern supermarkets, price sensitivity, and cash-to-mobile money shopping behavior.',
+    context: 'Dominance of informal general trade (dukasa/spazas/kiosks) over modern supermarkets, price sensitivity, and cash-to-mobile money shopping behaviour.',
     keyQuestions: [
-      'What product package sizes and price points maximize velocity across informal retail kiosks?',
-      'How can an FMCG brand optimize promotional spend across modern supermarket retail chains?',
+      'What product package sizes and price points maximise velocity across informal retail kiosks?',
+      'How can an FMCG brand optimise promotional spend across modern supermarket retail chains?',
       'What e-commerce fulfillment and quick-commerce delivery models are commercially viable in high-density urban areas?'
     ],
     researchAndIntelligence: [
@@ -1485,7 +1485,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     illustrativeEngagement: {
       title: 'Illustrative Capability: FMCG Brand Portfolio Price-Pack Architecture & General Trade Strategy',
       challenge: 'A consumer packaged goods company experienced declining market share as inflation eroded consumer purchasing power for standard pack sizes.',
-      investigation: 'Audited 1,000 retail kiosks and conducted 400 consumer pantry interviews across 4 urban centers.',
+      investigation: 'Audited 1,000 retail kiosks and conducted 400 consumer pantry interviews across 4 urban centres.',
       strategicDecision: 'Introduced affordable micro-pack single-use sizes and restructured distributor trade margins to protect kiosk stocking.',
       aiLayer: 'Built a predictive sales simulation model tracking price elasticity across retail segments.',
       deliverables: [
@@ -1507,7 +1507,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       operations: 'High-velocity manufacturing, primary/secondary warehousing, van sales, and retail merchandising.',
       technology: 'Handheld POS scanners, mobile money B2B payments, and distributor management systems (DMS).',
       people: 'Merchandisers, van sales drivers, trade marketing managers, and category analysts.',
-      aiOpportunities: 'Computer-vision shelf share tracking and localized consumer demand spike prediction.'
+      aiOpportunities: 'Computer-vision shelf share tracking and localised consumer demand spike prediction.'
     }
   },
   {
@@ -1526,18 +1526,18 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     },
     context: 'Bridging the gap between university graduate skills and employer hiring needs, tuition affordability, and digital blended learning infrastructure.',
     keyQuestions: [
-      'What technical, digital, and healthcare degree programs have the highest employer hiring demand and tuition willingness-to-pay?',
+      'What technical, digital, and healthcare degree programmes have the highest employer hiring demand and tuition willingness-to-pay?',
       'How can an educational institution transition toward scalable, hybrid digital learning without drop in student completion?',
-      'What corporate upskilling programs are employers willing to sponsor for mid-career professionals?'
+      'What corporate upskilling programmes are employers willing to sponsor for mid-career professionals?'
     ],
     researchAndIntelligence: [
       'Employer skills-gap surveys and emerging industry job role demand research',
-      'Student and parent education affordability, program perception, and career expectation studies',
+      'Student and parent education affordability, programme perception, and career expectation studies',
       'Higher education commission accreditation standards and online degree regulations'
     ],
     consultingAndStrategy: [
-      'University strategic planning, new program feasibility, and faculty operating models',
-      'Workforce curriculum modernization aligned to industry certification standards',
+      'University strategic planning, new programme feasibility, and faculty operating models',
+      'Workforce curriculum modernisation aligned to industry certification standards',
       'Corporate training academy structuring and commercial B2B offering design'
     ],
     aiOpportunities: [
@@ -1567,7 +1567,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       outcomeFramework: [
         'Reduced first-year student dropout rate from 32% to 11%',
         'Increased graduate employment placement within 6 months from 52% to 84%',
-        'Expanded overall institutional enrollment by 28%'
+        'Expanded overall institutional enrolment by 28%'
       ]
     },
     sectorEcosystem: {
@@ -1586,8 +1586,8 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     name: 'Professional & Business Services',
     category: 'diversified-vertical',
     tier: 'cross-sector',
-    tagline: 'Legal, accounting, advisory, and outsourcing operational modernization and AI workflow integration.',
-    description: 'Advising law firms, audit practices, management consulting boutiques, and business process outsourcing (BPO) centers on automation and service design.',
+    tagline: 'Legal, accounting, advisory, and outsourcing operational modernisation and AI workflow integration.',
+    description: 'Advising law firms, audit practices, management consulting boutiques, and business process outsourcing (BPO) centres on automation and service design.',
     heritageNote: 'Cross-Sector Application of MindCraft Consulting & Research Methodologies',
     designMetaphor: {
       theme: 'Knowledge Work Velocity & Governed Automation',
@@ -1598,7 +1598,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     context: 'Managing fee compression, talent retention, confidential client data protection, and transitioning from billable hours to value-based advisory.',
     keyQuestions: [
       'How can professional service firms automate repetitive document drafting and contract review safely?',
-      'What operating model enables business process outsourcing (BPO) centers to move up the value chain into AI data annotation and analytics?',
+      'What operating model enables business process outsourcing (BPO) centres to move up the value chain into AI data annotation and analytics?',
       'How should professional practices govern employee use of public vs private enterprise AI models?'
     ],
     researchAndIntelligence: [
@@ -1627,7 +1627,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     illustrativeEngagement: {
       title: 'Illustrative Capability: Regional Commercial Law Firm Private AI Vault & Workflow Automation',
       challenge: 'A 60-lawyer corporate law firm faced fee pressure and spent excessive associate hours on manual contract due-diligence and clause discovery.',
-      investigation: 'Analyzed 8,000 hours of associate billables across M&A due diligence and commercial leasing contracts.',
+      investigation: 'Analysed 8,000 hours of associate billables across M&A due diligence and commercial leasing contracts.',
       strategicDecision: 'Deployed a private, air-gapped vector search knowledge vault indexing 15 years of firm precedents.',
       aiLayer: 'Integrated an intelligent contract comparison and clause extraction engine with strict privilege protections.',
       deliverables: [
@@ -1642,7 +1642,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       ]
     },
     sectorEcosystem: {
-      market: 'Growing demand for specialized corporate legal, tax, audit, risk advisory, and business outsourcing services.',
+      market: 'Growing demand for specialised corporate legal, tax, audit, risk advisory, and business outsourcing services.',
       competitors: 'Big 4 audit firms and global legal networks competing with leading regional independent practices.',
       customers: 'Multinational corporations, financial institutions, private equity sponsors, and high-growth startups.',
       regulators: 'Law societies, institutes of certified public accountants, and data protection commissioners.',
@@ -1657,7 +1657,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     name: 'Environmental, Waste & Water Management',
     category: 'diversified-vertical',
     tier: 'cross-sector',
-    tagline: 'Circular economy strategy, municipal water utility optimization, industrial effluent compliance, and waste-to-value.',
+    tagline: 'Circular economy strategy, municipal water utility optimisation, industrial effluent compliance, and waste-to-value.',
     description: 'Advising water utilities, industrial recyclers, municipal waste management contractors, and sustainability investors on operational and regulatory models.',
     heritageNote: 'Cross-Sector Application of MindCraft Consulting & Research Methodologies',
     designMetaphor: {
@@ -1669,7 +1669,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     context: 'Managing non-revenue water loss in municipal grids, informal waste collection economics, industrial wastewater standards, and circular plastics mandates.',
     keyQuestions: [
       'How can a water utility reduce non-revenue physical and commercial water losses from 40%+ to under 20%?',
-      'What commercial collection and pricing models make formal plastics recycling sustainable across urban centers?',
+      'What commercial collection and pricing models make formal plastics recycling sustainable across urban centres?',
       'How can industrial manufacturing zones achieve zero-liquid-discharge (ZLD) effluent compliance cost-effectively?'
     ],
     researchAndIntelligence: [
@@ -1679,13 +1679,13 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     ],
     consultingAndStrategy: [
       'Municipal water utility performance improvement and non-revenue water reduction blueprints',
-      'Extended Producer Responsibility (EPR) compliance and producer responsibility organization (PRO) design',
-      'Industrial wastewater treatment concession and waste-to-energy financial modeling'
+      'Extended Producer Responsibility (EPR) compliance and producer responsibility organisation (PRO) design',
+      'Industrial wastewater treatment concession and waste-to-energy financial modelling'
     ],
     aiOpportunities: [
       'Acoustic sensor and pressure-telemetry water leak detection algorithms on municipal pipelines',
       'Computer-vision automated sorting and contamination detection for plastics recycling conveyor belts',
-      'Predictive municipal waste generation modeling optimizing collection truck routes'
+      'Predictive municipal waste generation modelling optimising collection truck routes'
     ],
     capabilityBuilding: [
       'Water utility engineers training on acoustic smart-meter telemetry and pressure management',
@@ -1699,7 +1699,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       title: 'Illustrative Capability: Municipal Water Utility Non-Revenue Water Loss Turnaround',
       challenge: 'A metropolitan water utility suffered a 44% non-revenue water (NRW) loss from unmapped pipeline leaks and illegal commercial bypasses.',
       investigation: 'Audited 250 kilometers of primary water mains, deployed acoustic listening sticks, and reconciled billing records with bulk flow meters.',
-      strategicDecision: 'Subdivided the grid into District Metered Areas (DMAs) with automated pressure reduction valves and prioritized maintenance crews.',
+      strategicDecision: 'Subdivided the grid into District Metered Areas (DMAs) with automated pressure reduction valves and prioritised maintenance crews.',
       aiLayer: 'Engineered an automated acoustic leak anomaly detection and billing discrepancy algorithm.',
       deliverables: [
         'Non-Revenue Water Diagnostic & Network Audit Dossier',
@@ -1720,7 +1720,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
       operations: 'Water abstraction, water treatment, pipeline distribution, waste collection, sorting, and recycling.',
       technology: 'Electromagnetic flow meters, acoustic leak loggers, smart pressure valves, and NIR optical sorters.',
       people: 'Water hydraulic engineers, environmental inspectors, waste collection drivers, and plant operators.',
-      aiOpportunities: 'Acoustic pipe leak detection and predictive urban waste generation volume modeling.'
+      aiOpportunities: 'Acoustic pipe leak detection and predictive urban waste generation volume modelling.'
     }
   }
 ];
@@ -1744,7 +1744,7 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
       'Eritrea'
     ],
     headline: 'MindCraft Continental Headquarters & East African Regional Integration Hub',
-    regionalContext: 'Dynamic economic community (EAC) with rapid digital health innovation, harmonized medicines registration guidelines, and expanding agro-processing.',
+    regionalContext: 'Dynamic economic community (EAC) with rapid digital health innovation, harmonised medicines registration guidelines, and expanding agro-processing.',
     industryOpportunity: [
       'Pharmaceuticals & Biologics Market Access',
       'Medical Device Distributor Networks',
@@ -1756,7 +1756,7 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
       '500+ Physician & Pharmacist Primary Intelligence Network',
       'Hospital Formulary & Procurement Decision Audits',
       'Rural Agro-Dealer & Farmer Adoption Censuses',
-      'EAC Regional Regulatory Harmonization Scans'
+      'EAC Regional Regulatory Harmonisation Scans'
     ],
     strategicQuestions: [
       'How to structure a pan-EAC regulatory submission strategy across PPB, NDA, TMDA, and FDA Rwanda?',
@@ -1765,7 +1765,7 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
     ],
     aiOpportunities: [
       'Automated East African regulatory gazette & guideline change-tracker',
-      'Predictive hospital tender demand modeling for medical equipment',
+      'Predictive hospital tender demand modelling for medical equipment',
       'Agricultural weather-indexed yield forecasting and credit scoring'
     ],
     potentialEngagements: [
@@ -1850,7 +1850,7 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
     industryOpportunity: [
       'Health Economics & Outcomes Research (HEOR) for Private Insurers',
       'Capital Medical Equipment & Managed Services (MES)',
-      'Mining Supply Chain Optimization & Local Content Compliance',
+      'Mining Supply Chain Optimisation & Local Content Compliance',
       'Banking RegTech & Algorithmic Risk Governance',
       'Automotive Aftermarket & Commercial Fleet Mobility'
     ],
@@ -1863,7 +1863,7 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
     strategicQuestions: [
       'How will emerging National Health Insurance (NHI) frameworks shift private hospital purchasing power in South Africa?',
       'What health economics evidence is required for Council for Medical Schemes (CMS) drug formulary coverage?',
-      'How can mining operators fulfill strict local content quotas while optimizing heavy haulage asset uptime?'
+      'How can mining operators fulfil strict local content quotas while optimising heavy haulage asset uptime?'
     ],
     aiOpportunities: [
       'Enterprise LLM private knowledge vaults for banking and legal precedents',
@@ -1887,13 +1887,13 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
       'Morocco'
     ],
     headline: 'Mediterranean Gateway, High-Volume Public Tenders & Large-Scale Industrial Hubs',
-    regionalContext: 'Major domestic pharmaceutical manufacturing base, centralized government procurement authorities (e.g. UPA in Egypt), and close trade integration with Europe and the Middle East.',
+    regionalContext: 'Major domestic pharmaceutical manufacturing base, centralised government procurement authorities (e.g. UPA in Egypt), and close trade integration with Europe and the Middle East.',
     industryOpportunity: [
-      'Centralized Public Tender Bidding & Equipment Placement',
+      'Centralised Public Tender Bidding & Equipment Placement',
       'Contract Pharmaceutical Manufacturing & Bioequivalence Advisory',
       'Industrial Chemicals & Automotive Component Assembly',
       'Renewable Energy & Green Hydrogen Infrastructure Advisory',
-      'Medical Tourism & Specialized Hospital Service Lines'
+      'Medical Tourism & Specialised Hospital Service Lines'
     ],
     researchCapability: [
       'Government Gazette & UPA Tender Award History Teardowns',
@@ -1902,8 +1902,8 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
       'Cross-Border Mediterranean Supply Chain Analysis'
     ],
     strategicQuestions: [
-      'What are historical discount thresholds and win-rate drivers in centralized government medical tenders?',
-      'How to structure localized contract manufacturing partnerships with regional pharmaceutical plants?',
+      'What are historical discount thresholds and win-rate drivers in centralised government medical tenders?',
+      'How to structure localised contract manufacturing partnerships with regional pharmaceutical plants?',
       'What are the commercial parameters for supplying automotive components into regional assembly plants in Morocco and Egypt?'
     ],
     aiOpportunities: [
@@ -1912,7 +1912,7 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
       'Arabic and French NLP document parsing for regulatory submissions'
     ],
     potentialEngagements: [
-      'Public Healthcare Tender Intelligence & Bid Optimization Retainer',
+      'Public Healthcare Tender Intelligence & Bid Optimisation Retainer',
       'Local Manufacturing Partnership & Licensing Feasibility Study',
       'North Africa Executive AI Enablement Masterclass Series',
       'Capital Equipment Lifecycle & Telemetry Intelligence Platform'
@@ -1951,7 +1951,7 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
   {
     id: 'understand-customers',
     problemTitle: 'Understand Customers',
-    tagline: 'Uncover real purchasing behaviors, unmet clinical needs, price sensitivity, and adoption barriers.',
+    tagline: 'Uncover real purchasing behaviours, unmet clinical needs, price sensitivity, and adoption barriers.',
     triggerQuestion: 'Why are target customers not adopting our product, or what is driving customer churn?',
     commonIndustries: [
       'Hospitals & Healthcare Providers',
@@ -1968,7 +1968,7 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
       training: 'Train frontline sales, customer success, and clinical staff on consultative customer experience excellence.',
       measurableOutcome: 'Measurable lift in Net Promoter Score (NPS), reduced customer acquisition cost, and 20%+ reduction in churn.'
     },
-    illustrativeEngagement: 'Customer Journey Diagnostics, Churn Predictive Modeling, and Service Touchpoint Optimization Suite.'
+    illustrativeEngagement: 'Customer Journey Diagnostics, Churn Predictive Modelling, and Service Touchpoint Optimisation Suite.'
   },
   {
     id: 'understand-competitors',
@@ -1995,7 +1995,7 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
   {
     id: 'improve-operations',
     problemTitle: 'Improve Operations',
-    tagline: 'Eliminate bottlenecks, reduce scrap, shorten lead times, and optimize asset productivity.',
+    tagline: 'Eliminate bottlenecks, reduce scrap, shorten lead times, and optimise asset productivity.',
     triggerQuestion: 'Where are our operational inefficiencies, delays, inventory stockouts, and margin leakages occurring?',
     commonIndustries: [
       'Manufacturing',
@@ -2017,7 +2017,7 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
     id: 'build-ai-capability',
     problemTitle: 'Build AI Capability',
     tagline: 'Upskill your workforce, certify internal AI champions, and instill responsible AI governance.',
-    triggerQuestion: 'How do we move our organization from curiosity to practical, daily, governed AI usage across business functions?',
+    triggerQuestion: 'How do we move our organisation from curiosity to practical, daily, governed AI usage across business functions?',
     commonIndustries: [
       'Financial Services',
       'Pharmaceuticals',
@@ -2027,9 +2027,9 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
       'Hospitals & Healthcare Providers'
     ],
     mindcraftApproach: {
-      research: 'Organizational AI-readiness diagnostics, digital skills gap assessment, and function-by-function use case prioritization.',
+      research: 'Organisational AI-readiness diagnostics, digital skills gap assessment, and function-by-function use case prioritisation.',
       strategy: 'Design tailored enterprise AI adoption roadmaps, responsible AI governance charters, and human-in-the-loop policies.',
-      aiEnablement: 'Deploy curated private enterprise sandbox tools and customized prompt libraries tailored to team roles.',
+      aiEnablement: 'Deploy curated private enterprise sandbox tools and customised prompt libraries tailored to team roles.',
       training: 'Multi-week applied masterclasses: executive briefings, function-specific cohorts, and train-the-trainer AI champions.',
       measurableOutcome: '70%+ daily active AI adoption rate across trained cohorts with zero confidentiality or compliance violations.'
     },
@@ -2070,7 +2070,7 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
       'Energy & Renewable Energy'
     ],
     mindcraftApproach: {
-      research: 'National gazette scans, regulatory authority circular tracking, fast-track pathway audits, and regional harmonization mapping.',
+      research: 'National gazette scans, regulatory authority circular tracking, fast-track pathway audits, and regional harmonisation mapping.',
       strategy: 'Create multi-country regulatory submission dossiers, compliance gap strategies, and post-market surveillance plans.',
       aiEnablement: 'Build an automated regulatory change-detection agent and searchable regional guideline intelligence vault.',
       training: 'Regulatory affairs and quality teams trained on AI-assisted dossier drafting and adverse event triage.',
@@ -2081,8 +2081,8 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
   {
     id: 'improve-commercial-intelligence',
     problemTitle: 'Improve Commercial Intelligence',
-    tagline: 'Empower sales forces, optimize territory coverage, track channel pricing, and maximize revenue velocity.',
-    triggerQuestion: 'How do we give our commercial teams real-time market data to prioritize high-yield accounts and close faster?',
+    tagline: 'Empower sales forces, optimise territory coverage, track channel pricing, and maximise revenue velocity.',
+    triggerQuestion: 'How do we give our commercial teams real-time market data to prioritise high-yield accounts and close faster?',
     commonIndustries: [
       'Pharmaceuticals',
       'Surgical Consumables',
@@ -2092,19 +2092,19 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
       'Telecommunications & Technology'
     ],
     mindcraftApproach: {
-      research: 'Retail census, hospital account tiering, distributor sales velocity tracking, and price-elasticity modeling.',
-      strategy: 'Design territory realignment blueprints, distributor incentive programs, and consultative sales playbooks.',
+      research: 'Retail census, hospital account tiering, distributor sales velocity tracking, and price-elasticity modelling.',
+      strategy: 'Design territory realignment blueprints, distributor incentive programmes, and consultative sales playbooks.',
       aiEnablement: 'Deploy field sales rep AI copilots providing pre-call account briefs, stock alerts, and optimal route recommendations.',
       training: 'Commercial sales reps and territory managers trained in data-driven territory planning and CRM intelligence.',
       measurableOutcome: '15-30% increase in sales rep call productivity, improved retailer stocking density, and higher gross margin retention.'
     },
-    illustrativeEngagement: 'Commercial Territory Optimization Blueprint, Field Sales AI Copilot, and Channel Velocity Radar.'
+    illustrativeEngagement: 'Commercial Territory Optimisation Blueprint, Field Sales AI Copilot, and Channel Velocity Radar.'
   },
   {
     id: 'transform-digitally',
     problemTitle: 'Transform Digitally',
-    tagline: 'Modernize legacy operating models, core systems, customer interfaces, and data infrastructure.',
-    triggerQuestion: 'How do we modernize our legacy systems and operational culture to compete with digital-first innovators?',
+    tagline: 'Modernise legacy operating models, core systems, customer interfaces, and data infrastructure.',
+    triggerQuestion: 'How do we modernise our legacy systems and operational culture to compete with digital-first innovators?',
     commonIndustries: [
       'Financial Services',
       'Hospitals & Healthcare Providers',
@@ -2116,7 +2116,7 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
       research: 'Digital maturity diagnostics, legacy architecture dependency mapping, and customer digital friction audits.',
       strategy: 'Develop a phased transformation roadmap with clear ROI gates, vendor selection criteria, and change management plans.',
       aiEnablement: 'Architect modern cloud-native data layers, API integration fabrics, and enterprise intelligence portals.',
-      training: 'Leadership and staff change-management cohorts, digital champion networks, and cultural alignment programs.',
+      training: 'Leadership and staff change-management cohorts, digital champion networks, and cultural alignment programmes.',
       measurableOutcome: 'Modernized operating model with lower cost-to-serve, scalable architecture, and high internal user adoption.'
     },
     illustrativeEngagement: 'Digital Operating Model Blueprint, Vendor Architecture Selection Matrix, and Enterprise Change Management Roadmap.'
@@ -2138,7 +2138,7 @@ export const PROBLEM_CROSS_SECTIONS: ProblemCrossSection[] = [
       research: 'Data availability and quality diagnostics, security requirement reviews, and workflow integration point mapping.',
       strategy: 'Architect the AI stack: model selection, private vector RAG infrastructure, latency budgets, and security guardrails.',
       aiEnablement: 'End-to-end software engineering: API gateways, human-in-the-loop validation UIs, and automated audit logging.',
-      training: 'User acceptance training, administrator system runbooks, and internal prompt engineering optimization.',
+      training: 'User acceptance training, administrator system runbooks, and internal prompt engineering optimisation.',
       measurableOutcome: 'Production software deployed on client infrastructure with 99.9% uptime, strict privacy, and validated ROI.'
     },
     illustrativeEngagement: 'Custom Enterprise RAG Intelligence Vault, Production Machine Learning Engine, and Governed AI Gateway Build.'
@@ -2183,7 +2183,7 @@ export const MARKET_ENTRY_9STEPS: MarketEntryStep[] = [
     stepNumber: '04',
     title: 'Regulatory Landscape & Licensing',
     question: 'What are the registration pathways, timeline milestones, local agent requirements, and compliance hurdles?',
-    mindcraftScope: 'National medicines/standards regulatory scans, fast-track pathway feasibility, registration dossier gap analysis, and regional EAC/ECOWAS harmonization rules.',
+    mindcraftScope: 'National medicines/standards regulatory scans, fast-track pathway feasibility, registration dossier gap analysis, and regional EAC/ECOWAS harmonisation rules.',
     deliverable: 'Regulatory Registration Roadmap & Fast-Track Strategy'
   },
   {
@@ -2197,7 +2197,7 @@ export const MARKET_ENTRY_9STEPS: MarketEntryStep[] = [
     stepNumber: '06',
     title: 'Strategic Options & Commercial Model',
     question: 'What commercial go-to-market model balances speed, margin retention, investment risk, and local control?',
-    mindcraftScope: 'Evaluating direct presence vs exclusive master distributor vs contract sales organization (CSO) vs local contract manufacturing partnerships.',
+    mindcraftScope: 'Evaluating direct presence vs exclusive master distributor vs contract sales organisation (CSO) vs local contract manufacturing partnerships.',
     deliverable: 'Commercial Go-to-Market Blueprint & 3-Year Financial Model'
   },
   {

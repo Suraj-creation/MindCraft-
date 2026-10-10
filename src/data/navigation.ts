@@ -56,9 +56,10 @@ const ROUTE_TABS = new Set<NavTab>([
   'senior-expertise'
 ]);
 
-/** Resolve a safe `NavTab` from a hash without allowing arbitrary route state. */
-export const tabFromHash = (hash: string): NavTab | null => {
-  const encoded = hash.replace(/^#/, '');
+/** Every routable tab, for prerendering and sitemaps. */
+export const ALL_TABS = [...ROUTE_TABS];
+
+const toTab = (encoded: string): NavTab | null => {
   if (!encoded) return null;
   try {
     const tab = decodeURIComponent(encoded) as NavTab;
@@ -67,6 +68,22 @@ export const tabFromHash = (hash: string): NavTab | null => {
     return null;
   }
 };
+
+/** Resolve a safe `NavTab` from a legacy `#tab` link without allowing arbitrary route state. */
+export const tabFromHash = (hash: string): NavTab | null => toTab(hash.replace(/^#/, ''));
+
+/** Each route is a real, crawlable path: `/` for the Overview, `/<tab>` for everything else. */
+export const routePath = (tab: NavTab): string => (tab === 'home' ? '/' : `/${tab}`);
+
+/** The tab for a pathname; `/` is the Overview, unknown paths resolve to null. */
+export const tabFromPath = (pathname: string): NavTab | null => {
+  const slug = pathname.replace(/^\/+|\/+$/g, '');
+  return slug ? toTab(slug) : 'home';
+};
+
+/** Plain left clicks route in-app; modified clicks keep the browser's own link behaviour (new tab, etc.). */
+export const isPlainClick = (e: { button: number; metaKey: boolean; ctrlKey: boolean; shiftKey: boolean; altKey: boolean }) =>
+  e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
 
 export const NAV_ITEMS: NavItem[] = [
   { id: 'home', label: 'Overview', desc: 'MindCraft at a glance' },

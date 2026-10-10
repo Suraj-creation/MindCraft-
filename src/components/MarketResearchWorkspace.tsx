@@ -214,7 +214,7 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
               return (
                 <React.Fragment key={g.name}>
                   <article className={`flex flex-col bg-[#050505] ${lead ? 'md:col-span-2 p-6 sm:p-8 lg:p-10' : 'p-6 sm:p-7'}`}>
-                    <p className="font-mono text-[11px] text-sky-300/80 tabular-nums" aria-hidden="true">{pad(i + 1)}</p>
+                    <p className="font-mono text-xs text-sky-300/80 tabular-nums" aria-hidden="true">{pad(i + 1)}</p>
                     <h3
                       className={`mt-3 font-heading font-medium leading-tight tracking-[-0.015em] text-white ${
                         lead ? 'text-[1.5rem] sm:text-[2rem]' : 'text-[1.25rem]'
@@ -287,7 +287,7 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
                       on ? 'bg-sky-400' : 'bg-[#0D0F17] ring-1 ring-white/30'
                     }`}
                   />
-                  <span className={`font-mono text-[11px] tabular-nums ${on ? 'text-sky-300' : 'text-white/45'}`}>{pad(i + 1)}</span>
+                  <span className={`font-mono text-xs tabular-nums ${on ? 'text-sky-300' : 'text-white/55'}`}>{pad(i + 1)}</span>
                   <span className={`mt-1 block font-heading text-[15px] font-medium leading-snug transition-colors duration-200 ${on ? 'text-white' : 'text-white/75'}`}>
                     {s.title}
                   </span>
@@ -324,7 +324,7 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
                   }`}
                 >
                   <span>{l.label}</span>
-                  <span aria-hidden="true" className={`hidden lg:inline font-mono text-[11px] tabular-nums ${active ? 'text-sky-300' : 'text-white/40'}`}>
+                  <span aria-hidden="true" className={`hidden lg:inline font-mono text-xs tabular-nums ${active ? 'text-sky-300' : 'text-white/55'}`}>
                     {pad(l.first + 1)}–{pad(l.first + 2)}
                   </span>
                 </button>
@@ -343,7 +343,7 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
                 className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12"
               >
                 <div className="lg:col-span-4">
-                  <p className="font-mono text-[11px] tabular-nums text-sky-300">
+                  <p className="font-mono text-xs tabular-nums text-sky-300">
                     Stages {pad(layer.first + 1)}–{pad(layer.first + 2)}
                   </p>
                   <h3 className="mt-2 font-heading text-[1.5rem] sm:text-[1.875rem] font-medium leading-tight tracking-[-0.02em] text-white">{layer.label}</h3>
@@ -380,7 +380,7 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
                           <span className="text-[15px] font-medium leading-snug text-white/90">{pe.source}</span>
                           {PRIMARY_ESTABLISHES[i] && (
                             <span className="text-[14px] leading-snug text-white/60">
-                              <span className="text-white/45">Would establish: </span>
+                              <span className="text-white/55">Would establish: </span>
                               {PRIMARY_ESTABLISHES[i]}
                             </span>
                           )}
@@ -407,7 +407,7 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
                           <span className="text-[15px] font-medium leading-snug text-white/90">{f.trend}</span>
                           <span className="text-[14px] leading-snug text-white/60">{f.meaning}</span>
                           <span className={`text-[13px] sm:text-right ${RISK_TEXT[f.risk]}`}>
-                            <span className="text-white/45 sm:hidden">Risk: </span>
+                            <span className="text-white/55 sm:hidden">Risk: </span>
                             {f.risk}
                             <span className="sr-only"> risk</span>
                           </span>
@@ -450,10 +450,10 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
           <RelatedLinks
             title="Pairs with"
             items={[
-              { label: 'Business Consulting', desc: 'Turn field evidence into a strategy and a plan.', onClick: () => setActiveTab('consulting'), tone: 'teal' },
-              { label: 'AI Enterprise Solutions', desc: 'Move from periodic studies to ongoing monitoring.', onClick: () => setActiveTab('ai-solutions'), tone: 'emerald' },
-              { label: 'Localization', desc: 'Carry findings into country-specific execution.', onClick: () => setActiveTab('localization'), tone: 'sky' },
-              { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth.', onClick: () => setActiveTab('senior-expertise'), tone: 'indigo' }
+              { label: 'Business Consulting', desc: 'Turn field evidence into a strategy and a plan.', to: 'consulting', tone: 'teal' },
+              { label: 'AI Enterprise Solutions', desc: 'Move from periodic studies to ongoing monitoring.', to: 'ai-solutions', tone: 'emerald' },
+              { label: 'Market localisation', desc: 'Carry findings into country-specific execution.', to: 'localization', tone: 'sky' },
+              { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth.', to: 'senior-expertise', tone: 'indigo' }
             ]}
           />
         </div>

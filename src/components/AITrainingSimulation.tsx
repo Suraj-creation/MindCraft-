@@ -40,8 +40,8 @@ const GROUPS = [
     name: 'AI Foundations & Executive Briefings',
     icon: Presentation,
     what: 'AI fundamentals for executives, boards and new staff, AI-readiness assessments and sector briefings for Life Sciences, healthcare, chemicals, automotive and financial services leaders.',
-    why: 'Diagnoses organizational capability and surfaces the priority use cases before any tool is chosen.',
-    outcome: 'A shared AI language and a prioritized view of where to start.'
+    why: 'Diagnoses organisational capability and surfaces the priority use cases before any tool is chosen.',
+    outcome: 'A shared AI language and a prioritised view of where to start.'
   },
   {
     name: 'Applied, Function-Specific AI Training',
@@ -60,29 +60,29 @@ const GROUPS = [
   {
     name: 'Capability Multiplication',
     icon: Users,
-    what: 'Train-the-trainer programs, custom curriculum design and mentorship and coaching that reinforce classroom learning on the job.',
+    what: 'Train-the-trainer programmes, custom curriculum design and mentorship and coaching that reinforce classroom learning on the job.',
     why: 'Capability has to outlast the engagement to be worth the investment.',
     outcome: 'Internal AI champions who sustain and scale adoption.'
   }
 ];
 
 const DELIVERABLES = [
-  'Customized training curricula, facilitator guides and participant workbooks.',
-  'AI-readiness scorecards and prioritized adoption roadmaps.',
+  'Customised training curricula, facilitator guides and participant workbooks.',
+  'AI-readiness scorecards and prioritised adoption roadmaps.',
   'A trained internal cohort of AI champions able to sustain and scale adoption.'
 ];
 
 const FORMATS = [
   'In-person workshops',
   'Virtual / online training',
-  'Hybrid programs',
+  'Hybrid programmes',
   'Short courses (1 to 5 days)',
-  'Structured programs (weeks to months)',
+  'Structured programmes (weeks to months)',
   'Retainer-based advisory'
 ];
 
 const COHORTS = [
-  { id: 'pharma-commercial', name: 'Pharma Commercial & Sales Force', desc: 'Territory optimization, CRM intelligence & detailing' },
+  { id: 'pharma-commercial', name: 'Pharma Commercial & Sales Force', desc: 'Territory optimisation, CRM intelligence & detailing' },
   { id: 'regulatory-clinical', name: 'Regulatory & Pharmacovigilance', desc: 'Dossier synthesis, guideline scraping & safety screening' },
   { id: 'hospital-execs', name: 'Hospital & Healthcare Leadership', desc: 'Clinical workflow AI, claims pre-check & HIS integration' },
   { id: 'banking-ops', name: 'Banking & Financial Operations', desc: 'Fraud detection, document parsing & customer service' }
@@ -205,7 +205,7 @@ export const AITrainingSimulation: React.FC<AITrainingSimulationProps> = ({ onOp
               <p className="mt-1 text-xs text-white/60">Across African, European and US time zones.</p>
               <ul className="mt-3 flex flex-wrap gap-1.5">
                 {FORMATS.map((f) => (
-                  <li key={f} className="rounded-lg border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 tabular-nums text-[11px] text-amber-200">
+                  <li key={f} className="rounded-lg border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 tabular-nums text-xs text-amber-200">
                     {f}
                   </li>
                 ))}
@@ -264,7 +264,7 @@ export const AITrainingSimulation: React.FC<AITrainingSimulationProps> = ({ onOp
                             : 'border-white/[0.08] bg-[#0A0A0A] text-[#9CA3AF] hover:border-white/20 hover:text-white'
                         }`}
                       >
-                        <div className={`flex items-center gap-1 tabular-nums text-[11px] font-bold ${isSelected || done ? 'text-amber-400' : 'text-[#9CA3AF]'}`}>
+                        <div className={`flex items-center gap-1 tabular-nums text-xs font-bold ${isSelected || done ? 'text-amber-400' : 'text-[#9CA3AF]'}`}>
                           <span>STEP {st.step}</span>
                           {done && <CheckCircle2 className="h-3 w-3" aria-label="completed" />}
                         </div>
@@ -433,19 +433,19 @@ export const AITrainingSimulation: React.FC<AITrainingSimulationProps> = ({ onOp
           <div className="space-y-10 md:space-y-14">
             <motion.div {...reveal}>
               <ContextualCTA
-                title="Design a curriculum for your organization"
+                title="Design a curriculum for your organisation"
                 body="Pick your cohort and we shape the modules, exercises and champion milestones around its workflows."
-                primaryLabel="Design Organization Curriculum"
+                primaryLabel="Design Organisation Curriculum"
                 onPrimary={onOpenIntake}
               />
             </motion.div>
             <RelatedLinks
               title="Pairs with"
               items={[
-                { label: 'AI Enterprise Solutions', desc: 'Pair custom AI software with users who adopt it.', onClick: () => setActiveTab('ai-solutions'), tone: 'emerald' },
-                { label: 'Business Consulting', desc: 'Align workforce readiness with strategic transformation.', onClick: () => setActiveTab('consulting'), tone: 'teal' },
-                { label: 'Localization', desc: 'Harmonized programs across regulatory and language environments.', onClick: () => setActiveTab('localization'), tone: 'amber' },
-                { label: 'Senior expertise', desc: 'Life Sciences experience behind the sector briefings.', onClick: () => setActiveTab('senior-expertise'), tone: 'indigo' }
+                { label: 'AI Enterprise Solutions', desc: 'Pair custom AI software with users who adopt it.', to: 'ai-solutions', tone: 'emerald' },
+                { label: 'Business Consulting', desc: 'Align workforce readiness with strategic transformation.', to: 'consulting', tone: 'teal' },
+                { label: 'Market localisation', desc: 'Harmonised programmes across regulatory and language environments.', to: 'localization', tone: 'amber' },
+                { label: 'Senior expertise', desc: 'Life Sciences experience behind the sector briefings.', to: 'senior-expertise', tone: 'indigo' }
               ]}
             />
           </div>

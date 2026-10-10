@@ -19,6 +19,7 @@ import { AfricaRegionName, NavTab } from '../types';
 import { PageHeader } from './ui/primitives';
 import { ArtImage } from './ui/ArtImage';
 import { ArtCaption, Scrim } from './ui/Hero';
+import { useMediaQuery } from '../lib/useMediaQuery';
 
 interface Props {
   onNavigate: (tab: NavTab) => void;
@@ -41,19 +42,6 @@ const ALL_JURISDICTIONS = AFRICA_REGIONS_DATA.flatMap(r =>
   r.countries.map(name => ({ name, region: r.name }))
 );
 
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches
-  );
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const handler = () => setMatches(mq.matches);
-    handler();
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, [query]);
-  return matches;
-}
 
 const primaryBtn =
   'mc-tap inline-flex items-center justify-center gap-2 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition-[background-color,transform] duration-200 active:scale-[0.98] w-full sm:w-auto shrink-0';
@@ -81,7 +69,7 @@ const Disclosure: React.FC<{
         <span className="text-sm font-semibold flex items-center gap-2 min-w-0">{title}</span>
         <span className="flex items-center gap-2 shrink-0">
           {typeof count === 'number' && (
-            <span className="text-[11px] tabular-nums text-gray-400">{count}</span>
+            <span className="text-xs tabular-nums text-gray-400">{count}</span>
           )}
           <ChevronDown
             className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
@@ -329,7 +317,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                     }`}
                   >
                     <span className="block font-semibold text-sm text-white">{reg.name}</span>
-                    <span className="block text-[11px] tabular-nums text-gray-400 mt-1">
+                    <span className="block text-xs tabular-nums text-gray-400 mt-1">
                       {reg.countries.length} Jurisdictions
                     </span>
                     <span className="hidden sm:block text-xs text-gray-400 mt-2 line-clamp-1">
@@ -509,11 +497,11 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                                 <span className="text-sm font-medium truncate">{c.name}</span>
                               </span>
                               {c.name === 'Kenya' ? (
-                                <span className="text-[11px] tabular-nums px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                                <span className="text-xs tabular-nums px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
                                   HQ
                                 </span>
                               ) : query ? (
-                                <span className="hidden sm:inline text-[11px] tabular-nums text-gray-400 shrink-0 truncate max-w-[6rem]">
+                                <span className="hidden sm:inline text-xs tabular-nums text-gray-400 shrink-0 truncate max-w-[6rem]">
                                   {c.region.replace(' Africa', '')}
                                 </span>
                               ) : null}
@@ -523,7 +511,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                       </div>
                     )}
                     {!isDesktop && (
-                      <p className="text-[11px] tabular-nums text-gray-400">Tap a jurisdiction to open its dossier.</p>
+                      <p className="text-xs tabular-nums text-gray-400">Tap a jurisdiction to open its dossier.</p>
                     )}
                   </div>
                 </div>
@@ -549,7 +537,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                 <div className="pb-5 border-b border-white/[0.08] space-y-3">
                   <h2 className="mc-h2">Africa Region + Industry Crossover Engine</h2>
                   <p className="text-sm text-gray-400 max-w-2xl">
-                    Select an African Region (or Country) and an Industry Vertical to synthesize a tailored market-intelligence pathway.
+                    Select an African Region (or Country) and an Industry Vertical to synthesise a tailored market-intelligence pathway.
                   </p>
                 </div>
 
@@ -588,7 +576,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                 <div className="p-4 sm:p-6 rounded-2xl bg-[#050505] border border-indigo-500/35 space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/[0.08]">
                     <div className="min-w-0">
-                      <div className="text-xs text-indigo-400 font-medium">Synthesized Pathway</div>
+                      <div className="text-xs text-indigo-400 font-medium">Synthesised Pathway</div>
                       <h3 className="text-xl font-bold text-white mt-1">
                         {crossoverIndustry.name} Strategy across {selectedRegion.name}
                       </h3>
@@ -615,7 +603,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                         title: 'Strategic Commercial Decision',
                         body:
                           crossoverIndustry.consultingAndStrategy[0] ||
-                          'Optimizing go-to-market structure and local regulatory compliance.'
+                          'Optimising go-to-market structure and local regulatory compliance.'
                       },
                       {
                         icon: Cpu,
@@ -670,7 +658,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                   <div className="p-5 rounded-xl bg-[#0D0F17] border border-indigo-500/35 space-y-3">
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-xs text-indigo-400 font-medium">Operational Hub</span>
-                      <span className="text-[11px] tabular-nums px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                      <span className="text-xs tabular-nums px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
                         Nairobi HQ
                       </span>
                     </div>

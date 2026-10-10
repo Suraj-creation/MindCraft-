@@ -100,11 +100,11 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
     ...(pillar.intersections ?? []).map((x) => ({
       label: x.withPillar,
       desc: x.integratedValue.split(':')[0],
-      onClick: () => PILLAR_TABS[x.withPillar] && setActiveTab(PILLAR_TABS[x.withPillar]),
+      to: PILLAR_TABS[x.withPillar],
       tone: 'teal' as const
     })),
-    { label: 'Localization', desc: 'From global strategy to local result', onClick: () => setActiveTab('localization'), tone: 'emerald' as const },
-    { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth', onClick: () => setActiveTab('senior-expertise') }
+    { label: 'Market localisation', desc: 'From global strategy to local result', to: 'localization', tone: 'emerald' as const },
+    { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth', to: 'senior-expertise' }
   ];
 
   return (
@@ -192,8 +192,8 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
                   <p className="mt-2 max-w-[38em] text-[15px] leading-relaxed text-white/70">{cap.description}</p>
                   <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
                     {cap.bulletPoints.map((b) => (
-                      <li key={b} className="flex gap-2.5 text-[13px] leading-snug text-white/60">
-                        <span aria-hidden="true" className="mt-[0.4rem] h-1 w-1 shrink-0 rounded-full bg-teal-400/80" />
+                      <li key={b} className="flex gap-2.5 text-sm leading-snug text-white/70">
+                        <span aria-hidden="true" className="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-teal-400/80" />
                         {b}
                       </li>
                     ))}
@@ -210,8 +210,7 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
       <section className="mc-section mc-editorial-band" aria-labelledby="diagnostic-title">
         <div className="mc-container">
           <motion.div {...reveal} className="max-w-2xl">
-            <p className="mc-meta">8 dimensions</p>
-            <h2 id="diagnostic-title" className="mc-h2 mt-3">How we assess AI readiness</h2>
+            <h2 id="diagnostic-title" className="mc-h2">How we assess AI readiness</h2>
             <p className="mc-lead mt-4">
               Before recommending any AI investment, we look at eight dimensions of the organisation. Choose one to see what we ask, where organisations tend to stall and how we help.
             </p>
@@ -236,7 +235,7 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
                       selected ? 'bg-[#0d0f17] text-white' : 'text-white/60 hover:text-white hover:bg-white/[0.03]'
                     }`}
                   >
-                    <span className={`tabular-nums font-mono text-[11px] ${selected ? 'text-teal-300' : 'text-white/35'}`}>{String(i + 1).padStart(2, '0')}</span>
+                    <span className={`tabular-nums font-mono text-xs ${selected ? 'text-teal-300' : 'text-white/50'}`}>{String(i + 1).padStart(2, '0')}</span>
                     <span className="whitespace-nowrap md:whitespace-normal">{d.name}</span>
                     {selected && <span aria-hidden="true" className="ml-auto hidden md:block h-px w-6 bg-teal-400" />}
                   </button>
@@ -254,15 +253,15 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
                   transition={{ duration: 0.2, ease: EASE }}
                 >
                   <h3 className="font-heading text-[1.5rem] sm:text-[1.875rem] font-medium leading-tight tracking-[-0.02em] text-white">{dim.name}</h3>
-                  <dl className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08]">
+                  <dl className="mt-6 border-t border-white/[0.1]">
                     {[
                       { term: 'What we ask', text: dim.ask, accent: 'text-teal-300' },
                       { term: 'Where it often stalls', text: dim.stall, accent: 'text-amber-300' },
                       { term: 'How we help', text: dim.help, accent: 'text-emerald-300' }
                     ].map((row) => (
-                      <div key={row.term} className="bg-[#0a0a0a] p-5 sm:p-6">
-                        <dt className={`text-[13px] font-medium ${row.accent}`}>{row.term}</dt>
-                        <dd className="mt-2 text-[15px] leading-relaxed text-white/80">{row.text}</dd>
+                      <div key={row.term} className="grid grid-cols-1 sm:grid-cols-[11rem_minmax(0,1fr)] gap-x-6 gap-y-1.5 border-b border-white/[0.1] py-4 sm:py-5">
+                        <dt className={`text-[13px] font-medium sm:pt-0.5 ${row.accent}`}>{row.term}</dt>
+                        <dd className="text-[15px] leading-relaxed text-white/80 max-w-[38em]">{row.text}</dd>
                       </div>
                     ))}
                   </dl>
@@ -284,7 +283,7 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
               onPrimary={onOpenIntake}
             />
           </motion.div>
-          <RelatedLinks title="Pairs with and related" items={related} />
+          <RelatedLinks title="Pairs with" items={related} />
         </div>
       </section>
     </MotionConfig>

@@ -3,6 +3,7 @@ import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { NavTab, RoleLens } from '../types';
 import { BrandLogo } from './ui/BrandLogo';
 import { NAV_ITEMS, NavSubItem, sectionOf } from '../data/navigation';
+import { RouteLink } from './ui/primitives';
 import { scrollToTop } from '../lib/smoothScroll';
 import {
   Search,
@@ -77,14 +78,14 @@ const TRIGGER_BASE =
   'relative h-16 lg:h-20 px-3 flex items-center gap-1 text-[13px] font-medium whitespace-nowrap transition-colors duration-150';
 
 /** One row inside a desktop panel. */
-const PanelItem: React.FC<{ item: NavSubItem; active: boolean; onSelect: () => void }> = ({ item, active, onSelect }) => {
+const PanelItem: React.FC<{ item: NavSubItem; active: boolean; onNavigate: (tab: NavTab) => void }> = ({ item, active, onNavigate }) => {
   const Icon = item.icon;
   return (
     <li>
-      <button
-        type="button"
+      <RouteLink
+        to={item.id}
+        onNavigate={onNavigate}
         data-menu-item
-        onClick={onSelect}
         aria-current={active ? 'page' : undefined}
         className={`w-full text-left px-3 py-2.5 rounded-xl flex items-start gap-3 transition-colors duration-150 ${
           active ? 'bg-[#0d0f17] ring-1 ring-inset ring-indigo-500/35' : 'hover:bg-white/[0.05] focus-visible:bg-white/[0.05]'
@@ -97,9 +98,9 @@ const PanelItem: React.FC<{ item: NavSubItem; active: boolean; onSelect: () => v
         )}
         <span className="min-w-0">
           <span className={`block text-sm font-semibold leading-snug ${active ? 'text-indigo-200' : 'text-white'}`}>{item.label}</span>
-          <span className="block mt-0.5 text-xs text-white/50 leading-snug">{item.desc}</span>
+          <span className="block mt-0.5 text-xs text-white/55 leading-snug">{item.desc}</span>
         </span>
-      </button>
+      </RouteLink>
     </li>
   );
 };
@@ -277,7 +278,7 @@ export const Header: React.FC<HeaderProps> = ({
     triggers[(i + dir + triggers.length) % triggers.length]?.focus();
   };
 
-  const onTriggerKey = (e: React.KeyboardEvent<HTMLButtonElement>, id: string, hasPanel: boolean) => {
+  const onTriggerKey = (e: React.KeyboardEvent<HTMLElement>, id: string, hasPanel: boolean) => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
       e.preventDefault();
       focusSiblingTrigger(e.currentTarget, e.key === 'ArrowRight' ? 1 : -1);
@@ -351,14 +352,15 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center h-16 lg:h-20 gap-4 xl:gap-8">
 
             {/* Logo & brand identity */}
-            <button
-              onClick={() => go('home')}
+            <RouteLink
+              to="home"
+              onNavigate={go}
               className="flex items-center shrink-0 mc-tap rounded-lg transition-transform duration-150 active:scale-[0.98]"
               id="brand-logo-button"
               aria-label="MindCraft Consultancy, home"
             >
               <BrandLogo height={64} sizes="(min-width: 1024px) 87px, 65px" priority className="h-12 lg:h-16" />
-            </button>
+            </RouteLink>
 
             {/* Desktop navigation (xl and up). Items that don't fit move into "More". */}
             <div ref={navWrapRef} className="hidden xl:flex flex-1 min-w-0 relative self-stretch">
@@ -390,20 +392,34 @@ export const Header: React.FC<HeaderProps> = ({
                         onPointerLeave={(e) => e.pointerType === 'mouse' && hasPanel && hoverClose()}
                         onBlur={(e) => onWrapperBlur(e, item.id)}
                       >
-                        <button
-                          type="button"
-                          id={triggerId(item.id)}
-                          data-nav-trigger
-                          aria-expanded={hasPanel ? open : undefined}
-                          aria-controls={hasPanel ? panelId(item.id) : undefined}
-                          aria-current={!hasPanel && isActive ? 'page' : undefined}
-                          onClick={() => (hasPanel ? toggleMenu(item.id) : go(item.id))}
-                          onKeyDown={(e) => onTriggerKey(e, item.id, hasPanel)}
-                          className={`${TRIGGER_BASE} ${isActive || open ? 'text-white' : 'text-white/65 hover:text-white'}`}
-                        >
-                          <TriggerFace label={item.label} caret={hasPanel} open={open} />
-                          {isActive && activeIndicator}
-                        </button>
+                        {hasPanel ? (
+                          <button
+                            type="button"
+                            id={triggerId(item.id)}
+                            data-nav-trigger
+                            aria-expanded={open}
+                            aria-controls={panelId(item.id)}
+                            onClick={() => toggleMenu(item.id)}
+                            onKeyDown={(e) => onTriggerKey(e, item.id, true)}
+                            className={`${TRIGGER_BASE} ${isActive || open ? 'text-white' : 'text-white/65 hover:text-white'}`}
+                          >
+                            <TriggerFace label={item.label} caret open={open} />
+                            {isActive && activeIndicator}
+                          </button>
+                        ) : (
+                          <RouteLink
+                            to={item.id}
+                            onNavigate={go}
+                            id={triggerId(item.id)}
+                            data-nav-trigger
+                            aria-current={isActive ? 'page' : undefined}
+                            onKeyDown={(e) => onTriggerKey(e, item.id, false)}
+                            className={`${TRIGGER_BASE} ${isActive ? 'text-white' : 'text-white/65 hover:text-white'}`}
+                          >
+                            <TriggerFace label={item.label} caret={false} />
+                            {isActive && activeIndicator}
+                          </RouteLink>
+                        )}
 
                         {hasPanel &&
                           renderPanel(
@@ -411,7 +427,7 @@ export const Header: React.FC<HeaderProps> = ({
                             index >= visibleItems.length - 2 && overflowItems.length === 0,
                             <ul className={item.wide ? 'grid grid-cols-2 gap-1' : 'space-y-0.5'}>
                               {item.dropdown!.map((sub) => (
-                                <PanelItem key={sub.id + sub.label} item={sub} active={activeTab === sub.id} onSelect={() => go(sub.id)} />
+                                <PanelItem key={sub.id + sub.label} item={sub} active={activeTab === sub.id} onNavigate={go} />
                               ))}
                             </ul>,
                             item.wide
@@ -448,10 +464,10 @@ export const Header: React.FC<HeaderProps> = ({
                           {overflowItems.map((item) =>
                             item.dropdown ? (
                               <div key={item.id}>
-                                <div className="px-3 pt-2 pb-1 text-xs font-medium text-white/40">{item.label}</div>
+                                <div className="px-3 pt-2 pb-1 text-xs font-medium text-white/55">{item.label}</div>
                                 <ul className="space-y-0.5">
                                   {item.dropdown.map((sub) => (
-                                    <PanelItem key={sub.id + sub.label} item={sub} active={activeTab === sub.id} onSelect={() => go(sub.id)} />
+                                    <PanelItem key={sub.id + sub.label} item={sub} active={activeTab === sub.id} onNavigate={go} />
                                   ))}
                                 </ul>
                               </div>
@@ -460,7 +476,7 @@ export const Header: React.FC<HeaderProps> = ({
                                 <PanelItem
                                   item={{ id: item.id, label: item.label, short: item.label, desc: item.desc ?? '' }}
                                   active={activeSection === item.id}
-                                  onSelect={() => go(item.id)}
+                                  onNavigate={go}
                                 />
                               </ul>
                             )
@@ -484,7 +500,7 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <Search className="w-4 h-4 text-white/50" />
                 <span className="hidden min-[1800px]:inline text-white/55">Search</span>
-                <kbd className="hidden min-[1800px]:inline px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 font-mono text-[11px] text-white/45">⌘K</kbd>
+                <kbd className="hidden min-[1800px]:inline px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 font-mono text-xs text-white/55">⌘K</kbd>
               </button>
 
               {/* Role lens (desktop) */}
@@ -534,7 +550,7 @@ export const Header: React.FC<HeaderProps> = ({
                       }
                       className="absolute right-0 top-full mt-2 w-64 rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.85)] p-1.5 z-50"
                     >
-                      <div className="px-3 pt-2 pb-1.5 text-xs font-medium text-white/40">View the site as</div>
+                      <div className="px-3 pt-2 pb-1.5 text-xs font-medium text-white/55">View the site as</div>
                       {(Object.keys(ROLE_LABELS) as RoleLens[]).map((r) => (
                         <button
                           key={r}
@@ -613,15 +629,15 @@ export const Header: React.FC<HeaderProps> = ({
                     if (!item.dropdown) {
                       return (
                         <li key={item.id}>
-                          <button
-                            type="button"
-                            onClick={() => go(item.id)}
+                          <RouteLink
+                            to={item.id}
+                            onNavigate={go}
                             aria-current={isActive ? 'page' : undefined}
                             className="mc-tap w-full py-3 flex items-center justify-between gap-3 text-left"
                           >
                             <span className={`text-[15px] font-medium ${isActive ? 'text-indigo-300' : 'text-white/90'}`}>{item.label}</span>
                             {isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" aria-hidden="true" />}
-                          </button>
+                          </RouteLink>
                         </li>
                       );
                     }
@@ -638,7 +654,7 @@ export const Header: React.FC<HeaderProps> = ({
                         >
                           <span className="flex items-baseline gap-2 min-w-0">
                             <span className={`text-[15px] font-medium ${isActive ? 'text-indigo-300' : 'text-white/90'}`}>{item.label}</span>
-                            {item.badge && <span className="text-xs text-white/40 truncate">{item.badge}</span>}
+                            {item.badge && <span className="text-xs text-white/55 truncate">{item.badge}</span>}
                           </span>
                           <span className="flex items-center gap-2.5 shrink-0">
                             {isActive && !expanded && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" aria-hidden="true" />}
@@ -658,9 +674,9 @@ export const Header: React.FC<HeaderProps> = ({
                               const subActive = activeTab === sub.id;
                               return (
                                 <li key={sub.id + sub.label}>
-                                  <button
-                                    type="button"
-                                    onClick={() => go(sub.id)}
+                                  <RouteLink
+                                    to={sub.id}
+                                    onNavigate={go}
                                     aria-current={subActive ? 'page' : undefined}
                                     className={`mc-tap w-full text-left px-3 py-2.5 rounded-xl flex items-start gap-3 transition-colors ${
                                       subActive ? 'bg-[#0d0f17] ring-1 ring-inset ring-indigo-500/35' : 'active:bg-white/5'
@@ -669,9 +685,9 @@ export const Header: React.FC<HeaderProps> = ({
                                     {Icon && <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${sub.color}`} />}
                                     <span className="min-w-0">
                                       <span className={`block text-sm font-semibold ${subActive ? 'text-indigo-200' : 'text-white'}`}>{sub.label}</span>
-                                      <span className="block text-xs text-white/50 mt-0.5 leading-snug">{sub.desc}</span>
+                                      <span className="block text-xs text-white/55 mt-0.5 leading-snug">{sub.desc}</span>
                                     </span>
-                                  </button>
+                                  </RouteLink>
                                 </li>
                               );
                             })}

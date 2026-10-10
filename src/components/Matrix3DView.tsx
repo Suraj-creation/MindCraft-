@@ -16,6 +16,7 @@ import {
 import { UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { SERVICE_PILLARS } from '../data/mindcraftData';
 import { NavTab } from '../types';
+import { withholdFigures } from '../lib/evidence';
 import { BTN_SECONDARY, PageHeader } from './ui/primitives';
 
 interface Props {
@@ -38,11 +39,11 @@ const StepHeader: React.FC<{
 }> = ({ n, label, meta, tone, icon }) => (
   <div className="flex items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
     <span className={`text-xs flex items-center gap-2 font-medium${tone}`}>
-      <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-[11px] leading-none">{n}</span>
+      <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-xs leading-none">{n}</span>
       {icon}
       {label}
     </span>
-    <span className="text-[11px] tabular-nums text-gray-400 text-right">{meta}</span>
+    <span className="text-xs tabular-nums text-gray-400 text-right">{meta}</span>
   </div>
 );
 
@@ -84,6 +85,8 @@ export const Matrix3DView: React.FC<Props> = ({
   const coreCount = UNIVERSAL_INDUSTRIES.filter(i => i.category === 'core-lifesciences').length;
   const diversifiedCount = UNIVERSAL_INDUSTRIES.length - coreCount;
 
+  const targetOutcome = withholdFigures(selectedIndustry.illustrativeEngagement.outcomeFramework)[0];
+
   const handleLaunch = () => {
     if (onSelectEngagementConfig) {
       onSelectEngagementConfig(selectedIndustry.name, selectedGeography, selectedPillar.name);
@@ -93,8 +96,8 @@ export const Matrix3DView: React.FC<Props> = ({
 
   const stats = [
     { value: String(UNIVERSAL_INDUSTRIES.length), label: 'Industries' },
-    { value: String(AFRICA_REGIONS_DATA.length), label: 'Regional hubs' },
-    { value: String(SERVICE_PILLARS.length), label: 'Service pillars' }
+    { value: String(AFRICA_REGIONS_DATA.length), label: 'African regions' },
+    { value: String(SERVICE_PILLARS.length), label: 'Capabilities' }
   ];
 
   const fadeIn = {
@@ -171,11 +174,11 @@ export const Matrix3DView: React.FC<Props> = ({
         <PageHeader
           as={headingLevel === 1 ? 'h1' : 'h2'}
           id="matrix-title"
-          title="Industry × Geography × Capability 3D Matrix"
-          lead="Synthesize an instant, custom engagement profile by intersecting any industry vertical with a regional geographic footprint and a core MindCraft service pillar."
+          title="Match an industry, a region and a capability."
+          lead="Choose a sector, a geography and one of MindCraft's four capabilities to see how an engagement could be shaped for that context."
           actions={
             <button type="button" onClick={handleLaunch} className={BTN_SECONDARY}>
-              <span>Build Engagement from Matrix</span>
+              <span>Open in Engagement Builder</span>
             </button>
           }
           metrics={stats}
@@ -224,7 +227,7 @@ export const Matrix3DView: React.FC<Props> = ({
             <StepHeader
               n={2}
               label="Geography"
-              meta={`${AFRICA_REGIONS_DATA.length} regional hubs`}
+              meta={`${AFRICA_REGIONS_DATA.length} African regions`}
               tone="text-emerald-400"
               icon={<Globe2 className="w-4 h-4" aria-hidden="true" />}
             />
@@ -246,7 +249,7 @@ export const Matrix3DView: React.FC<Props> = ({
               </span>
             </label>
             <p className="p-3 rounded-xl bg-[#050505] border border-white/[0.08] text-[13px] text-[#E0E0E0] leading-relaxed">
-              Full primary intelligence network coverage, regulatory monitoring, and distributor due diligence in target geography.
+              Primary research, regulatory context and distributor due diligence, scoped to the countries in this region.
             </p>
           </motion.div>
 
@@ -255,7 +258,7 @@ export const Matrix3DView: React.FC<Props> = ({
             <StepHeader
               n={3}
               label="Capability"
-              meta={`${SERVICE_PILLARS.length} service pillars`}
+              meta={`${SERVICE_PILLARS.length} capabilities`}
               tone="text-sky-400"
               icon={<Layers className="w-4 h-4" aria-hidden="true" />}
             />
@@ -294,20 +297,20 @@ export const Matrix3DView: React.FC<Props> = ({
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-white/[0.08]">
             <div className="min-w-0">
               <div className="flex items-center gap-2 text-xs text-indigo-400 font-medium">
-                <Box className="w-4 h-4 shrink-0" aria-hidden="true" /> Synthesized 3D Matrix Blueprint
+                <Box className="w-4 h-4 shrink-0" aria-hidden="true" /> Engagement profile
               </div>
-              <h3 className="text-xl md:text-2xl font-bold text-white mt-2 leading-tight">
+              <h2 className="font-heading text-xl md:text-2xl font-medium tracking-[-0.01em] text-white mt-2 leading-tight">
                 {selectedPillar.name} for {selectedIndustry.name} in {selectedGeography}
-              </h3>
+              </h2>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-[11px] tabular-nums border border-indigo-500/35">
+              <span className="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs tabular-nums border border-indigo-500/35">
                 {selectedIndustry.name}
               </span>
-              <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] tabular-nums border border-emerald-500/30">
+              <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs tabular-nums border border-emerald-500/30">
                 {selectedGeography}
               </span>
-              <span className="px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 text-[11px] tabular-nums border border-sky-500/30">
+              <span className="px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 text-xs tabular-nums border border-sky-500/30">
                 {selectedPillar.name}
               </span>
             </div>
@@ -335,16 +338,18 @@ export const Matrix3DView: React.FC<Props> = ({
               Swipe for all {blocks.length} blocks
             </p>
 
-            {/* Measured outcome */}
-            <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1.5">
-              <div className="text-xs text-emerald-400 flex items-center gap-1.5 font-medium">
-                <TrendingUp className="w-4 h-4" aria-hidden="true" /> Target Business Outcome
+            {/* Target outcome: only an outcome without an unsourced figure is shown */}
+            {targetOutcome && (
+              <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1.5">
+                <div className="text-xs text-emerald-400 flex items-center gap-1.5 font-medium">
+                  <TrendingUp className="w-4 h-4" aria-hidden="true" /> Target business outcome
+                </div>
+                <p className="text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
+                  <span className="min-w-0">{targetOutcome}</span>
+                </p>
               </div>
-              <p className="text-[13px] sm:text-sm text-[#E0E0E0] leading-relaxed flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="min-w-0">{selectedIndustry.illustrativeEngagement.outcomeFramework[0]}</span>
-              </p>
-            </div>
+            )}
           </motion.div>
 
           <button
@@ -352,7 +357,7 @@ export const Matrix3DView: React.FC<Props> = ({
             onClick={handleLaunch}
             className="hidden lg:inline-flex mc-tap items-center gap-2 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-[13px] font-semibold text-white transition-colors active:scale-[0.98]"
           >
-            Configure Full Blueprint <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            Open in Engagement Builder <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </motion.div>
 
@@ -363,7 +368,7 @@ export const Matrix3DView: React.FC<Props> = ({
             onClick={handleLaunch}
             className="mc-tap w-full flex items-center justify-center gap-2 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-[13px] font-semibold text-white transition-colors active:scale-[0.98]"
           >
-            Configure Full Blueprint <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            Open in Engagement Builder <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>

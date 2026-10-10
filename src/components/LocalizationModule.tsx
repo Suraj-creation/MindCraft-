@@ -32,7 +32,7 @@ const STAGES: { title: string; line: string; chips?: string[] }[] = [
   },
   {
     title: 'Local execution & outcome',
-    line: 'Harmonized research and training programs across diverse regulatory and language environments, tied to measurable value.'
+    line: 'Harmonised research and training programmes across diverse regulatory and language environments, tied to measurable value.'
   }
 ];
 
@@ -65,7 +65,7 @@ const LOCALIZED: { title: string; line: string; pillar: PillarId; capability: st
   },
   {
     title: 'Research & cultural context',
-    line: 'Harmonized research across diverse regulatory and language environments.',
+    line: 'Harmonised research across diverse regulatory and language environments.',
     pillar: 'market-research',
     capability: 'Secondary & Desk Research'
   },
@@ -85,7 +85,7 @@ export const LocalizationModule: React.FC<LocalizationModuleProps> = ({ variant 
       <div className="mc-container">
         <SectionHeader
           title={<span id="localization-module-title">From global strategy to local result</span>}
-          lead="Localization at MindCraft is a local-market capability: regulatory, commercial and cultural context carried through to execution."
+          lead="Localisation at MindCraft is a local-market capability: regulatory, commercial and cultural context carried through to execution."
           action={
             !full ? (
               <button
@@ -93,14 +93,14 @@ export const LocalizationModule: React.FC<LocalizationModuleProps> = ({ variant 
                 onClick={() => onNavigate('localization')}
                 className="mc-tap self-start md:self-auto px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white text-sm font-semibold flex items-center justify-center gap-2 transition-[background-color,transform] duration-150"
               >
-                <span>See how localization works</span>
+                <span>See how localisation works</span>
                 <ArrowRight aria-hidden className="w-4 h-4" />
               </button>
             ) : undefined
           }
         />
 
-        <ol className="grid grid-cols-1 lg:grid-cols-5 gap-0 lg:gap-4" aria-label="Localization stages">
+        <ol className="grid grid-cols-1 lg:grid-cols-5 gap-0 lg:gap-4" aria-label="Localisation stages">
           {STAGES.map((s, i) => (
             <motion.li
               key={s.title}
@@ -140,7 +140,7 @@ export const LocalizationModule: React.FC<LocalizationModuleProps> = ({ variant 
 
         {full && (
           <div className="mt-10 sm:mt-14">
-            <h3 className="font-heading text-xl sm:text-2xl font-medium text-white">What gets localized</h3>
+            <h3 className="font-heading text-xl sm:text-2xl font-medium text-white">What gets localised</h3>
             <p className="mt-2 text-sm text-white/60 max-w-2xl">
               Five areas where global work meets local conditions, each delivered through one of MindCraft&rsquo;s pillars.
             </p>

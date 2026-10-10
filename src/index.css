@@ -200,6 +200,17 @@ html.lenis, html.lenis body { height: auto; }
   position: relative;
   z-index: 1;
 }
+/* Scrims fade the art from the left for desktop compositions. On phones the copy spans the full width,
+   so every line sits over the image: dim the whole field evenly beneath the copy. */
+@media (max-width: 639px) {
+  .mc-art-bleed::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 5, 5, 0.42);
+    pointer-events: none;
+  }
+}
 .mc-full-bleed {
   width: 100vw;
   margin-left: calc((100vw - 100%) / -2);
@@ -264,6 +275,9 @@ html.lenis, html.lenis body { height: auto; }
   outline: 2px solid #818cf8;
   outline-offset: 2px;
 }
+/* Main receives focus on route change so screen readers announce the new page; it is a landmark, not a control */
+#main-content:focus,
+#main-content:focus-visible { outline: none; }
 /* Header triggers fill the bar's height: keep their ring inside the bar */
 [data-nav-trigger]:focus-visible {
   outline-offset: -12px;
