@@ -297,7 +297,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
 
           {/* Region selector (shared by regional + country + crossover) */}
           {(activeTab === 'regional' || activeTab === 'country') && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3" role="group" aria-label="Regional clusters">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3" role="group" aria-label="Regional clusters">
               {AFRICA_REGIONS_DATA.map(reg => {
                 const isSelected = selectedRegionName === reg.name;
                 return (
@@ -664,7 +664,7 @@ export const AfricaIntelligenceExplorer: React.FC<Props> = ({
                     </div>
                     <h3 className="text-xl font-bold text-white">MindCraft Continental Core</h3>
                     <p className="text-sm text-[#E0E0E0] leading-relaxed">
-                      Central coordination hub orchestrating primary research, strategic consulting, role-based AI training cohorts, and enterprise AI software builds across 4 African regions.
+                      Central coordination hub orchestrating primary research, strategic consulting, role-based AI training cohorts, and enterprise AI software builds across {AFRICA_REGIONS_DATA.length} African regions.
                     </p>
                     <div className="text-[12px] tabular-nums text-indigo-400 pt-3 border-t border-indigo-500/35">
                       Network: Associate consultants • In-country research partners • Subject-matter experts

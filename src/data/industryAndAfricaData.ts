@@ -25,7 +25,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
     },
     context: 'Navigating multi-tier distribution, disparate regulatory bodies (PPB, NAFDAC, SAHPRA, EDA), out-of-pocket payment models, and public reimbursement transitions.',
     keyQuestions: [
-      'How should we price and position a new biologic across East, West, and Southern Africa?',
+      'How should we price and position a new biologic across East, West, Central, North and Southern Africa?',
       'What are the real market shares of originator brands vs local generics across private retail chains?',
       'Which Key Opinion Leaders (KOLs) drive regional clinical guidelines and hospital formulary adoption?'
     ],
@@ -1726,7 +1726,7 @@ export const UNIVERSAL_INDUSTRIES: UniversalIndustry[] = [
 ];
 
 // ==========================================
-// AFRICA INTELLIGENCE - 4 REGIONS & EXACT COUNTRY LISTS
+// AFRICA INTELLIGENCE - 5 REGIONS & EXACT COUNTRY LISTS
 // ==========================================
 export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
   {
@@ -1825,6 +1825,50 @@ export const AFRICA_REGIONS_DATA: AfricaRegionData[] = [
       'Pharma Channel Audit & Anti-Counterfeiting Strategy',
       'Executive AI Literacy & Corporate Transformation Masterclasses',
       'B2B Trade Financing & Alternative Underwriting Platform Build'
+    ]
+  },
+  {
+    name: 'Central Africa',
+    countries: [
+      'Cameroon',
+      'Democratic Republic of the Congo',
+      'Republic of the Congo',
+      'Gabon',
+      'Chad',
+      'Central African Republic',
+      'Equatorial Guinea',
+      'São Tomé and Príncipe'
+    ],
+    headline: 'CEMAC & ECCAS Markets, Francophone Healthcare Systems & Resource-Driven Economies',
+    regionalContext: 'Predominantly Francophone markets, most sharing the CEMAC monetary union, with national regulators at different stages of maturity, significant donor-funded public-health procurement and economies anchored in extractives, timber and agriculture.',
+    industryOpportunity: [
+      'Essential Medicines Access & Public-Health Programme Supply',
+      'Diagnostics & Laboratory Network Strengthening',
+      'Mining & Extractives Supply Chain Services',
+      'Agribusiness, Timber & Food Processing',
+      'Telecoms, Mobile Money & Digital Payments'
+    ],
+    researchCapability: [
+      'Francophone Physician, Pharmacist & Distributor Interviews',
+      'Public & Donor-Funded Procurement Pathway Mapping',
+      'CEMAC & DRC Product Registration Requirement Scans',
+      'Distributor & Cold-Chain Capability Assessments across Douala, Kinshasa and Libreville'
+    ],
+    strategicQuestions: [
+      'How should a manufacturer sequence product registration across Cameroon, Gabon, Congo and the DRC?',
+      'Which distributors can reliably serve both the Douala port and inland CEMAC markets?',
+      'How do donor-funded and public procurement channels shape demand for essential medicines and diagnostics in the DRC?'
+    ],
+    aiOpportunities: [
+      'French-language regulatory document parsing and registration tracking',
+      'Demand forecasting to anticipate public-health programme stock-outs',
+      'Mobile-money transaction analytics for distributor and SME credit'
+    ],
+    potentialEngagements: [
+      'Central Africa Market Entry & Registration Roadmap',
+      'Distributor Due Diligence across CEMAC and the DRC',
+      'Francophone Sales Force AI Enablement Programme',
+      'Public-Health Supply Chain Visibility Dashboard'
     ]
   },
   {

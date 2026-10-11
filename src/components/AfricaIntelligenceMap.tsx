@@ -123,6 +123,7 @@ const FILTERS: ('All' | AfricaRegionName)[] = ['All', ...AFRICA_REGIONS_DATA.map
 const COMPASS: Record<AfricaRegionName, { cell: string; word: string }> = {
   'North Africa': { cell: 'col-start-2 row-start-1', word: 'North' },
   'West Africa': { cell: 'col-start-1 row-start-2', word: 'West' },
+  'Central Africa': { cell: 'col-start-2 row-start-2', word: 'Central' },
   'East Africa': { cell: 'col-start-3 row-start-2', word: 'East' },
   'Southern Africa': { cell: 'col-start-2 row-start-3', word: 'Southern' }
 };
@@ -163,7 +164,7 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
   return (
     <MotionConfig reducedMotion="user">
       {/* ---------------------------------------------------------- */}
-      {/* Opening: type-led, with the four regions as a schematic you can use */}
+      {/* Opening: type-led, with the five regions as a schematic you can use */}
       <HeroSection id="africa-intelligence-section" labelledBy="africa-intel-title">
         <div className="mc-container relative pt-10 sm:pt-14 lg:pt-16 pb-14 sm:pb-16 lg:pb-20">
           <Illumination tone="emerald" strength={0.95} className="right-[-14rem] top-[-4rem] h-[38rem] w-[38rem] lg:right-[-6rem] lg:top-[-2rem]" />
@@ -193,7 +194,7 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
               }
             />
 
-            {/* Schematic: four regions by orientation. Each node filters the dossiers below. */}
+            {/* Schematic: five regions by orientation, Central at the hub. Each node filters the dossiers below. */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -201,11 +202,11 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
               className="lg:col-span-5"
             >
               <div role="group" aria-label="Show country dossiers by region" className="relative mx-auto grid aspect-square w-full max-w-[25rem] grid-cols-3 grid-rows-3">
-                <span aria-hidden="true" className="absolute left-1/2 top-[27%] bottom-[27%] w-px -translate-x-1/2 bg-white/[0.14]" />
-                <span aria-hidden="true" className="absolute top-1/2 left-[29%] right-[29%] h-px -translate-y-1/2 bg-white/[0.14]" />
-                <div aria-hidden="true" className="col-start-2 row-start-2 flex flex-col items-center justify-center">
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 ring-[6px] ring-emerald-400/15" />
-                </div>
+                {/* Spokes from the Central hub out to the four outer regions */}
+                <span aria-hidden="true" className="absolute left-1/2 top-[27%] h-[9%] w-px -translate-x-1/2 bg-white/[0.14]" />
+                <span aria-hidden="true" className="absolute left-1/2 bottom-[27%] h-[9%] w-px -translate-x-1/2 bg-white/[0.14]" />
+                <span aria-hidden="true" className="absolute top-1/2 left-[29%] w-[6%] h-px -translate-y-1/2 bg-white/[0.14]" />
+                <span aria-hidden="true" className="absolute top-1/2 right-[29%] w-[6%] h-px -translate-y-1/2 bg-white/[0.14]" />
                 {AFRICA_REGIONS_DATA.map((r) => {
                   const on = selectedRegion === r.name;
                   const pos = COMPASS[r.name];
@@ -367,7 +368,11 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
             {/* List */}
             <div className="lg:col-span-4">
               {filteredCountries.length === 0 ? (
-                <p className="py-3 text-sm text-white/60">No dossiers match your filters.</p>
+                <p className="py-3 text-sm text-white/60">
+                  {selectedRegion !== 'All' && !q
+                    ? `No ${selectedRegion} dossiers are written up yet. Request a regional briefing and we will scope it with you.`
+                    : 'No dossiers match your filters.'}
+                </p>
               ) : (
                 <ul className="grid grid-cols-2 gap-x-4 sm:grid-cols-3 lg:grid-cols-1 border-t border-white/[0.08] lg:sticky lg:top-28">
                   {filteredCountries.map((c) => {
@@ -508,7 +513,7 @@ export const AfricaIntelligenceMap: React.FC<AfricaIntelligenceMapProps> = ({ on
           <RelatedLinks
             title="Elsewhere in Markets"
             items={[
-              { label: 'Regions and jurisdictions', desc: 'All four regions and 45 jurisdictions', tone: 'emerald', to: 'africa-explorer' },
+              { label: 'Regions and jurisdictions', desc: `All ${AFRICA_REGIONS_DATA.length} regions and ${TOTAL_JURISDICTIONS} jurisdictions`, tone: 'emerald', to: 'africa-explorer' },
               { label: 'Market localisation', desc: 'How a global strategy becomes a local result', tone: 'emerald', to: 'localization' },
               { label: 'Market entry', desc: 'A structured, nine-step approach', tone: 'amber', to: 'market-entry' }
             ]}

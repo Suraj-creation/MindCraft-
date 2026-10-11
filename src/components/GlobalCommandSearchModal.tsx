@@ -163,7 +163,7 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
 
   const gateways: { tab: NavTab; label: string; sub: string; Icon: React.ElementType; color: string }[] = [
     { tab: 'industries', label: 'Universal Industry Explorer', sub: '24 Sectors (Pharma, Devices, Telco, Energy...)', Icon: Building2, color: 'text-indigo-400' },
-    { tab: 'africa-explorer', label: 'Africa Intelligence Hub', sub: '4 Regional Clusters & 45 Jurisdictions', Icon: Globe2, color: 'text-emerald-400' },
+    { tab: 'africa-explorer', label: 'Africa Intelligence Hub', sub: `${AFRICA_REGIONS_DATA.length} Regional Clusters & ${AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0)} Jurisdictions`, Icon: Globe2, color: 'text-emerald-400' },
     { tab: 'market-entry', label: '9-Step Market Entry Framework', sub: 'De-risk entry into any African market', Icon: Compass, color: 'text-sky-400' },
     { tab: 'localization', label: 'Market Localisation', sub: 'Global strategy to local regulatory, commercial and partner execution', Icon: Globe2, color: 'text-emerald-400' },
     { tab: 'senior-expertise', label: 'Senior Life Sciences Expertise', sub: 'Market access, regulatory strategy and commercial excellence', Icon: Building2, color: 'text-indigo-400' },

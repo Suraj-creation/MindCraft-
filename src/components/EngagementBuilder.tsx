@@ -50,6 +50,7 @@ export const EngagementBuilder: React.FC<EngagementBuilderProps> = ({
     'Pan-Africa (Multi-Country)',
     'East Africa (Kenya, Tanzania, Uganda, Rwanda, Ethiopia)',
     'West Africa (Nigeria, Ghana, Côte d\'Ivoire)',
+    'Central Africa (Cameroon, DRC, Gabon)',
     'Southern Africa (South Africa, Zambia)',
     'North Africa (Egypt, Morocco)',
     'Europe-to-Africa Expansion Corridor',

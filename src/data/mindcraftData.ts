@@ -328,7 +328,7 @@ export const LIFE_SCIENCES_SECTORS: LifeSciencesSector[] = [
       'KOL Influence Mapping & Advisory Board Strategy'
     ],
     workflowExample: {
-      question: 'How should we price and position a new biologic across East and West Africa?',
+      question: 'How should we price and position a new biologic across East, West, Central, North and Southern Africa?',
       method: 'Multi-country physician & payer research + price-elasticity modelling + competitor benchmarking.',
       intelligence: 'Identified willingness-to-pay tiers and public tender inclusion criteria in Kenya, Ghana, and Nigeria.',
       decision: 'Formulated tiered dual-brand strategy: private hospital premium line + public institution volume tier.',

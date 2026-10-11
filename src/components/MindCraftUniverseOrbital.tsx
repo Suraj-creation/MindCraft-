@@ -25,6 +25,7 @@ const OUTCOMES = [
 ];
 
 const TOTAL_COUNTRIES = AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0);
+const REGION_WORDS = AFRICA_REGIONS_DATA.map((r) => r.name.replace(' Africa', ''));
 const CORE_INDUSTRIES = UNIVERSAL_INDUSTRIES.filter((i) => i.category === 'core-lifesciences');
 const OTHER_INDUSTRIES = UNIVERSAL_INDUSTRIES.filter((i) => i.category !== 'core-lifesciences');
 
@@ -158,7 +159,7 @@ export const MindCraftUniverseOrbital: React.FC<Props> = ({ onNavigate, onSelect
       id: 'regions',
       label: 'Ring 3',
       name: 'African regional clusters',
-      desc: `East, West, Southern and North Africa: ${TOTAL_COUNTRIES} countries in all.`,
+      desc: `${REGION_WORDS.slice(0, -1).join(', ')} and ${REGION_WORDS[REGION_WORDS.length - 1]} Africa: ${TOTAL_COUNTRIES} countries in all.`,
       count: String(AFRICA_REGIONS_DATA.length)
     },
     {

@@ -11,7 +11,7 @@ import { Scrim } from './ui/Hero';
  * Overview page sections. Every claim below is traceable to
  * resources/MindCraft Consultancy Services - Corporate Profile (1).docx,
  * resources/Industry verticals & Geography (4).docx or
- * resources/2.0 Business Profile- Dayanand Poojari.pdf.
+ * src/data/seniorExpertise.ts.
  */
 
 interface SectionProps {
@@ -208,7 +208,7 @@ export const ExpertiseReachSection: React.FC<SectionProps> = ({ setActiveTab }) 
               ))}
             </ul>
             <div className="mt-6 flex flex-col items-start gap-1">
-              <MoreLink tone="emerald" to="africa-explorer" onNavigate={setActiveTab}>See the four African regions</MoreLink>
+              <MoreLink tone="emerald" to="africa-explorer" onNavigate={setActiveTab}>See the five African regions</MoreLink>
               <MoreLink tone="emerald" to="localization" onNavigate={setActiveTab}>How we adapt strategy to local markets</MoreLink>
             </div>
           </article>
@@ -224,7 +224,7 @@ export const ExpertiseReachSection: React.FC<SectionProps> = ({ setActiveTab }) 
               Senior pharmaceutical and healthcare expertise
             </h3>
             <p className="mt-4 text-[15px] sm:text-base text-white/70 leading-relaxed">
-              MindCraft draws on the independent pharmaceutical and healthcare consulting experience of {SENIOR_PROFILE.name}, based in {SENIOR_PROFILE.basedIn}.
+              {SENIOR_PROFILE.summary}
             </p>
             <div className="mt-5">
               <MoreLink to="senior-expertise" onNavigate={setActiveTab}>View the expertise profile</MoreLink>

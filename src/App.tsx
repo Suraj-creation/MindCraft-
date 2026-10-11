@@ -184,7 +184,7 @@ export default function App({ initialTab = 'home' }: { initialTab?: NavTab }) {
     },
     africa: {
       title: 'African markets lens',
-      desc: 'Multi-country market entry, regulatory mapping and research across East, West, Southern and North Africa.',
+      desc: 'Multi-country market entry, regulatory mapping and research across East, West, Central, Southern and North Africa.',
       focus: 'African market knowledge'
     },
     learning: {
@@ -273,7 +273,7 @@ export default function App({ initialTab = 'home' }: { initialTab?: NavTab }) {
           </div>
         )}
 
-        {/* 3. Africa Regional Clusters & 45 Jurisdictions Hub */}
+        {/* 3. Africa Regional Clusters & Jurisdictions Hub */}
         {view === 'africa-explorer' && (
           <div>
             <AfricaIntelligenceExplorer

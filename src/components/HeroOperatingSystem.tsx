@@ -52,7 +52,7 @@ export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpen
           </h1>
 
           <p className="mc-lead mt-6 sm:mt-7 !text-white/80 !max-w-[31em]">
-            Consulting, market intelligence and applied AI for decisions that need practical progress.
+            Consulting, market intelligence and applied AI that turns African ambition into measurable growth.
           </p>
 
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:items-center gap-3">

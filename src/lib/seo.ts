@@ -82,7 +82,7 @@ export const PAGES: Record<NavTab, PageSeo> = {
     name: 'African Regions',
     title: brand('African Market Regions'),
     description:
-      'Market context across East, West, Southern and North Africa, with country coverage and the decisions MindCraft can support in each region.'
+      'Market context across East, West, Central, Southern and North Africa, with country coverage and the decisions MindCraft can support in each region.'
   },
   'africa-intelligence': {
     name: 'Regulatory & Market Map',
@@ -118,7 +118,7 @@ export const PAGES: Record<NavTab, PageSeo> = {
     name: 'Capability Map',
     title: brand('Capability Map'),
     description:
-      "See how MindCraft's four capabilities connect to 24 industries, Africa's four regional clusters and the outcomes the work is for."
+      "See how MindCraft's four capabilities connect to 24 industries, Africa's five regional clusters and the outcomes the work is for."
   },
   'life-sciences': {
     name: 'Life Sciences',
@@ -167,7 +167,7 @@ export const PAGES: Record<NavTab, PageSeo> = {
     name: 'Senior Expertise',
     title: brand('Senior Pharmaceutical & Healthcare Expertise'),
     description:
-      'The independent pharmaceutical and healthcare consulting experience of Dayanand Poojari, based in Kenya, that MindCraft draws on.',
+      'Senior pharmaceutical and healthcare experts with more than 30 years of experience in African markets: market access, regulatory strategy and commercial excellence.',
     canonical: 'about'
   }
 };
@@ -196,7 +196,6 @@ export const INDEXABLE_TABS = ALL_TABS.filter((t) => !PAGES[t].canonical);
 
 const ORG_ID = `${SITE.origin}/#organization`;
 const SITE_ID = `${SITE.origin}/#website`;
-const PERSON_ID = `${SITE.origin}/about#dayanand-poojari`;
 
 const LIFE_SCIENCES = [
   'Pharmaceuticals',
@@ -241,25 +240,6 @@ const website = {
   name: SITE.name,
   inLanguage: 'en-GB',
   publisher: { '@id': ORG_ID }
-};
-
-/** The independent consultant whose experience MindCraft draws on (resources/2.0 Business Profile). No affiliation is claimed. */
-const person = {
-  '@type': 'Person',
-  '@id': PERSON_ID,
-  name: 'Dayanand Poojari',
-  jobTitle: 'Independent Consultant',
-  description: 'Pharmaceutical and healthcare consultant: market access, regulatory strategy and commercial excellence in African markets.',
-  homeLocation: { '@type': 'Place', name: 'Kenya' },
-  knowsAbout: [
-    'Market entry and regulatory compliance',
-    'Specialty products research and market intelligence',
-    'Go-to-market strategy and commercial effectiveness',
-    'Distributor selection and partnerships',
-    'Supply chain optimisation',
-    'Interim management',
-    'Quality management systems and ISO certification'
-  ]
 };
 
 /** The JSON-LD graph for one route. */
@@ -314,7 +294,6 @@ export const structuredData = (tab: NavTab) => {
       audience: LIFE_SCIENCES.map((name) => ({ '@type': 'BusinessAudience', audienceType: name }))
     });
   }
-  if (canonicalTab(tab) === 'about') graph.push(person);
   return { '@context': 'https://schema.org', '@graph': graph };
 };
 

@@ -38,7 +38,7 @@ const CATEGORY_LABEL: Record<LifeSciencesSector['category'], string> = {
  */
 const ILLUSTRATIVE: Record<string, { question: string; method: string; decision: string; ai: string }> = {
   pharma: {
-    question: 'How should we price and position a new biologic across East and West Africa?',
+    question: 'How should we price and position a new biologic across East, West, Central, North and Southern Africa?',
     method: 'Physician and payer interviews in each market, price-sensitivity research and competitor benchmarking.',
     decision: 'A pricing and access approach for each channel, from private hospitals to public tenders.',
     ai: 'A competitor price and tender tracker that keeps the picture current after launch.'
@@ -485,7 +485,7 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
               Senior experience <em>we draw on</em>
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-white/70">
-              MindCraft draws on the experience of {SENIOR_PROFILE.name}, an independent pharmaceutical and healthcare consultant based in {SENIOR_PROFILE.basedIn}. His work spans:
+              {SENIOR_PROFILE.summary} Their work spans:
             </p>
             <ul className="mt-5 border-t border-white/[0.1]">
               {SENIOR_AREAS.map((a) => (
@@ -495,7 +495,7 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
               ))}
             </ul>
             <button type="button" onClick={() => setActiveTab('senior-expertise')} className={`${BTN_SECONDARY} mt-7 w-full sm:w-auto`}>
-              <span>Read his profile</span>
+              <span>View senior expertise</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </motion.div>
@@ -558,7 +558,7 @@ export const LifeSciencesEcosystem: React.FC<LifeSciencesEcosystemProps> = ({ on
           <RelatedLinks
             title="Continue"
             items={[
-              { label: 'Senior expertise', desc: 'The independent consultant whose experience we draw on', to: 'senior-expertise' },
+              { label: 'Senior expertise', desc: 'Senior experts with more than 30 years in African markets', to: 'senior-expertise' },
               { label: 'Industries we serve', desc: `All ${UNIVERSAL_INDUSTRIES.length} sectors and their dossiers`, to: 'industries' },
               { label: 'Market localisation', desc: 'From global strategy to local result', to: 'localization', tone: 'emerald' },
               { label: 'Market entry', desc: 'A stepwise route into African markets', to: 'market-entry', tone: 'emerald' }

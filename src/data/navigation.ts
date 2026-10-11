@@ -106,11 +106,11 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: 'industries',
     label: 'Markets',
-    badge: '4 regions',
+    badge: '5 regions',
     wide: true,
     dropdown: [
       { id: 'industries', label: 'Industry Explorer', short: 'Industries', desc: 'Sector context and relevant capability links' },
-      { id: 'africa-explorer', label: 'African Regions', short: 'African regions', desc: 'Market context across East, West, Southern and North Africa' },
+      { id: 'africa-explorer', label: 'African Regions', short: 'African regions', desc: 'Market context across East, West, Central, Southern and North Africa' },
       { id: 'africa-intelligence', label: 'Regulatory & Market Map', short: 'Market map', desc: 'Regulatory and market context across African regions' },
       { id: 'localization', label: 'Market Localisation', short: 'Localisation', desc: 'Adapt strategy for local regulatory and commercial context' },
       { id: 'market-entry', label: 'Market Entry', short: 'Market entry', desc: 'A structured approach to entering a market' },

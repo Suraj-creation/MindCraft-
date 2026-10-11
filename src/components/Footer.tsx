@@ -4,6 +4,7 @@ import { NavTab } from '../types';
 import { BrandLogo } from './ui/BrandLogo';
 import { RouteLink } from './ui/primitives';
 import { MapPin, ShieldCheck, ArrowRight, Compass, BarChart3, GraduationCap, Cpu } from 'lucide-react';
+import dsetLogo from '../assets/DSeTC_logo_1.svg';
 
 interface FooterProps {
   setActiveTab: (tab: NavTab) => void;
@@ -130,8 +131,18 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenIntake, show
         </div>
 
         {/* Bottom strip */}
-        <div className="mt-12 pt-6 border-t border-white/10 text-xs text-white/55">
-          © 2026 MindCraft Consultancy Services. All rights reserved.
+        <div className="mt-12 pt-6 border-t border-white/10 text-xs text-white/55 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <span>© 2026 MindCraft Consultancy Services. All rights reserved.</span>
+          <a
+            href="https://dsetconsulting.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex min-h-11 items-center gap-3 text-white/60 hover:text-white transition-colors"
+          >
+            In collaboration with
+            <img src={dsetLogo} alt="DSeT Consulting" width={80} height={30} loading="lazy" decoding="async" className="h-[30px] w-20 rounded-md object-cover" />
+            <span className="sr-only">(opens in a new tab)</span>
+          </a>
         </div>
       </div>
     </footer>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { MotionConfig, motion } from 'motion/react';
+import { ArrowUpRight } from 'lucide-react';
 import { NavTab } from '../types';
-import { ContextualCTA, EASE, RelatedLinks, reveal } from './ui/primitives';
+import { BTN_SECONDARY, ContextualCTA, EASE, RelatedLinks, reveal } from './ui/primitives';
+import dsetLogo from '../assets/DSeTC_logo_1.svg';
 import { ArtImage } from './ui/ArtImage';
 import { HeroCopy, HeroSection, Scrim } from './ui/Hero';
 import { SeniorExpertiseProfile } from './SeniorExpertise';
@@ -12,22 +14,22 @@ interface AboutLeadershipProps {
 }
 
 /*
- * Every statement on this page comes from the 2026 corporate profile: vision and mission (s.1), core values (s.1),
- * what sets MindCraft apart (s.7), engagement process (s.8), delivery modalities (s.6), team and partnerships (s.9).
- * No offices besides the Nairobi headquarters, no named partners, no certifications, no figures.
+ * Vision, mission and values are the client's revised wording (October 2026). Everything else comes from the 2026
+ * corporate profile: what sets MindCraft apart (s.7), engagement process (s.8), delivery modalities (s.6), team and
+ * partnerships (s.9). No offices besides the Nairobi headquarters, no certifications, no figures.
  */
 
 const VISION =
-  "To be Africa's most trusted partner for AI-powered business growth — recognised globally for combining deep Life Sciences expertise with practical, ethical and impactful artificial intelligence adoption.";
+  'To be Africa’s most trusted partner for building businesses that last, powered by Life Sciences expertise and ethical AI.';
 const MISSION =
-  'To equip organisations across Africa, Europe and the United States with the market intelligence, strategic advisory and AI capability they need to compete, grow and lead in their industries — with a special commitment to advancing Life Sciences enterprises operating in and around the African continent.';
+  'To equip organisations with the market intelligence, strategic advisory and AI capability to compete, grow and lead, with a special commitment to Life Sciences enterprises in and around Africa.';
 
 const VALUES = [
-  { name: 'Sector depth', text: 'Advice and solutions grounded in real industry knowledge, not generic frameworks.' },
-  { name: 'Applied rigour', text: 'Research and AI outputs that are decision-ready, not academic exercises.' },
-  { name: 'African context, global standard', text: 'World-class consulting delivered with authentic local understanding.' },
-  { name: 'Responsible AI', text: 'Every AI training programme and enterprise solution built on data privacy, ethics and governance.' },
-  { name: 'Client partnership', text: 'Long-term relationships built on measurable, repeatable value.' }
+  { name: 'Sector depth', text: 'Advice grounded in real industry knowledge, especially Life Sciences, never generic frameworks.' },
+  { name: 'African roots, global standard', text: 'World-class consulting delivered with authentic local understanding, for clients across the globe.' },
+  { name: 'Applied rigour', text: 'Research, intelligence and AI outputs that are decision-ready, not academic exercises.' },
+  { name: 'Trusted partnership', text: 'Long-term relationships built on honesty and measurable, repeatable value, so the businesses we serve last.' },
+  { name: 'Ethical AI', text: 'Every AI programme and solution built on practical use, data privacy, ethics and governance.' }
 ];
 
 const APART = [
@@ -125,7 +127,7 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
                   <>
                     <span className="sr-only">About MindCraft: </span>
                     <span className="block">Sector depth.</span>{' '}
-                    <span className="block">African context.</span>{' '}
+                    <span className="block">African roots.</span>{' '}
                     <span className="block">
                       <em>Global standard.</em>
                     </span>
@@ -291,6 +293,31 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ onOpenIntake, 
                 </motion.li>
               ))}
             </ul>
+
+            <motion.div
+              {...reveal}
+              className="lg:col-span-12 grid grid-cols-1 sm:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr_auto] items-center gap-5 sm:gap-8 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5 sm:p-7"
+            >
+              {/* The supplied logo is a square tile with generous padding; cover-cropping keeps the wordmark */}
+              <img src={dsetLogo} alt="DSeT Consulting" width={128} height={48} loading="lazy" decoding="async" className="h-12 w-32 rounded-lg object-cover" />
+              <div className="min-w-0">
+                <p className="mc-meta">In collaboration with</p>
+                <h3 className="mt-1.5 font-heading text-[1.25rem] sm:text-[1.375rem] font-medium leading-tight tracking-[-0.015em] text-white">DSeT Consulting</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-white/65 max-w-[40em]">
+                  MindCraft works in collaboration with DSeT Consulting, extending the consulting and delivery capability behind our engagements.
+                </p>
+              </div>
+              <a
+                href="https://dsetconsulting.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${BTN_SECONDARY} sm:col-start-2 lg:col-start-auto w-full sm:w-auto`}
+              >
+                <span>Visit DSeT Consulting</span>
+                <ArrowUpRight className="h-4 w-4 text-indigo-400" aria-hidden="true" />
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            </motion.div>
           </div>
         </section>
 

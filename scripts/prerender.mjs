@@ -70,7 +70,7 @@ const llms = [
   '',
   `> ${SITE.description}`,
   '',
-  'MindCraft offers four connected capabilities: Business Consulting; Market Research and Intelligence; AI Training and Digital Literacy; and AI Enterprise Solutions. Engagements can start with one focused need or combine several. Africa is the primary focus market (East, West, Southern and North Africa), with clients also supported in Europe and the United States. Life Sciences is the specialist sector: Pharmaceuticals, Medical Devices, Medical Diagnostics, Medical Equipment, Surgical Consumables, and Hospitals & Healthcare Providers.',
+  'MindCraft offers four connected capabilities: Business Consulting; Market Research and Intelligence; AI Training and Digital Literacy; and AI Enterprise Solutions. Engagements can start with one focused need or combine several. Africa is the primary focus market (East, West, Central, Southern and North Africa), with clients also supported in Europe and the United States. Life Sciences is the specialist sector: Pharmaceuticals, Medical Devices, Medical Diagnostics, Medical Equipment, Surgical Consumables, and Hospitals & Healthcare Providers.',
   '',
   `Enquiries: ${SITE.email}`,
   '',

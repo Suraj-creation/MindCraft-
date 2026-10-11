@@ -8,7 +8,6 @@ import { EASE } from './primitives';
  * Sources are the generated brand illustrations supplied in src/assets (PNG, ~2 MB each). The files used here are
  * Lanczos-resized WebP copies (quality 80): `overview/<name>-<width>.webp` and `pages/<name>-<width>.webp`.
  * All of them are conceptual illustrations, not photographs of MindCraft people, clients or premises.
- * The one exception is `dayanand-portrait.webp`, the real photograph from his own consultant profile.
  */
 const files = {
   ...(import.meta.glob('../../assets/overview/*.webp', { eager: true, import: 'default' }) as Record<string, string>),

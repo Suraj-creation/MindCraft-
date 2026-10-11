@@ -1,10 +1,10 @@
 import type { NavTab } from '../types';
 
 /**
- * Senior Expertise - Dayanand Poojari.
- * Transcribed from resources/2.0 Business Profile- Dayanand Poojari.pdf.
- * Only the fields under `SENIOR_PROFILE`, `SENIOR_AREAS[].description`, `WHY_WORK_WITH` and `SENIOR_CONTACT`
- * come from the PDF. `mindcraftRelevance` / `MINDCRAFT_STRENGTHS` are MindCraft's own mapping, NOT from the PDF.
+ * Senior Expertise: the senior pharmaceutical and healthcare experts MindCraft draws on.
+ * Deliberately generic: no individual is named. Area wording is adapted from the supplied consultant profile
+ * (resources/2.0 Business Profile), rewritten for the team. `mindcraftRelevance` / `MINDCRAFT_STRENGTHS`
+ * are MindCraft's own mapping.
  */
 
 export type StrengthKey = 'life-sciences' | 'african-market' | 'regulatory' | 'commercial';
@@ -12,9 +12,9 @@ export type StrengthKey = 'life-sciences' | 'african-market' | 'regulatory' | 'c
 export interface SeniorArea {
   id: string;
   title: string;
-  /** Verbatim from the source profile (paragraph breaks preserved as array items). */
+  /** Paragraph breaks preserved as array items. */
   description: string[];
-  /** MindCraft mapping - NOT from the PDF. */
+  /** MindCraft mapping. */
   mindcraftRelevance: {
     pillar: NavTab; // consulting | market-research | ai-solutions | ai-training | life-sciences
     pillarLabel: string;
@@ -23,14 +23,13 @@ export interface SeniorArea {
 }
 
 export const SENIOR_PROFILE = {
-  name: 'Dayanand Poojari',
-  role: 'Independent Consultant',
-  positioning:
-    'Pharmaceutical & Healthcare Consultant | Market Access, Regulatory Strategy & Commercial Excellence Expert',
-  shortPositioning: 'Pharmaceutical & healthcare market access, regulatory strategy and commercial excellence',
-  basedIn: 'Kenya',
+  years: '30+',
+  positioning: 'Pharmaceutical & healthcare consulting',
+  focus: 'Market access, regulatory strategy and commercial excellence',
+  summary:
+    'MindCraft draws on senior pharmaceutical and healthcare experts with more than 30 years of experience in African markets, bringing deep local and cultural understanding and proven use cases from the field.',
   background:
-    'Based in Kenya, I am a seasoned pharmaceutical and healthcare consultant with a proven track record of helping manufacturers and companies successfully enter and expand in the African market. I specialize in providing strategic consultation and interim management services, focusing on go-to-market strategies, market access, regulatory compliance, and operational optimization.'
+    'Our senior experts have helped manufacturers and healthcare companies enter and expand across Africa for more than three decades. They know how local markets, regulators, distributors and buyers actually work, and bring strategic consultation and interim management focused on go-to-market strategy, market access, regulatory compliance and operational optimisation.'
 } as const;
 
 export const SENIOR_AREAS: SeniorArea[] = [
@@ -38,8 +37,8 @@ export const SENIOR_AREAS: SeniorArea[] = [
     id: 'market-entry-regulatory',
     title: 'Market Entry & Regulatory Compliance',
     description: [
-      'I assist pharmaceutical manufacturers in navigating complex regulatory environments, from securing local GMP certifications to registering products, medical devices, and nutraceuticals.',
-      "Whether you're stuck in the regulatory maze or need help with market access, I offer practical solutions to ensure compliance and streamline the registration process."
+      'We help pharmaceutical manufacturers navigate complex regulatory environments, from securing local GMP certifications to registering products, medical devices and nutraceuticals.',
+      'Whether a registration is stuck or market access needs a clear route, we offer practical solutions that ensure compliance and streamline the process.'
     ],
     mindcraftRelevance: { pillar: 'consulting', pillarLabel: 'Business Consulting', strengthens: ['regulatory', 'african-market'] }
   },
@@ -47,8 +46,8 @@ export const SENIOR_AREAS: SeniorArea[] = [
     id: 'specialty-research',
     title: 'Specialty Products Research & Market Intelligence',
     description: [
-      'I provide in-depth research and market analysis on specialty products, identifying emerging trends, competitive landscapes, and unmet needs within the healthcare sector.',
-      'My insights help companies make informed, data-driven decisions that align with local market demands.'
+      'In-depth research and market analysis on specialty products, identifying emerging trends, competitive landscapes and unmet needs within the healthcare sector.',
+      'The insight helps companies make informed, data-driven decisions that match local market demand.'
     ],
     mindcraftRelevance: { pillar: 'market-research', pillarLabel: 'Market Research', strengthens: ['life-sciences', 'african-market'] }
   },
@@ -56,8 +55,8 @@ export const SENIOR_AREAS: SeniorArea[] = [
     id: 'go-to-market',
     title: 'Go-to-Market Strategies & Commercial Effectiveness',
     description: [
-      'With a deep understanding of local market dynamics, I develop tailored go-to-market strategies that effectively position your products for success.',
-      'This includes commercial frameworks, pricing models, and operational strategies that maximize impact and ROI.'
+      'Built on a deep understanding of local market dynamics, we develop tailored go-to-market strategies that position products for success.',
+      'This includes commercial frameworks, pricing models and operational strategies that maximise impact and return on investment.'
     ],
     mindcraftRelevance: { pillar: 'consulting', pillarLabel: 'Business Consulting', strengthens: ['commercial', 'african-market'] }
   },
@@ -65,8 +64,8 @@ export const SENIOR_AREAS: SeniorArea[] = [
     id: 'distributor-partnerships',
     title: 'Distributor Selection & Partnerships',
     description: [
-      'My focus on distributor-based trading models allows me to identify high-potential target markets and select the right distributors to drive growth.',
-      'I leverage my extensive network to secure reliable distributor partnerships, ensuring long-term operational success and market penetration.'
+      'Experience with distributor-based trading models lets us identify high-potential target markets and select the right distributors to drive growth.',
+      'A long-standing regional network helps secure reliable distributor partnerships, for lasting operational success and market penetration.'
     ],
     mindcraftRelevance: { pillar: 'consulting', pillarLabel: 'Business Consulting', strengthens: ['commercial', 'african-market'] }
   },
@@ -74,7 +73,7 @@ export const SENIOR_AREAS: SeniorArea[] = [
     id: 'supply-chain',
     title: 'Supply Chain Optimization',
     description: [
-      'I help companies streamline their supply chain operations, improving efficiency, reducing costs, and ensuring timely product availability across the region.'
+      'We help companies streamline supply chain operations, improving efficiency, reducing costs and ensuring timely product availability across the region.'
     ],
     mindcraftRelevance: { pillar: 'consulting', pillarLabel: 'Business Consulting', strengthens: ['commercial', 'life-sciences'] }
   },
@@ -82,7 +81,7 @@ export const SENIOR_AREAS: SeniorArea[] = [
     id: 'interim-management',
     title: 'Interim Management & Operational Support',
     description: [
-      'I provide hands-on interim management services to guide organizations through transitional phases, ensuring smooth operational processes and sustained business growth.'
+      'Hands-on interim management that guides organisations through transitional phases, keeping operations running smoothly and growth sustained.'
     ],
     mindcraftRelevance: { pillar: 'consulting', pillarLabel: 'Business Consulting', strengthens: ['commercial'] }
   },
@@ -90,9 +89,9 @@ export const SENIOR_AREAS: SeniorArea[] = [
     id: 'quality-systems',
     title: 'Quality Management Systems & Certification',
     description: [
-      'I support companies in developing, implementing, and optimizing robust quality management systems aligned with international benchmarks.',
-      'I guide organizations through the full ISO certification lifecycle, including ISO 9001 and all related frameworks, helping ensure compliance with global and regional quality standards.',
-      "My expertise streamlines the path to certification, bolsters regulatory readiness, and enhances your organization's reputation for operational excellence and product quality in the African market."
+      'We support companies in developing, implementing and optimising robust quality management systems aligned with international benchmarks.',
+      'That includes the full ISO certification lifecycle, including ISO 9001 and related frameworks, for compliance with global and regional quality standards.',
+      'The result is a faster path to certification, stronger regulatory readiness and a reputation for operational excellence and product quality in African markets.'
     ],
     mindcraftRelevance: { pillar: 'consulting', pillarLabel: 'Business Consulting', strengthens: ['regulatory', 'life-sciences'] }
   }
@@ -101,26 +100,21 @@ export const SENIOR_AREAS: SeniorArea[] = [
 export const WHY_WORK_WITH = [
   {
     title: 'Deep Industry Experience',
-    text: 'In-depth knowledge of African pharmaceutical and healthcare markets ensures strategic guidance.'
+    text: 'More than 30 years in African pharmaceutical and healthcare markets, so guidance rests on how those markets really work.'
   },
   {
-    title: 'Consulting Expertise',
-    text: 'Proven ability to tackle regulatory challenges and optimize commercial strategies effectively.'
+    title: 'Local and Cultural Understanding',
+    text: 'First-hand knowledge of local regulators, distributors, buyers and business culture across the continent.'
   },
   {
     title: 'Rapid Value Creation',
-    text: 'Delivering actionable insights and solutions to accelerate growth and achieve business success.'
+    text: 'Proven use cases and practical solutions that tackle regulatory challenges and accelerate commercial growth.'
   }
 ] as const;
 
-export const SENIOR_CONTACT = {
-  email: 'dayapoojari@gmail.com',
-  phone: '+254-720572553'
-} as const;
-
-/** MindCraft mapping - NOT from the PDF. How the expertise strengthens the firm. */
+/** MindCraft mapping. How the expertise strengthens the firm. */
 export const MINDCRAFT_STRENGTHS: { key: StrengthKey; label: string; note: string }[] = [
-  { key: 'life-sciences', label: 'Life Sciences authority', note: 'Pharmaceutical and healthcare depth behind MindCraft\'s core sector.' },
+  { key: 'life-sciences', label: 'Life Sciences depth', note: "Pharmaceutical and healthcare experience relevant to MindCraft's core sector." },
   { key: 'african-market', label: 'African market knowledge', note: 'Practical entry and expansion experience in African markets.' },
   { key: 'regulatory', label: 'Regulatory capability', note: 'GMP, product registration and quality-system certification.' },
   { key: 'commercial', label: 'Commercial expertise', note: 'Go-to-market, pricing, distributors and supply chain.' }

@@ -1,25 +1,16 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowRight, ChevronDown, Mail, Phone } from 'lucide-react';
+import { ArrowRight, ChevronDown, Mail } from 'lucide-react';
 import type { NavTab } from '../types';
 import { BTN_PRIMARY, BTN_SECONDARY, EASE, TONES, reveal } from './ui/primitives';
 import type { Tone } from './ui/primitives';
 import { Illumination } from './ui/Hero';
-import portrait from '../assets/pages/dayanand-portrait.webp';
-import {
-  MINDCRAFT_STRENGTHS,
-  SENIOR_AREAS,
-  SENIOR_CONTACT,
-  SENIOR_PROFILE,
-  WHY_WORK_WITH,
-  type StrengthKey
-} from '../data/seniorExpertise';
+import { SITE } from '../lib/seo';
+import { MINDCRAFT_STRENGTHS, SENIOR_AREAS, SENIOR_PROFILE, WHY_WORK_WITH, type StrengthKey } from '../data/seniorExpertise';
 
 /*
- * Dayanand Poojari is an independent consultant whose experience MindCraft draws on.
- * Everything attributed to him (positioning, background, area descriptions, "why work with") is shown verbatim
- * from his own business profile. The pillar and strength mapping is MindCraft's and is labelled as such.
- * The photograph is the real one from his consultant profile; it is shown at its natural size or smaller.
+ * The senior pharmaceutical and healthcare experts MindCraft draws on, presented as a team: no individual is named.
+ * The pillar and strength mapping is MindCraft's and is labelled as such.
  */
 
 const PILLAR_TONE: Partial<Record<NavTab, Tone>> = {
@@ -30,66 +21,13 @@ const PILLAR_TONE: Partial<Record<NavTab, Tone>> = {
   'life-sciences': 'indigo'
 };
 
-/* Display copy for MindCraft's own mapping. Overrides wording that overstated the relationship
-   ("authority", "depth behind MindCraft's core sector"); the data file still needs the same fix. */
-const STRENGTH_COPY: Partial<Record<StrengthKey, { label?: string; note?: string }>> = {
-  'life-sciences': {
-    label: 'Life Sciences depth',
-    note: "Pharmaceutical and healthcare experience relevant to MindCraft's core sector."
-  }
-};
-const strengthLabel = (key: StrengthKey) =>
-  STRENGTH_COPY[key]?.label ?? MINDCRAFT_STRENGTHS.find((s) => s.key === key)?.label ?? key;
+const strengthLabel = (key: StrengthKey) => MINDCRAFT_STRENGTHS.find((s) => s.key === key)?.label ?? key;
 
 /** "Go-to-Market Strategies & Commercial Effectiveness" -> "Go-to-market strategies & commercial effectiveness" */
 const sentenceCase = (s: string) => s.charAt(0) + s.slice(1).toLowerCase();
 
-const [positioningRole, positioningFocus] = SENIOR_PROFILE.positioning.split(' | ');
-const telHref = `tel:${SENIOR_CONTACT.phone.replace(/[^+\d]/g, '')}`;
-
 /* ------------------------------------------------------------------ */
-/** Compact card (not currently placed on any page). Links through to the full profile. */
-export const SeniorExpertiseCard: React.FC<{ onOpenProfile: () => void }> = ({ onOpenProfile }) => {
-  const chips = [SENIOR_AREAS[0], SENIOR_AREAS[2], SENIOR_AREAS[3]];
-  return (
-    <motion.article
-      {...reveal}
-      aria-labelledby="se-card-title"
-      className="rounded-2xl border border-white/10 bg-[#0a0a0a] p-5 sm:p-7 grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-center"
-    >
-      <img
-        src={portrait}
-        width={220}
-        height={248}
-        alt={`Portrait of ${SENIOR_PROFILE.name}`}
-        loading="lazy"
-        decoding="async"
-        className="h-[4.5rem] w-16 rounded-lg border border-white/10 object-cover"
-      />
-      <div className="min-w-0">
-        <span className="mc-eyebrow">Senior expertise · independent consultant</span>
-        <h3 id="se-card-title" className="font-heading text-xl sm:text-2xl font-medium text-white mt-2">
-          {SENIOR_PROFILE.name}
-        </h3>
-        <p className="mt-1.5 text-sm text-white/65 leading-snug max-w-xl">{SENIOR_PROFILE.shortPositioning}.</p>
-        <ul className="mt-4 flex flex-wrap gap-2">
-          {chips.map((c) => (
-            <li key={c.id} className="px-3 py-1.5 rounded-full border border-white/10 bg-[#0d0f17] text-xs text-white/75">
-              {sentenceCase(c.title)}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <button type="button" onClick={onOpenProfile} className={BTN_SECONDARY}>
-        <span>View senior expertise</span>
-        <ArrowRight className="w-4 h-4 text-indigo-400" aria-hidden="true" />
-      </button>
-    </motion.article>
-  );
-};
-
-/* ------------------------------------------------------------------ */
-/** One area of expertise: a ruled row that opens to his own description and MindCraft's mapping. */
+/** One area of expertise: a ruled row that opens to its description and MindCraft's mapping. */
 const AreaRow: React.FC<{
   area: (typeof SENIOR_AREAS)[number];
   index: number;
@@ -187,46 +125,29 @@ export const SeniorExpertiseProfile: React.FC<{
       <Illumination tone="indigo" strength={0.55} className="-left-48 -top-40 h-[34rem] w-[34rem]" />
 
       <div className="mc-container relative">
-        {/* Opening: the label spans the row, so the real portrait and his name share one top edge */}
+        {/* Opening: the label spans the row, so the experience figure and the heading share one top edge */}
         <p className="mc-meta mb-6 sm:mb-8" aria-hidden="true">
           Senior expertise
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-[11rem_1fr] lg:grid-cols-[13.75rem_1fr] gap-8 sm:gap-10 lg:gap-16 items-start">
-          <motion.div {...reveal} className="w-44 sm:w-full">
-            <img
-              src={portrait}
-              width={220}
-              height={248}
-              alt={`Portrait of ${SENIOR_PROFILE.name}`}
-              loading="lazy"
-              decoding="async"
-              className="block h-auto w-full rounded-xl border border-white/10"
-            />
+          <motion.div {...reveal} className="sm:border-t sm:border-indigo-400/60 sm:pt-5">
+            <p className="font-heading text-[4.5rem] sm:text-[5rem] lg:text-[6rem] font-medium leading-none tracking-[-0.04em] text-indigo-300 tabular-nums">
+              {SENIOR_PROFILE.years}
+            </p>
+            <p className="mt-3 max-w-[12rem] text-[14px] leading-snug text-white/65">years of pharmaceutical and healthcare experience in African markets</p>
           </motion.div>
 
           <motion.div {...reveal} transition={{ ...reveal.transition, delay: 0.05 }} className="min-w-0">
             <h2 id="se-title" className="mc-h1">
-              <span className="sr-only">Senior expertise: </span>
-              {SENIOR_PROFILE.name}
+              Senior experts, <em>three decades</em> in the field
             </h2>
-            <p className="mt-3 text-[15px] font-medium text-indigo-300">Independent consultant · based in {SENIOR_PROFILE.basedIn}</p>
+            <p className="mt-3 text-[15px] font-medium text-indigo-300">
+              {SENIOR_PROFILE.positioning} · {SENIOR_PROFILE.focus}
+            </p>
 
             <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-              <div>
-                <p className="font-heading text-[1.25rem] sm:text-[1.5rem] font-medium leading-snug tracking-[-0.015em] text-white">
-                  {positioningRole}
-                  {positioningFocus && <span className="block mt-1 text-white/65">{positioningFocus}</span>}
-                </p>
-                <p className="mt-5 text-[15px] leading-relaxed text-white/65 max-w-[30em]">
-                  He works as an independent consultant. MindCraft draws on his pharmaceutical and healthcare experience where a Life Sciences engagement calls for it.
-                </p>
-              </div>
-              <figure className="lg:border-l lg:border-white/[0.1] lg:pl-12">
-                <blockquote className="text-[15px] leading-relaxed text-white/75">
-                  <p>“{SENIOR_PROFILE.background}”</p>
-                </blockquote>
-                <figcaption className="mt-3 text-[13px] text-white/50">In his words, from his business profile</figcaption>
-              </figure>
+              <p className="font-heading text-[1.25rem] sm:text-[1.5rem] font-medium leading-snug tracking-[-0.015em] text-white">{SENIOR_PROFILE.summary}</p>
+              <p className="text-[15px] leading-relaxed text-white/70 lg:border-l lg:border-white/[0.1] lg:pl-12">{SENIOR_PROFILE.background}</p>
             </div>
           </motion.div>
         </div>
@@ -236,23 +157,23 @@ export const SeniorExpertiseProfile: React.FC<{
           <motion.div {...reveal} className="lg:col-span-4 lg:sticky lg:top-28 lg:self-start">
             <h3 className="mc-h2">{SENIOR_AREAS.length === 7 ? 'Seven' : SENIOR_AREAS.length} areas of expertise</h3>
             <p className="mt-4 text-[15px] leading-relaxed text-white/65">
-              Each description is in his own words. Open an area to read it and to see where MindCraft maps it.
+              Open an area to see how our senior experts help, and where MindCraft maps it.
             </p>
 
             <div className="mt-8 border-t border-white/[0.1] pt-6">
               <h4 className="text-[13px] font-medium text-white/80">MindCraft's mapping</h4>
-              <p className="mt-1 text-[13px] leading-snug text-white/50">Our reading of where this experience meets our work. Not part of his profile.</p>
+              <p className="mt-1 text-[13px] leading-snug text-white/50">Our reading of where this experience meets our four capabilities.</p>
               <ul className="mt-5 space-y-4">
                 {MINDCRAFT_STRENGTHS.map((s) => {
                   const count = SENIOR_AREAS.filter((a) => a.mindcraftRelevance.strengthens.includes(s.key)).length;
                   return (
                     <li key={s.key} className="grid grid-cols-[1fr_auto] gap-x-4">
-                      <span className="text-sm font-medium text-white">{STRENGTH_COPY[s.key]?.label ?? s.label}</span>
+                      <span className="text-sm font-medium text-white">{s.label}</span>
                       <span className="font-mono text-[12px] text-indigo-300/85 tabular-nums">
                         {count}/{SENIOR_AREAS.length}
                         <span className="sr-only"> areas</span>
                       </span>
-                      <span className="col-span-2 mt-0.5 text-[13px] leading-snug text-white/55">{STRENGTH_COPY[s.key]?.note ?? s.note}</span>
+                      <span className="col-span-2 mt-0.5 text-[13px] leading-snug text-white/55">{s.note}</span>
                     </li>
                   );
                 })}
@@ -274,12 +195,9 @@ export const SeniorExpertiseProfile: React.FC<{
           </ol>
         </div>
 
-        {/* Why work with him, as his profile states it */}
+        {/* Why work with our senior experts */}
         <motion.div {...reveal} className="mt-16 sm:mt-24">
-          <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-            <h3 className="font-heading text-[1.375rem] sm:text-[1.625rem] font-medium tracking-[-0.015em] text-white">Why work with him</h3>
-            <p className="text-[13px] text-white/50">As stated in his business profile</p>
-          </div>
+          <h3 className="font-heading text-[1.375rem] sm:text-[1.625rem] font-medium tracking-[-0.015em] text-white">Why work with our senior experts</h3>
           <ul className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-x-10">
             {WHY_WORK_WITH.map((w) => (
               <li key={w.title} className="border-t border-white/[0.12] py-5">
@@ -290,33 +208,21 @@ export const SeniorExpertiseProfile: React.FC<{
           </ul>
         </motion.div>
 
-        {/* Close: contact him directly, or bring the question to MindCraft */}
+        {/* Close: write to the team, or bring the question to MindCraft */}
         <motion.div
           {...reveal}
           className="mt-14 sm:mt-20 grid grid-cols-1 lg:grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.08]"
         >
           <div className="bg-[#0a0a0a] p-6 sm:p-8">
-            <h3 className="font-heading text-[1.25rem] font-medium text-white">Contact {SENIOR_PROFILE.name.split(' ')[0]} directly</h3>
-            <ul className="mt-4 flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2" aria-label="Expert contact details">
-              <li>
-                <a
-                  href={`mailto:${SENIOR_CONTACT.email}`}
-                  className="mc-tap w-full px-4 rounded-xl border border-white/10 hover:border-white/25 text-sm text-white/80 hover:text-white inline-flex items-center gap-2 transition-colors duration-150 break-all"
-                >
-                  <Mail className="w-4 h-4 text-indigo-400 shrink-0" aria-hidden="true" />
-                  {SENIOR_CONTACT.email}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={telHref}
-                  className="mc-tap w-full px-4 rounded-xl border border-white/10 hover:border-white/25 text-sm text-white/80 hover:text-white inline-flex items-center gap-2 transition-colors duration-150"
-                >
-                  <Phone className="w-4 h-4 text-indigo-400 shrink-0" aria-hidden="true" />
-                  {SENIOR_CONTACT.phone}
-                </a>
-              </li>
-            </ul>
+            <h3 className="font-heading text-[1.25rem] font-medium text-white">Speak to our senior experts</h3>
+            <p className="mt-2 text-[15px] leading-relaxed text-white/65 max-w-[30em]">Write to us and we will connect you with the right expert.</p>
+            <a
+              href={`mailto:${SITE.email}`}
+              className="mc-tap mt-4 px-4 rounded-xl border border-white/10 hover:border-white/25 text-sm text-white/80 hover:text-white inline-flex items-center gap-2 transition-colors duration-150 break-all"
+            >
+              <Mail className="w-4 h-4 text-indigo-400 shrink-0" aria-hidden="true" />
+              {SITE.email}
+            </a>
           </div>
           <div className="bg-[#0a0a0a] p-6 sm:p-8">
             <h3 className="font-heading text-[1.25rem] font-medium text-white">Or bring the question to MindCraft</h3>
