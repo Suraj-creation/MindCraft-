@@ -445,7 +445,8 @@ export const AITrainingSimulation: React.FC<AITrainingSimulationProps> = ({ onOp
                 { label: 'AI Enterprise Solutions', desc: 'Pair custom AI software with users who adopt it.', to: 'ai-solutions', tone: 'emerald' },
                 { label: 'Business Consulting', desc: 'Align workforce readiness with strategic transformation.', to: 'consulting', tone: 'teal' },
                 { label: 'Market localisation', desc: 'Harmonised programmes across regulatory and language environments.', to: 'localization', tone: 'amber' },
-                { label: 'Senior expertise', desc: 'Life Sciences experience behind the sector briefings.', to: 'senior-expertise', tone: 'indigo' }
+                { label: 'Senior expertise', desc: 'Life Sciences experience behind the sector briefings.', to: 'senior-expertise', tone: 'indigo' },
+                { label: 'Sketch an engagement', desc: '13 practice areas & 89 specialized healthcare services.', to: 'engagement-builder', tone: 'indigo' }
               ]}
             />
           </div>

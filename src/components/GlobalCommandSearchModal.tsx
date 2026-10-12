@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA, PROBLEM_CROSS_SECTIONS } from '../data/industryAndAfricaData';
 import { SERVICE_PILLARS } from '../data/mindcraftData';
+import { ENGAGEMENT_DOMAINS, ALL_ENGAGEMENT_SERVICES } from '../data/engagementTaxonomy';
 import { NavTab } from '../types';
 
 interface Props {
@@ -158,10 +159,35 @@ export const GlobalCommandSearchModal: React.FC<Props> = ({
       id: p.id
     }));
 
-    return [...industries, ...regions, ...problems, ...pillars];
+    const domains = ENGAGEMENT_DOMAINS.filter(d =>
+      d.title.toLowerCase().includes(q) ||
+      d.subtitle.toLowerCase().includes(q) ||
+      d.description.toLowerCase().includes(q)
+    ).map(d => ({
+      type: 'Practice Area',
+      title: `${d.id < 10 ? `0${d.id}` : d.id}. ${d.title}`,
+      subtitle: `${d.services.length} services · ${d.subtitle}`,
+      tab: 'engagement-builder' as NavTab,
+      id: d.slug
+    }));
+
+    const services = ALL_ENGAGEMENT_SERVICES.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      s.briefExplanation.toLowerCase().includes(q) ||
+      s.scopeDetail.toLowerCase().includes(q)
+    ).map(s => ({
+      type: 'Engagement Solution',
+      title: s.name,
+      subtitle: `[${s.domainName}] ${s.briefExplanation}`,
+      tab: 'engagement-builder' as NavTab,
+      id: s.id
+    }));
+
+    return [...services, ...domains, ...pillars, ...problems, ...industries, ...regions];
   }, [query]);
 
   const gateways: { tab: NavTab; label: string; sub: string; Icon: React.ElementType; color: string }[] = [
+    { tab: 'engagement-builder', label: 'Sketch an Engagement', sub: '13 Practice Areas & 89 Specialized Solutions', Icon: Layers, color: 'text-indigo-400' },
     { tab: 'industries', label: 'Universal Industry Explorer', sub: '24 Sectors (Pharma, Devices, Telco, Energy...)', Icon: Building2, color: 'text-indigo-400' },
     { tab: 'africa-explorer', label: 'Africa Intelligence Hub', sub: `${AFRICA_REGIONS_DATA.length} Regional Clusters & ${AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0)} Jurisdictions`, Icon: Globe2, color: 'text-emerald-400' },
     { tab: 'market-entry', label: '9-Step Market Entry Framework', sub: 'De-risk entry into any African market', Icon: Compass, color: 'text-sky-400' },

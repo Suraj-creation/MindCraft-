@@ -255,7 +255,7 @@ const PROCESS = [
   { stage: 'Follow-up', body: 'Optional coaching, refresher training or enhancements.' }
 ];
 
-export const ApproachSection: React.FC<SectionProps> = () => (
+export const ApproachSection: React.FC<SectionProps> = ({ setActiveTab }) => (
   <section className="mc-section mc-editorial-band" id="approach" aria-labelledby="approach-title">
     <div className="mc-container">
       <SectionHeader
@@ -285,6 +285,30 @@ export const ApproachSection: React.FC<SectionProps> = () => (
           </li>
         ))}
       </ol>
+
+      {/* Direct gateway to 13-domain engagement builder */}
+      <div className="mt-12 p-6 rounded-2xl bg-[#050505] border border-indigo-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-400">
+            <span className="w-2 h-2 rounded-full bg-indigo-400" />
+            <span>Interactive Scope Architecture</span>
+          </div>
+          <h3 className="text-lg font-medium text-white mt-1">
+            Sketch an engagement before we talk:
+          </h3>
+          <p className="text-sm text-white/70 mt-1 max-w-2xl">
+            Explore 13 practice areas and 89 specialized services across Strategy & Feasibility, Regulatory & Compliance, QMS, Distribution, Tenders, Localization, Infrastructure, and AI to generate an indicative brief.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setActiveTab('engagement-builder')}
+          className="mc-tap px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition-colors shrink-0 inline-flex items-center gap-2 active:scale-[0.98]"
+        >
+          <span>Sketch an engagement</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   </section>
 );

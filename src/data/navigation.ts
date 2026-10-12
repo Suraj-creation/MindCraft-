@@ -126,7 +126,7 @@ export const NAV_ITEMS: NavItem[] = [
       { id: 'about', label: 'About MindCraft', short: 'About MindCraft', desc: 'Vision, mission, values and how we engage' },
       { id: 'senior-expertise', label: 'Senior Expertise', short: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting experience we draw on' },
       { id: 'insights', label: 'Insights', short: 'Insights', desc: 'Perspectives on Life Sciences, Africa and applied AI' },
-      { id: 'engagement-builder', label: 'Engagement Builder', short: 'Engagement builder', desc: 'Sketch an indicative brief before a conversation' }
+      { id: 'engagement-builder', label: 'Engagement Builder', short: 'Engagement builder', desc: 'Sketch an engagement brief across 13 practice areas & 89 services' }
     ]
   }
 ];

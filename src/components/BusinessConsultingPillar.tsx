@@ -104,7 +104,8 @@ export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> =
       tone: 'teal' as const
     })),
     { label: 'Market localisation', desc: 'From global strategy to local result', to: 'localization', tone: 'emerald' as const },
-    { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth', to: 'senior-expertise' }
+    { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth', to: 'senior-expertise' },
+    { label: 'Sketch an engagement', desc: '13 practice areas & 89 specialized healthcare services', to: 'engagement-builder', tone: 'indigo' as const }
   ];
 
   return (

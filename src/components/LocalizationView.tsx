@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowRight, MapPinned } from 'lucide-react';
+import { ArrowRight, MapPinned, Factory } from 'lucide-react';
 import { NavTab } from '../types';
 import { AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { AFRICAN_COUNTRIES, SERVICE_PILLARS } from '../data/mindcraftData';
+import { ENGAGEMENT_DOMAINS } from '../data/engagementTaxonomy';
 import { ContextualCTA, DeepDive, EASE, PageHeader, RelatedLinks, SectionHeader, TONES } from './ui/primitives';
 import { LocalizationModule } from './LocalizationModule';
 import { ArtImage } from './ui/ArtImage';
@@ -212,6 +213,51 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
+        </div>
+      </section>
+
+      {/* Domain 7: Localization & Manufacturing Services */}
+      <section className="mc-section bg-[#070707] border-y border-white/[0.08]" aria-labelledby="localization-manufacturing-title">
+        <div className="mc-container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">
+                <Factory className="w-4 h-4" />
+                <span>Practice Area 07 · Healthcare Localization & Manufacturing</span>
+              </div>
+              <h2 id="localization-manufacturing-title" className="font-heading text-2xl sm:text-3xl font-medium text-white">
+                From Import Reliance to Compliant Domestic Production.
+              </h2>
+              <p className="mt-2 text-sm text-white/70 max-w-2xl">
+                Transition to local manufacturing through greenfield facility setup, technology transfer, CMO/CDMO partnerships, and WHO/GMP compliant process validation.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onNavigate('engagement-builder')}
+              className="mc-tap px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors shrink-0 inline-flex items-center gap-2 active:scale-[0.98]"
+            >
+              <span>Sketch localization scope</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {ENGAGEMENT_DOMAINS.find(d => d.id === 7)?.services.map((svc) => (
+              <div
+                key={svc.id}
+                className="p-4 rounded-xl bg-[#0a0a0a] border border-white/10 flex flex-col justify-between"
+              >
+                <div>
+                  <h3 className="text-sm font-bold text-white mb-1.5">{svc.name}</h3>
+                  <p className="text-xs text-white/70 leading-relaxed">{svc.briefExplanation}</p>
+                </div>
+                <div className="mt-3 pt-2 border-t border-white/[0.06] text-[11px] text-emerald-400 font-medium">
+                  {svc.typicalDeliverables[0]}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

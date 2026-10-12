@@ -547,7 +547,8 @@ export const AIEnterpriseSolutionsView: React.FC<AIEnterpriseSolutionsViewProps>
                 { label: 'Market Research', desc: 'Turn periodic studies into continuous intelligence monitoring.', to: 'market-research', tone: 'sky' },
                 { label: 'AI Training & Literacy', desc: 'Make sure the people using the system adopt it.', to: 'ai-training', tone: 'amber' },
                 { label: 'Market localisation', desc: 'Adapt solutions to each country’s regulatory and market context.', to: 'localization', tone: 'emerald' },
-                { label: 'Senior expertise', desc: 'The Life Sciences experience behind these solutions.', to: 'senior-expertise', tone: 'indigo' }
+                { label: 'Senior expertise', desc: 'The Life Sciences experience behind these solutions.', to: 'senior-expertise', tone: 'indigo' },
+                { label: 'Sketch an engagement', desc: '13 practice areas & 89 specialized healthcare services.', to: 'engagement-builder', tone: 'indigo' }
               ]}
             />
           </div>

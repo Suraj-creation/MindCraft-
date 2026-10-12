@@ -261,6 +261,10 @@ export interface EngagementBlueprint {
   geography: string;
   need: string;
   objective: string;
+  selectedServices?: string[];
+  selectedDomains?: string[];
+  selectedCountries?: string[];
+  selectedCapabilityAreas?: string[];
   workstreams: {
     pillar: string;
     scope: string;

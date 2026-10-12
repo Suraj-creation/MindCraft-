@@ -2,13 +2,16 @@ import React, { useState, useEffect, useRef, useId } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { EngagementBlueprint } from '../types';
 import { UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
+import { ENGAGEMENT_DOMAINS } from '../data/engagementTaxonomy';
 import {
   X,
   CheckCircle2,
   ArrowRight,
   ArrowLeft,
   Copy,
-  Mail
+  Mail,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 
 interface EngagementIntakeModalProps {
@@ -30,14 +33,18 @@ const OPTIONAL = <span className="font-normal text-white/50"> (optional)</span>;
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
-/** Option values match the Engagement Builder's blueprint values so a blueprint pre-fills cleanly. */
+/** Option values match the Engagement Builder's blueprint values and 13 domains. */
 const NEEDS: { value: string; label: string }[] = [
   { value: 'Not sure yet', label: 'Not sure yet: help me work it out' },
-  { value: 'Integrated Multi-Pillar (Strategy + Research + AI)', label: 'A combination of capabilities' },
-  { value: 'Business Consulting & Strategic Advisory', label: 'Business Consulting' },
-  { value: 'Market Research & Commercial Evidence', label: 'Market Research & Intelligence' },
+  { value: 'Integrated Multi-Pillar (Strategy + Research + AI)', label: 'A combination of capabilities (Multi-Pillar)' },
+  ...ENGAGEMENT_DOMAINS.map(d => ({
+    value: d.title,
+    label: `${d.id < 10 ? `0${d.id}` : d.id}. ${d.title} (${d.services.length} services)`
+  })),
+  { value: 'Business Consulting & Strategic Advisory', label: 'Business Consulting & Strategic Advisory' },
+  { value: 'Market Research & Commercial Evidence', label: 'Market Research & Commercial Evidence' },
   { value: 'AI Training & Organizational Capability', label: 'AI Training & Digital Literacy' },
-  { value: 'AI Enterprise Solutions & Engineering', label: 'AI Enterprise Solutions' }
+  { value: 'AI Enterprise Solutions & Engineering', label: 'AI Enterprise Solutions & Engineering' }
 ];
 
 const TIMELINES = ['Within the next month', 'Within 3 months', 'Within 6 months', 'Exploring options for now'];
@@ -166,20 +173,39 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
 
   const needLabel = NEEDS.find((n) => n.value === pillarNeed)?.label ?? pillarNeed;
 
-  const summary = (ref = referenceId) =>
-    [
+  const summary = (ref = referenceId) => {
+    const countriesSection = initialBlueprint?.selectedCountries && initialBlueprint.selectedCountries.length > 0
+      ? `Target African Markets (${initialBlueprint.selectedCountries.length}): ${initialBlueprint.selectedCountries.join(', ')}`
+      : `Markets in scope: ${targetMarkets.trim() || 'Not specified'}`;
+
+    const capabilityNeedsSection = initialBlueprint?.selectedCapabilityAreas && initialBlueprint.selectedCapabilityAreas.length > 0
+      ? `Capability Areas (${initialBlueprint.selectedCapabilityAreas.length}): ${initialBlueprint.selectedCapabilityAreas.join(', ')}`
+      : '';
+
+    const servicesSection = initialBlueprint?.selectedServices && initialBlueprint.selectedServices.length > 0
+      ? [
+          '',
+          `Selected Scope Items (${initialBlueprint.selectedServices.length}):`,
+          ...initialBlueprint.selectedServices.map((s) => `• ${s}`)
+        ]
+      : [];
+
+    return [
       `Reference: ${ref}`,
       `Name: ${fullName.trim()}${roleTitle.trim() ? `, ${roleTitle.trim()}` : ''}`,
       `Email: ${email.trim()}`,
       `Organisation: ${organization.trim()}`,
       `Industry: ${sector || 'Not specified'}`,
       `Support needed: ${needLabel}`,
-      `Markets in scope: ${targetMarkets.trim() || 'Not specified'}`,
+      ...(capabilityNeedsSection ? [capabilityNeedsSection] : []),
+      countriesSection,
       `Timing: ${timelineUrgency}`,
+      ...servicesSection,
       '',
       'Challenge:',
       challengeDescription.trim() || 'Not specified'
     ].join('\n');
+  };
 
   const mailtoHref = (ref = referenceId) => {
     const subject = `Enquiry from ${organization.trim() || fullName.trim()} [${ref}]`;
@@ -424,6 +450,55 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
                             className={FIELD_CLASS}
                           />
                         </div>
+
+                        {initialBlueprint?.selectedCountries && initialBlueprint.selectedCountries.length > 0 && (
+                          <div className="p-3 rounded-xl bg-[#050505] border border-emerald-500/30 space-y-1.5">
+                            <span className="text-xs font-semibold text-emerald-400">
+                              Selected African Markets ({initialBlueprint.selectedCountries.length}):
+                            </span>
+                            <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto pr-1">
+                              {initialBlueprint.selectedCountries.map((c) => (
+                                <span key={c} className="text-[11px] px-2 py-0.5 rounded-md bg-[#0a0a0a] border border-emerald-500/30 text-emerald-300">
+                                  {c}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {initialBlueprint?.selectedCapabilityAreas && initialBlueprint.selectedCapabilityAreas.length > 0 && (
+                          <div className="p-3 rounded-xl bg-[#050505] border border-indigo-500/30 space-y-1.5">
+                            <span className="text-xs font-semibold text-indigo-400">
+                              Selected Capability Needs ({initialBlueprint.selectedCapabilityAreas.length}):
+                            </span>
+                            <div className="flex flex-wrap gap-1">
+                              {initialBlueprint.selectedCapabilityAreas.map((a) => (
+                                <span key={a} className="text-[11px] px-2 py-0.5 rounded-md bg-[#0a0a0a] border border-indigo-500/30 text-indigo-300">
+                                  {a}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {initialBlueprint?.selectedServices && initialBlueprint.selectedServices.length > 0 && (
+                          <div className="p-3.5 rounded-xl bg-indigo-950/30 border border-indigo-500/30 space-y-2">
+                            <div className="text-xs font-semibold text-indigo-300 flex items-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                              <span>Pre-selected Scope from Engagement Builder ({initialBlueprint.selectedServices.length} items):</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+                              {initialBlueprint.selectedServices.map((svc) => (
+                                <span
+                                  key={svc}
+                                  className="text-[11px] px-2 py-0.5 rounded-md bg-[#050505] border border-white/10 text-white/90"
+                                >
+                                  • {svc}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -501,6 +576,51 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
                             <dd className="font-semibold text-white">{timelineUrgency}</dd>
                           </div>
                         </div>
+
+                        {initialBlueprint?.selectedCountries && initialBlueprint.selectedCountries.length > 0 && (
+                          <div className="pt-3 border-t border-white/[0.08] text-sm">
+                            <dt className="text-emerald-400/90 text-xs font-medium mb-1">
+                              Target African Markets ({initialBlueprint.selectedCountries.length})
+                            </dt>
+                            <dd className="text-white/80 text-xs flex flex-wrap gap-1 max-h-24 overflow-y-auto pr-1">
+                              {initialBlueprint.selectedCountries.map((c) => (
+                                <span key={c} className="px-2 py-0.5 rounded bg-[#0a0a0a] border border-emerald-500/30 text-emerald-300">
+                                  {c}
+                                </span>
+                              ))}
+                            </dd>
+                          </div>
+                        )}
+
+                        {initialBlueprint?.selectedCapabilityAreas && initialBlueprint.selectedCapabilityAreas.length > 0 && (
+                          <div className="pt-3 border-t border-white/[0.08] text-sm">
+                            <dt className="text-indigo-400/90 text-xs font-medium mb-1">
+                              Capability Areas ({initialBlueprint.selectedCapabilityAreas.length})
+                            </dt>
+                            <dd className="text-white/80 text-xs flex flex-wrap gap-1">
+                              {initialBlueprint.selectedCapabilityAreas.map((a) => (
+                                <span key={a} className="px-2 py-0.5 rounded bg-[#0a0a0a] border border-indigo-500/30 text-indigo-300">
+                                  {a}
+                                </span>
+                              ))}
+                            </dd>
+                          </div>
+                        )}
+
+                        {initialBlueprint?.selectedServices && initialBlueprint.selectedServices.length > 0 && (
+                          <div className="pt-3 border-t border-white/[0.08] text-sm">
+                            <dt className="text-white/50 text-xs font-medium mb-1">
+                              Selected Scope ({initialBlueprint.selectedServices.length} items)
+                            </dt>
+                            <dd className="text-white/80 text-xs flex flex-wrap gap-1">
+                              {initialBlueprint.selectedServices.map(s => (
+                                <span key={s} className="px-2 py-0.5 rounded bg-[#0a0a0a] border border-white/10">
+                                  {s}
+                                </span>
+                              ))}
+                            </dd>
+                          </div>
+                        )}
 
                         <div className="text-sm">
                           <dt className="text-white/50 text-xs font-medium">Challenge</dt>

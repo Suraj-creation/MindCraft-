@@ -453,7 +453,8 @@ export const MarketResearchWorkspace: React.FC<MarketResearchWorkspaceProps> = (
               { label: 'Business Consulting', desc: 'Turn field evidence into a strategy and a plan.', to: 'consulting', tone: 'teal' },
               { label: 'AI Enterprise Solutions', desc: 'Move from periodic studies to ongoing monitoring.', to: 'ai-solutions', tone: 'emerald' },
               { label: 'Market localisation', desc: 'Carry findings into country-specific execution.', to: 'localization', tone: 'sky' },
-              { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth.', to: 'senior-expertise', tone: 'indigo' }
+              { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth.', to: 'senior-expertise', tone: 'indigo' },
+              { label: 'Sketch an engagement', desc: '13 practice areas & 89 specialized healthcare services.', to: 'engagement-builder', tone: 'indigo' }
             ]}
           />
         </div>
