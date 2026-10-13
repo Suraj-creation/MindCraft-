@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef, useId } from 'react';
+import React, { useState, useEffect, useRef, useId, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { EngagementBlueprint } from '../types';
 import { UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
 import { ENGAGEMENT_DOMAINS } from '../data/engagementTaxonomy';
+import { MultiSelectDropdown, MultiSelectOption } from './ui/MultiSelectDropdown';
 import {
   X,
   CheckCircle2,
@@ -33,18 +34,58 @@ const OPTIONAL = <span className="font-normal text-white/50"> (optional)</span>;
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
-/** Option values match the Engagement Builder's blueprint values and 13 domains. */
-const NEEDS: { value: string; label: string }[] = [
-  { value: 'Not sure yet', label: 'Not sure yet: help me work it out' },
-  { value: 'Integrated Multi-Pillar (Strategy + Research + AI)', label: 'A combination of capabilities (Multi-Pillar)' },
-  ...ENGAGEMENT_DOMAINS.map(d => ({
+export const SUPPORT_NEED_GROUPS = [
+  'Core Practice Areas (13 Domains)',
+  'Core Service Pillars',
+  'General & Multi-Pillar'
+];
+
+export const SUPPORT_NEED_OPTIONS: MultiSelectOption[] = [
+  // 13 Practice Areas
+  ...ENGAGEMENT_DOMAINS.map((d) => ({
     value: d.title,
-    label: `${d.id < 10 ? `0${d.id}` : d.id}. ${d.title} (${d.services.length} services)`
+    label: `${d.id < 10 ? `0${d.id}` : d.id}. ${d.title}`,
+    group: 'Core Practice Areas (13 Domains)',
+    subtitle: `${d.services.length} specialized services included`
   })),
-  { value: 'Business Consulting & Strategic Advisory', label: 'Business Consulting & Strategic Advisory' },
-  { value: 'Market Research & Commercial Evidence', label: 'Market Research & Commercial Evidence' },
-  { value: 'AI Training & Organizational Capability', label: 'AI Training & Digital Literacy' },
-  { value: 'AI Enterprise Solutions & Engineering', label: 'AI Enterprise Solutions & Engineering' }
+  // Core Service Pillars
+  {
+    value: 'Business Consulting & Strategic Advisory',
+    label: 'Business Consulting & Strategic Advisory',
+    group: 'Core Service Pillars',
+    subtitle: 'Market entry, partner selection & commercial strategy'
+  },
+  {
+    value: 'Market Research & Commercial Evidence',
+    label: 'Market Research & Commercial Evidence',
+    group: 'Core Service Pillars',
+    subtitle: 'Primary intelligence, HCP surveys & regulatory mapping'
+  },
+  {
+    value: 'AI Training & Organizational Capability',
+    label: 'AI Training & Digital Literacy',
+    group: 'Core Service Pillars',
+    subtitle: 'Executive alignment, prompt engineering & change management'
+  },
+  {
+    value: 'AI Enterprise Solutions & Engineering',
+    label: 'AI Enterprise Solutions & Engineering',
+    group: 'Core Service Pillars',
+    subtitle: 'VoiceOps, PharmaAI, MedicsIQ, EdgeBay & SecureCloud'
+  },
+  // General & Multi-Pillar
+  {
+    value: 'Integrated Multi-Pillar (Strategy + Research + AI)',
+    label: 'A combination of capabilities (Multi-Pillar)',
+    group: 'General & Multi-Pillar',
+    subtitle: 'Cross-functional engagement spanning multiple workstreams'
+  },
+  {
+    value: 'Not sure yet',
+    label: 'Not sure yet: help me work it out',
+    group: 'General & Multi-Pillar',
+    subtitle: 'Introductory discussion to frame scope and priorities'
+  }
 ];
 
 const TIMELINES = ['Within the next month', 'Within 3 months', 'Within 6 months', 'Exploring options for now'];
@@ -84,7 +125,15 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
   const [targetMarkets, setTargetMarkets] = useState<string>('');
 
   const [sector, setSector] = useState<string>(initialBlueprint?.industry || '');
-  const [pillarNeed, setPillarNeed] = useState<string>(initialBlueprint?.need || NEEDS[0].value);
+  const [selectedNeeds, setSelectedNeeds] = useState<string[]>(() => {
+    if (initialBlueprint?.selectedCapabilityAreas && initialBlueprint.selectedCapabilityAreas.length > 0) {
+      return initialBlueprint.selectedCapabilityAreas;
+    }
+    if (initialBlueprint?.need && initialBlueprint.need !== 'Not sure yet') {
+      return [initialBlueprint.need];
+    }
+    return [];
+  });
   const [challengeDescription, setChallengeDescription] = useState<string>('');
   const [timelineUrgency, setTimelineUrgency] = useState<string>(TIMELINES[1]);
 
@@ -99,7 +148,11 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
   useEffect(() => {
     if (initialBlueprint) {
       setSector(initialBlueprint.industry);
-      setPillarNeed(initialBlueprint.need);
+      if (initialBlueprint.selectedCapabilityAreas && initialBlueprint.selectedCapabilityAreas.length > 0) {
+        setSelectedNeeds(initialBlueprint.selectedCapabilityAreas);
+      } else if (initialBlueprint.need && initialBlueprint.need !== 'Not sure yet') {
+        setSelectedNeeds([initialBlueprint.need]);
+      }
       if (initialBlueprint.geography) setTargetMarkets(initialBlueprint.geography);
       if (initialBlueprint.objective) {
         setChallengeDescription(`Focus on: ${initialBlueprint.objective}`);
@@ -171,16 +224,14 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
   const stepOneValid = !errors.name && !errors.email && !errors.org;
   const errorFor = (key: keyof typeof errors) => (showErrors ? errors[key] : '');
 
-  const needLabel = NEEDS.find((n) => n.value === pillarNeed)?.label ?? pillarNeed;
+  const supportNeededSummary = selectedNeeds.length > 0
+    ? selectedNeeds.join(', ')
+    : 'Not specified';
 
   const summary = (ref = referenceId) => {
     const countriesSection = initialBlueprint?.selectedCountries && initialBlueprint.selectedCountries.length > 0
       ? `Target African Markets (${initialBlueprint.selectedCountries.length}): ${initialBlueprint.selectedCountries.join(', ')}`
       : `Markets in scope: ${targetMarkets.trim() || 'Not specified'}`;
-
-    const capabilityNeedsSection = initialBlueprint?.selectedCapabilityAreas && initialBlueprint.selectedCapabilityAreas.length > 0
-      ? `Capability Areas (${initialBlueprint.selectedCapabilityAreas.length}): ${initialBlueprint.selectedCapabilityAreas.join(', ')}`
-      : '';
 
     const servicesSection = initialBlueprint?.selectedServices && initialBlueprint.selectedServices.length > 0
       ? [
@@ -196,8 +247,7 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
       `Email: ${email.trim()}`,
       `Organisation: ${organization.trim()}`,
       `Industry: ${sector || 'Not specified'}`,
-      `Support needed: ${needLabel}`,
-      ...(capabilityNeedsSection ? [capabilityNeedsSection] : []),
+      `Support needed (${selectedNeeds.length || 0} areas): ${supportNeededSummary}`,
       countriesSection,
       `Timing: ${timelineUrgency}`,
       ...servicesSection,
@@ -256,7 +306,16 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
   const lifeSciences = UNIVERSAL_INDUSTRIES.filter((i) => i.category === 'core-lifesciences').map((i) => i.name);
   const otherIndustries = UNIVERSAL_INDUSTRIES.filter((i) => i.category !== 'core-lifesciences').map((i) => i.name);
   const extraSector = sector && !sectorOptions.includes(sector) && sector !== OTHER_SECTOR ? sector : null;
-  const extraNeed = !NEEDS.some((n) => n.value === pillarNeed) ? pillarNeed : null;
+  const needOptions = useMemo(() => {
+    const custom = selectedNeeds
+      .filter((val) => !SUPPORT_NEED_OPTIONS.some((opt) => opt.value === val))
+      .map((val) => ({
+        value: val,
+        label: val,
+        group: 'Other Needs'
+      }));
+    return custom.length > 0 ? [...custom, ...SUPPORT_NEED_OPTIONS] : SUPPORT_NEED_OPTIONS;
+  }, [selectedNeeds]);
 
 
   return (
@@ -427,16 +486,20 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
                         </div>
 
                         <div className="space-y-1.5">
-                          <label htmlFor={fid('need')} className={LABEL_CLASS}>Support you are looking for</label>
-                          <select
+                          <MultiSelectDropdown
                             id={fid('need')}
-                            value={pillarNeed}
-                            onChange={(e) => setPillarNeed(e.target.value)}
-                            className={FIELD_CLASS}
-                          >
-                            {extraNeed && <option value={extraNeed}>{extraNeed}</option>}
-                            {NEEDS.map((n) => <option key={n.value} value={n.value}>{n.label}</option>)}
-                          </select>
+                            label={`Support you are looking for ${selectedNeeds.length > 0 ? `(${selectedNeeds.length} selected)` : ''}`}
+                            placeholder="Select one or more areas of support..."
+                            selectedValues={selectedNeeds}
+                            onChange={setSelectedNeeds}
+                            options={needOptions}
+                            groups={SUPPORT_NEED_GROUPS}
+                            searchable={true}
+                            accentColor="indigo"
+                            allowSelectAllInGroup={false}
+                            maxDisplayChips={3}
+                            helpText="Choose all practice areas, pillars, or capabilities where you require support."
+                          />
                         </div>
 
                         <div className="space-y-1.5">
@@ -568,8 +631,27 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
 
                         <div className="pt-3 border-t border-white/[0.08] grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                           <div>
-                            <dt className="text-white/50 text-xs font-medium">Support needed</dt>
-                            <dd className="font-semibold text-white">{needLabel}</dd>
+                            <dt className="text-white/50 text-xs font-medium">
+                              Support needed {selectedNeeds.length > 1 ? `(${selectedNeeds.length})` : ''}
+                            </dt>
+                            <dd className="font-semibold text-white">
+                              {selectedNeeds.length === 0 ? (
+                                <span className="text-white/60">Not specified</span>
+                              ) : selectedNeeds.length === 1 ? (
+                                selectedNeeds[0]
+                              ) : (
+                                <div className="flex flex-wrap gap-1 mt-1.5">
+                                  {selectedNeeds.map((need) => (
+                                    <span
+                                      key={need}
+                                      className="px-2 py-0.5 rounded bg-[#0a0a0a] border border-indigo-500/30 text-indigo-300 text-xs font-normal"
+                                    >
+                                      {need}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </dd>
                           </div>
                           <div>
                             <dt className="text-white/50 text-xs font-medium">Timing</dt>
