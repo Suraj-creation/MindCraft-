@@ -130,7 +130,7 @@ export interface DiversifiedIndustry {
   methodology: string;
 }
 
-export type AfricaRegionName = 'East Africa' | 'West Africa' | 'Southern Africa' | 'North Africa';
+export type AfricaRegionName = 'East Africa' | 'West Africa' | 'Central Africa' | 'Southern Africa' | 'North Africa';
 
 export interface AfricaRegionData {
   name: AfricaRegionName;
@@ -147,7 +147,7 @@ export interface AfricaRegionData {
 export interface CountryDossier {
   id: string;
   name: string;
-  region: AfricaRegionName | 'Central Africa';
+  region: AfricaRegionName;
   isHQ?: boolean;
   capital: string;
   currency: string;
@@ -261,6 +261,10 @@ export interface EngagementBlueprint {
   geography: string;
   need: string;
   objective: string;
+  selectedServices?: string[];
+  selectedDomains?: string[];
+  selectedCountries?: string[];
+  selectedCapabilityAreas?: string[];
   workstreams: {
     pillar: string;
     scope: string;

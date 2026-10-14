@@ -1,11 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPinned, Factory } from 'lucide-react';
 import { NavTab } from '../types';
 import { AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { AFRICAN_COUNTRIES, SERVICE_PILLARS } from '../data/mindcraftData';
-import { ContextualCTA, DeepDive, EASE, MetricStrip, RelatedLinks, SectionHeader, TONES } from './ui/primitives';
+import { ENGAGEMENT_DOMAINS } from '../data/engagementTaxonomy';
+import { ContextualCTA, DeepDive, EASE, PageHeader, RelatedLinks, SectionHeader, TONES } from './ui/primitives';
 import { LocalizationModule } from './LocalizationModule';
+import { ArtImage } from './ui/ArtImage';
+import { ArtCaption, Scrim } from './ui/Hero';
 
 interface LocalizationViewProps {
   onNavigate: (tab: NavTab) => void;
@@ -32,22 +35,25 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
 
   return (
     <div>
-      <section className="mc-section" aria-labelledby="localization-title">
+      <section className="mc-section mc-page-intro" aria-labelledby="localization-title">
         <div className="mc-container">
-          <SectionHeader
-            as="h1"
-            eyebrow="Africa Hub · Localization"
-            title={<span id="localization-title">Local market capability</span>}
-            lead="How a global strategy becomes a local result: market intelligence, country context, local partners and execution, delivered from Nairobi across Africa."
-          />
-          <MetricStrip
-            items={[
+          <PageHeader
+            id="localization-title"
+            title="Make strategy work locally."
+            lead="Bring commercial and regulatory decisions into the realities of each market across Africa."
+            metrics={[
               { value: AFRICA_REGIONS_DATA.length, label: 'African regions' },
               { value: jurisdictions, label: 'Jurisdictions' },
               { value: SERVICE_PILLARS.length, label: 'Service pillars' },
               { value: AFRICAN_COUNTRIES.length, label: 'Country dossiers' }
             ]}
           />
+          <figure className="mc-art-bleed mc-full-bleed relative mt-10 min-h-56 sm:min-h-72">
+            <ArtImage name="localization-market" alt="" sizes="100vw" position="object-[52%_52%]" />
+            <Scrim background="linear-gradient(90deg, rgba(5,5,5,.8), rgba(5,5,5,.13) 68%, rgba(5,5,5,.02))" />
+            <Scrim background="linear-gradient(180deg, rgba(5,5,5,.28), rgba(5,5,5,0) 35%, rgba(5,5,5,.72))" />
+            <ArtCaption className="absolute bottom-4 left-[max(1rem,calc((100vw-min(100vw-2rem,88rem))/2))]">Local market illustration</ArtCaption>
+          </figure>
         </div>
       </section>
 
@@ -56,7 +62,6 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
       <section className="mc-section" aria-labelledby="country-picker-title">
         <div className="mc-container">
           <SectionHeader
-            eyebrow="Start from a country"
             title={<span id="country-picker-title">Where do you need local context?</span>}
             lead="Choose a region, then a country. Published dossiers show the market context we hold today."
           />
@@ -75,7 +80,7 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                   }`}
                 >
                   {r.name}
-                  <span className="ml-2 font-mono text-[11px] text-white/40 tabular-nums">{r.countries.length}</span>
+                  <span className="ml-2 tabular-nums text-xs text-white/55 tabular-nums">{r.countries.length}</span>
                 </button>
               );
             })}
@@ -118,19 +123,19 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                   {dossier ? (
                     <div>
                       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                        <h3 className="font-heading text-2xl font-light text-white">{dossier.name}</h3>
-                        <span className="font-mono text-[11px] uppercase tracking-wider text-emerald-300">
+                        <h3 className="font-heading text-2xl font-medium text-white">{dossier.name}</h3>
+                        <span className="text-xs text-emerald-300 font-medium">
                           {dossier.isHQ ? 'MindCraft headquarters · ' : ''}
                           {dossier.region}
                         </span>
                       </div>
                       <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10">
                         <div className="bg-[#0a0a0a] p-3.5">
-                          <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">Capital</dt>
+                          <dt className="text-xs text-white/50 font-medium">Capital</dt>
                           <dd className="mt-1 text-sm text-white">{dossier.capital}</dd>
                         </div>
                         <div className="bg-[#0a0a0a] p-3.5">
-                          <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">Currency</dt>
+                          <dt className="text-xs text-white/50 font-medium">Currency</dt>
                           <dd className="mt-1 text-sm text-white">{dossier.currency}</dd>
                         </div>
                       </dl>
@@ -149,7 +154,7 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
 
                       <ul aria-label="Key sectors" className="mt-4 flex flex-wrap gap-1.5">
                         {dossier.keySectors.map((s) => (
-                          <li key={s} className={`rounded-full border px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider ${TONES.indigo.chip}`}>
+                          <li key={s} className={`rounded-full border px-2.5 py-1 text-xs font-medium${TONES.indigo.chip}`}>
                             {s}
                           </li>
                         ))}
@@ -158,16 +163,16 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                       <DeepDive className="mt-5" title="Regulatory and market-entry context" hint={`${dossier.name} dossier`} tone="emerald">
                         <dl className="mt-2 space-y-3 text-sm">
                           <div>
-                            <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">Regulatory intelligence</dt>
+                            <dt className="text-xs text-white/50 font-medium">Regulatory intelligence</dt>
                             <dd className="mt-1 text-white/75 leading-snug">{dossier.capabilityCoverage.regulatoryIntelligence}</dd>
                           </div>
                           <div>
-                            <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">Market entry support</dt>
+                            <dt className="text-xs text-white/50 font-medium">Market entry support</dt>
                             <dd className="mt-1 text-white/75 leading-snug">{dossier.capabilityCoverage.marketEntrySupport}</dd>
                           </div>
                           {dossier.marketHighlights.length > 3 && (
                             <div>
-                              <dt className="font-mono text-[11px] uppercase tracking-wider text-white/50">More highlights</dt>
+                              <dt className="text-xs text-white/50 font-medium">More highlights</dt>
                               <dd className="mt-1">
                                 <ul className="space-y-1.5 text-white/75">
                                   {dossier.marketHighlights.slice(3).map((h) => (
@@ -191,7 +196,7 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
                     </div>
                   ) : (
                     <div>
-                      <h3 className="font-heading text-2xl font-light text-white">{country}</h3>
+                      <h3 className="font-heading text-2xl font-medium text-white">{country}</h3>
                       <p className="mt-2 text-sm text-white/65 leading-relaxed max-w-xl">
                         A country dossier has not been published yet for {country}. Tell us what you need to know and we will scope the local context with you.
                       </p>
@@ -212,15 +217,60 @@ export const LocalizationView: React.FC<LocalizationViewProps> = ({ onNavigate, 
         </div>
       </section>
 
+      {/* Domain 7: Localization & Manufacturing Services */}
+      <section className="mc-section bg-[#070707] border-y border-white/[0.08]" aria-labelledby="localization-manufacturing-title">
+        <div className="mc-container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">
+                <Factory className="w-4 h-4" />
+                <span>Practice Area 07 · Healthcare Localization & Manufacturing</span>
+              </div>
+              <h2 id="localization-manufacturing-title" className="font-heading text-2xl sm:text-3xl font-medium text-white">
+                From Import Reliance to Compliant Domestic Production.
+              </h2>
+              <p className="mt-2 text-sm text-white/70 max-w-2xl">
+                Transition to local manufacturing through greenfield facility setup, technology transfer, CMO/CDMO partnerships, and WHO/GMP compliant process validation.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onNavigate('engagement-builder')}
+              className="mc-tap px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors shrink-0 inline-flex items-center gap-2 active:scale-[0.98]"
+            >
+              <span>Sketch localization scope</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {ENGAGEMENT_DOMAINS.find(d => d.id === 7)?.services.map((svc) => (
+              <div
+                key={svc.id}
+                className="p-4 rounded-xl bg-[#0a0a0a] border border-white/10 flex flex-col justify-between"
+              >
+                <div>
+                  <h3 className="text-sm font-bold text-white mb-1.5">{svc.name}</h3>
+                  <p className="text-xs text-white/70 leading-relaxed">{svc.briefExplanation}</p>
+                </div>
+                <div className="mt-3 pt-2 border-t border-white/[0.06] text-[11px] text-emerald-400 font-medium">
+                  {svc.typicalDeliverables[0]}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mc-section" aria-label="Next steps">
-        <div className="mc-container space-y-8">
+        <div className="mc-container space-y-10 md:space-y-14">
           <RelatedLinks
             title="Continue exploring"
             items={[
-              { label: 'Africa Explorer', desc: 'Regions and jurisdictions', tone: 'emerald', onClick: () => onNavigate('africa-explorer') },
-              { label: 'Market entry framework', desc: 'Nine steps into a new market', tone: 'emerald', onClick: () => onNavigate('market-entry') },
-              { label: 'Africa intelligence', desc: 'Country-level market context', tone: 'sky', onClick: () => onNavigate('africa-intelligence') },
-              { label: 'Senior expertise', desc: 'The people behind the work', tone: 'indigo', onClick: () => onNavigate('senior-expertise') }
+              { label: 'African regions', desc: 'Regions and jurisdictions', tone: 'emerald', to: 'africa-explorer' },
+              { label: 'Market entry', desc: 'Nine steps into a new market', tone: 'emerald', to: 'market-entry' },
+              { label: 'Regulatory & market map', desc: 'Country-level market context', tone: 'sky', to: 'africa-intelligence' },
+              { label: 'Senior expertise', desc: 'The people behind the work', tone: 'indigo', to: 'senior-expertise' }
             ]}
           />
           <ContextualCTA

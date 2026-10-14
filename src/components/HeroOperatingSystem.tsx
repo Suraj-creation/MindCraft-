@@ -1,9 +1,11 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { NavTab, RoleLens } from '../types';
-import { ArrowRight, Compass, BarChart3, GraduationCap, Cpu, Dna, Globe2, MapPin } from 'lucide-react';
-import { UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
-import { EASE, MetricStrip, TONES, Tone } from './ui/primitives';
+import { ArrowRight } from 'lucide-react';
+import { AFRICA_REGIONS_DATA, UNIVERSAL_INDUSTRIES } from '../data/industryAndAfricaData';
+import { BTN_PRIMARY, BTN_SECONDARY, EASE } from './ui/primitives';
+import { ArtImage } from './ui/ArtImage';
+import { Scrim } from './ui/Hero';
 
 interface HeroOperatingSystemProps {
   setActiveTab: (tab: NavTab) => void;
@@ -11,139 +13,84 @@ interface HeroOperatingSystemProps {
   onOpenIntake: () => void;
 }
 
-const PILLARS: { tab: NavTab; name: string; tone: Tone; icon: React.ComponentType<{ className?: string }> }[] = [
-  { tab: 'consulting', name: 'Business Consulting', tone: 'teal', icon: Compass },
-  { tab: 'market-research', name: 'Market Research', tone: 'sky', icon: BarChart3 },
-  { tab: 'ai-training', name: 'AI Training', tone: 'amber', icon: GraduationCap },
-  { tab: 'ai-solutions', name: 'AI Enterprise Solutions', tone: 'emerald', icon: Cpu }
-];
-
-export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ setActiveTab, onOpenIntake }) => {
-  const jurisdictions = AFRICA_REGIONS_DATA.reduce((n, r) => n + r.countries.length, 0);
-  const core = UNIVERSAL_INDUSTRIES.filter((i) => i.tier === 'core');
-  const diversified = UNIVERSAL_INDUSTRIES.length - core.length;
+export const HeroOperatingSystem: React.FC<HeroOperatingSystemProps> = ({ onOpenIntake }) => {
+  const reduce = useReducedMotion();
+  const lifeSciences = UNIVERSAL_INDUSTRIES.filter((i) => i.category === 'core-lifesciences').length;
+  const regions = AFRICA_REGIONS_DATA.map((r) => r.name.replace(' Africa', ''));
 
   const goCapabilities = () => {
-    document.getElementById('capabilities')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('capabilities')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#050505] border-b border-white/10">
-      <div className="absolute inset-x-0 top-0 h-[28rem] bg-radial-glow pointer-events-none" aria-hidden />
+    <section aria-labelledby="overview-title" className="mc-art-bleed min-h-[clamp(34rem,72vw,48rem)] border-b border-white/[0.1] bg-[#050505]">
+      {/* The globe sits left of centre in the photograph, so on desktop the photo takes the right of the hero
+          and its left edge dissolves into the canvas; the headline never covers Africa. */}
+      <div aria-hidden="true" className="absolute inset-0 lg:left-auto lg:w-[56%]">
+        <ArtImage
+          name="globe"
+          alt=""
+          priority
+          sizes="(min-width: 1024px) 90vw, 100vw"
+          position="object-[38%_45%] lg:object-[34%_48%]"
+          className="brightness-[0.8] saturate-[0.9]"
+        />
+        <Scrim className="hidden lg:block" background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.82) 12%, rgba(5,5,5,.3) 30%, rgba(5,5,5,0) 46%)" />
+        <Scrim className="lg:hidden" background="linear-gradient(180deg, rgba(5,5,5,.55) 0%, rgba(5,5,5,.6) 42%, rgba(5,5,5,.9) 70%, #050505 100%)" />
+        <Scrim background="linear-gradient(180deg, rgba(5,5,5,.7) 0%, rgba(5,5,5,0) 22%, rgba(5,5,5,0) 70%, #050505 100%)" />
+      </div>
 
-      <div className="mc-container relative z-10 pt-8 sm:pt-14 lg:pt-16 pb-8 sm:pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-12 items-center">
+      <div className="mc-container mc-art-copy flex min-h-[clamp(34rem,72vw,48rem)] flex-col justify-end pb-12 pt-28 sm:pb-16 sm:pt-32 lg:pb-14 lg:pt-36">
+        <motion.div
+          className="max-w-[40rem]"
+          initial={reduce ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: reduce ? 0 : 0.24, delay: reduce ? 0 : 0.03, ease: EASE }}
+        >
+          <h1 id="overview-title" className="mc-display max-w-[13ch]">
+            Turn complexity into meaningful business progress.
+          </h1>
 
-          {/* Positioning + actions */}
-          <motion.div
-            className="lg:col-span-7"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: EASE }}
-          >
-            <p className="mc-eyebrow">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden />
-              Consultancy · Nairobi · Africa · Europe · United States
-            </p>
+          <p className="mc-lead mt-6 sm:mt-7 !text-white/80 !max-w-[31em]">
+            Consulting, market intelligence and applied AI that turns African ambition into measurable growth.
+          </p>
 
-            <h1 className="mc-h1 mt-4 font-light lg:text-[2.9rem] xl:text-[3.25rem]">
-              AI-powered business growth,
-              <br />
-              grounded in <span className="font-bold text-indigo-400">African markets</span>
-              {' '}and deep <span className="font-bold text-white">Life Sciences</span> expertise.
-            </h1>
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:items-center gap-3">
+            <button type="button" onClick={onOpenIntake} id="hero-primary-cta" className={`${BTN_PRIMARY} !px-6`}>
+              Discuss your business challenge
+              <ArrowRight aria-hidden="true" className="w-4 h-4" />
+            </button>
+            <button type="button" onClick={goCapabilities} id="hero-secondary-cta" className={`${BTN_SECONDARY} bg-black/35`}>
+              Explore our capabilities
+            </button>
+          </div>
+        </motion.div>
 
-            <p className="mc-lead mt-5">
-              One partner for Business Consulting, Market Research, AI Training and AI Enterprise Solutions, delivered as a single integrated engagement.
-            </p>
-
-            <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3">
-              <button
-                onClick={goCapabilities}
-                id="hero-primary-cta"
-                className="mc-tap px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-semibold text-sm shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-[background-color,transform] duration-150 flex items-center justify-center gap-2"
-              >
-                <span>Explore capabilities</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <button
-                onClick={onOpenIntake}
-                id="hero-secondary-cta"
-                className="mc-tap px-5 rounded-xl bg-white/5 hover:bg-white/10 active:scale-[0.98] text-white/90 text-sm border border-white/10 hover:border-white/20 transition-[background-color,border-color,transform] duration-150 flex items-center justify-center"
-              >
-                Talk to MindCraft
-              </button>
-              <button
-                onClick={() => setActiveTab('africa-explorer')}
-                className="mc-tap px-2 text-sm text-emerald-400 hover:text-emerald-300 flex items-center justify-center sm:justify-start gap-1.5 transition-colors"
-              >
-                <Globe2 className="w-4 h-4" />
-                <span>Explore African markets</span>
-              </button>
+        {/* Three answers a first-time visitor is looking for */}
+        <dl className="mt-14 sm:mt-16 lg:mt-20 grid grid-cols-1 md:grid-cols-3 border-t border-white/[0.14]">
+          {[
+            {
+              term: 'One team, four capabilities',
+              desc: 'Start with one focused need, or run research, strategy, training and AI as one programme.'
+            },
+            {
+              term: `${UNIVERSAL_INDUSTRIES.length} industries, led by Life Sciences`,
+              desc: `Specialist depth across ${lifeSciences} Life Sciences sub-sectors, from pharmaceuticals to hospitals.`
+            },
+            {
+              term: 'Africa first, international reach',
+              desc: `${regions.slice(0, -1).join(', ')} and ${regions[regions.length - 1]} Africa, with clients in Europe and the United States.`
+            }
+          ].map((f, i) => (
+            <div
+              key={f.term}
+              className={`pt-6 pb-2 md:pb-0 md:pr-8 ${i > 0 ? 'md:pl-8 md:border-l md:border-white/[0.14] border-t border-white/[0.1] md:border-t-0 mt-4 md:mt-0' : ''}`}
+            >
+              <dt className="font-heading text-[1.0625rem] font-medium text-white leading-snug">{f.term}</dt>
+              <dd className="mt-2 text-sm text-white/60 leading-relaxed max-w-[34em]">{f.desc}</dd>
             </div>
-          </motion.div>
-
-          {/* At a glance: what / where / who */}
-          <motion.div
-            className="lg:col-span-5"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.08, ease: EASE }}
-          >
-            <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 divide-y divide-white/10">
-              <div className="p-4 sm:p-5">
-                <div className="mc-eyebrow mb-3">What we do</div>
-                <ul className="grid grid-cols-2 gap-2">
-                  {PILLARS.map((p) => {
-                    const Icon = p.icon;
-                    return (
-                      <li key={p.tab}>
-                        <button
-                          onClick={() => setActiveTab(p.tab)}
-                          className={`mc-card-interactive mc-tap w-full text-left px-3 py-2 rounded-xl bg-[#050505] border border-white/10 ${TONES[p.tone].hoverBorder} flex items-center gap-2.5`}
-                        >
-                          <Icon className={`w-4 h-4 shrink-0 ${TONES[p.tone].text}`} />
-                          <span className="text-[13px] font-medium text-white leading-tight">{p.name}</span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
-              <div className="p-4 sm:p-5">
-                <div className="mc-eyebrow mb-3">Where</div>
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-emerald-400" />
-                  <p className="text-sm text-white/80 leading-snug">
-                    <span className="text-white font-semibold">Africa is our primary focus</span>, with <span className="text-white">Europe</span> and the <span className="text-white">United States</span> served from our Nairobi headquarters.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 sm:p-5">
-                <div className="mc-eyebrow mb-3">Who we help</div>
-                <div className="flex items-start gap-3">
-                  <Dna className="w-4 h-4 mt-0.5 shrink-0 text-indigo-400" />
-                  <p className="text-sm text-white/80 leading-snug">
-                    <span className="text-white font-semibold">Life Sciences first</span>: pharmaceuticals, devices, diagnostics and hospitals, plus {diversified} other industry verticals.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        <div className="hidden sm:block mt-12">
-          <MetricStrip
-            items={[
-              { value: PILLARS.length, label: 'Integrated capabilities' },
-              { value: UNIVERSAL_INDUSTRIES.length, label: 'Industry verticals' },
-              { value: jurisdictions, label: 'African jurisdictions' },
-              { value: 3, label: 'Regions served' }
-            ]}
-          />
-        </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { NavTab, RoleLens } from '../types';
-import logoMark from '../assets/logo-mark.png';
+import { BrandLogo } from './ui/BrandLogo';
+import { NAV_ITEMS, NavSubItem, sectionOf } from '../data/navigation';
+import { RouteLink } from './ui/primitives';
+import { scrollToTop } from '../lib/smoothScroll';
 import {
-  Compass,
-  BarChart3,
-  GraduationCap,
-  Cpu,
   Search,
   CheckCircle2,
-  ArrowRight,
   Menu,
   X,
   ChevronDown,
@@ -25,86 +23,8 @@ interface HeaderProps {
   onOpenSearch: () => void;
 }
 
-interface NavSubItem {
-  id: NavTab;
-  label: string;
-  desc: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  color?: string;
-}
-
-interface NavItem {
-  id: NavTab;
-  label: string;
-  badge?: string;
-  dropdown?: NavSubItem[];
-}
-
 const EASE = [0.16, 1, 0.3, 1] as const;
-
-const NAV_ITEMS: NavItem[] = [
-  { id: 'home', label: 'Overview' },
-  {
-    id: 'industries',
-    label: 'Industries',
-    badge: '24 Sectors',
-    dropdown: [
-      { id: 'industries', label: '24 Industry Verticals Explorer', desc: 'Comprehensive dossiers & key strategic questions across 24 sectors' },
-      { id: 'matrix-3d', label: '3D Matrix Configuration', desc: 'Intersect 24 Industries × 5 Geographies × 4 Capabilities' },
-      { id: 'life-sciences', label: 'Core Life Sciences Ecosystem', desc: 'Deep heritage across Pharma, Devices, Diagnostics, and Biotech' }
-    ]
-  },
-  {
-    id: 'africa-explorer',
-    label: 'Africa Hub',
-    badge: '4 Regions',
-    dropdown: [
-      { id: 'africa-explorer', label: '4 Regional Clusters & 45 Jurisdictions', desc: 'East, West, Southern, North Africa intelligence & country dossiers' },
-      { id: 'localization', label: 'Market Localization', desc: 'How global strategy becomes local regulatory, commercial and partner execution' },
-      { id: 'market-entry', label: '9-Step Pan-African Market Entry', desc: 'Signature framework to de-risk and accelerate expansion' },
-      { id: 'africa-intelligence', label: 'Interactive Regulatory Map', desc: 'PPB, NAFDAC, SAHPRA and regional harmonization tracker' }
-    ]
-  },
-  {
-    id: 'question-to-outcome',
-    label: 'Problem-Led',
-    badge: '10 Challenges',
-    dropdown: [
-      { id: 'question-to-outcome', label: 'What Are You Trying to Solve?', desc: '10 Archetypal business challenges with 5-pillar integrated solutions' },
-      { id: 'capability-graph', label: 'MindCraft Universe (Orbital)', desc: 'Concentric system topology of capabilities, sectors & geographies' },
-      { id: 'engagement-builder', label: 'Engagement Blueprint Builder', desc: 'Instant scoping and timeline generation for executive sign-off' }
-    ]
-  },
-  {
-    id: 'consulting',
-    label: 'Capabilities',
-    dropdown: [
-      { id: 'consulting', label: 'Business Consulting', icon: Compass, color: 'text-teal-400', desc: 'Corporate strategy, operating models & diagnostics' },
-      { id: 'market-research', label: 'Market Research', icon: BarChart3, color: 'text-sky-400', desc: 'Primary & secondary evidence and intelligence' },
-      { id: 'ai-training', label: 'AI Training & Literacy', icon: GraduationCap, color: 'text-amber-400', desc: 'Applied capability transformation & champion cohorts' },
-      { id: 'ai-solutions', label: 'AI Enterprise Solutions', icon: Cpu, color: 'text-emerald-400', desc: 'Governed production systems & architecture' }
-    ]
-  },
-  {
-    id: 'operating-model',
-    label: 'Operating System',
-    dropdown: [
-      { id: 'operating-model', label: 'The MindCraft Model', desc: 'Four integrated capabilities under one multidisciplinary partner' },
-      { id: 'maturity-model', label: 'AI Transformation Maturity', desc: 'Level 0 to Level 5 enterprise readiness ladder' },
-      { id: 'engagement-builder', label: 'Custom Engagement Builder', desc: 'Generate customized scoped engagement blueprints' }
-    ]
-  },
-  { id: 'responsible-ai', label: 'Responsible AI' },
-  {
-    id: 'about',
-    label: 'About',
-    dropdown: [
-      { id: 'about', label: 'About MindCraft', desc: 'Vision, mission, values and how we engage' },
-      { id: 'senior-expertise', label: 'Senior Life Sciences Expertise', desc: 'Pharmaceutical market access, regulatory strategy and commercial excellence' },
-      { id: 'insights', label: 'Insights', desc: 'Perspectives on Life Sciences, Africa and applied AI' }
-    ]
-  }
-];
+const MORE_ID = 'more';
 
 const ROLE_LABELS: { [key in RoleLens]: string } = {
   all: 'All Perspectives',
@@ -119,6 +39,72 @@ const ROLE_LABELS: { [key in RoleLens]: string } = {
   hospital: 'Hospital / Healthcare Provider'
 };
 
+const triggerId = (id: string) => `nav-${id}`;
+const panelId = (id: string) => `nav-panel-${id}`;
+
+/** Arrow / Home / End / Escape inside an open panel. Items carry data-menu-item. */
+const handlePanelKeys = (e: React.KeyboardEvent<HTMLElement>, onEscape: () => void) => {
+  const items = Array.from<HTMLElement>(e.currentTarget.querySelectorAll<HTMLElement>('[data-menu-item]'));
+  const i = items.indexOf(document.activeElement as HTMLElement);
+  let n: number;
+  if (e.key === 'ArrowDown') n = (i + 1) % items.length;
+  else if (e.key === 'ArrowUp') n = i <= 0 ? items.length - 1 : i - 1;
+  else if (e.key === 'Home') n = 0;
+  else if (e.key === 'End') n = items.length - 1;
+  else if (e.key === 'Escape') {
+    e.preventDefault();
+    e.stopPropagation();
+    onEscape();
+    return;
+  } else return;
+  e.preventDefault();
+  items[n]?.focus();
+};
+
+/** Trigger label + caret. Shared by the live bar and the hidden measuring row so widths match. */
+const TriggerFace: React.FC<{ label: string; caret: boolean; open?: boolean }> = ({ label, caret, open }) => (
+  <>
+    <span>{label}</span>
+    {caret && (
+      <ChevronDown
+        aria-hidden="true"
+        className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? 'rotate-180 text-indigo-300' : 'text-white/35'}`}
+      />
+    )}
+  </>
+);
+
+const TRIGGER_BASE =
+  'relative h-16 lg:h-20 px-3 flex items-center gap-1 text-[13px] font-medium whitespace-nowrap transition-colors duration-150';
+
+/** One row inside a desktop panel. */
+const PanelItem: React.FC<{ item: NavSubItem; active: boolean; onNavigate: (tab: NavTab) => void }> = ({ item, active, onNavigate }) => {
+  const Icon = item.icon;
+  return (
+    <li>
+      <RouteLink
+        to={item.id}
+        onNavigate={onNavigate}
+        data-menu-item
+        aria-current={active ? 'page' : undefined}
+        className={`w-full text-left px-3 py-2.5 rounded-xl flex items-start gap-3 transition-colors duration-150 ${
+          active ? 'bg-[#0d0f17] ring-1 ring-inset ring-indigo-500/35' : 'hover:bg-white/[0.05] focus-visible:bg-white/[0.05]'
+        }`}
+      >
+        {Icon && (
+          <span className={`mt-0.5 p-1.5 rounded-lg bg-white/5 border border-white/10 shrink-0 ${item.color}`}>
+            <Icon className="w-4 h-4" />
+          </span>
+        )}
+        <span className="min-w-0">
+          <span className={`block text-sm font-semibold leading-snug ${active ? 'text-indigo-200' : 'text-white'}`}>{item.label}</span>
+          <span className="block mt-0.5 text-xs text-white/55 leading-snug">{item.desc}</span>
+        </span>
+      </RouteLink>
+    </li>
+  );
+};
+
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   setActiveTab,
@@ -129,10 +115,33 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [lensOpen, setLensOpen] = useState(false);
-  const [mobileLensOpen, setMobileLensOpen] = useState(false);
+  const [mobileGroup, setMobileGroup] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(NAV_ITEMS.length);
+
   const headerRef = useRef<HTMLElement>(null);
+  const navWrapRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLUListElement>(null);
+  const openRef = useRef<string | null>(null);
+  const openedByHover = useRef(false);
+  const timers = useRef<{ open?: number; close?: number }>({});
+  const pendingFocus = useRef<'first' | 'last' | null>(null);
+
+  const activeSection = sectionOf(activeTab);
+  const visibleItems = NAV_ITEMS.slice(0, visibleCount);
+  const overflowItems = NAV_ITEMS.slice(visibleCount);
+  const moreIsActive = overflowItems.some((i) => i.id === activeSection);
+
+  const setMenu = (id: string | null) => {
+    openRef.current = id;
+    setOpenMenu(id);
+  };
+
+  const clearTimers = () => {
+    window.clearTimeout(timers.current.open);
+    window.clearTimeout(timers.current.close);
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -147,18 +156,31 @@ export const Header: React.FC<HeaderProps> = ({
     return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
 
+  // The sheet opens on the section you are in; growing past the breakpoint closes it
+  useEffect(() => {
+    if (mobileMenuOpen) setMobileGroup(activeSection);
+  }, [mobileMenuOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1280px)');
+    const onChange = () => mq.matches && setMobileMenuOpen(false);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   // Escape closes any open menu; outside click closes desktop popovers
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setMobileMenuOpen(false);
-        setActiveDropdown(null);
+        setMenu(null);
         setLensOpen(false);
       }
     };
     const onPointer = (e: PointerEvent) => {
       if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
-        setActiveDropdown(null);
+        clearTimers();
+        setMenu(null);
         setLensOpen(false);
       }
     };
@@ -167,329 +189,574 @@ export const Header: React.FC<HeaderProps> = ({
     return () => {
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('pointerdown', onPointer);
+      clearTimers();
     };
   }, []);
 
+  // Fit as many top-level items as the bar allows; the rest go under "More"
+  useLayoutEffect(() => {
+    const wrap = navWrapRef.current;
+    const measure = measureRef.current;
+    if (!wrap || !measure) return;
+    const compute = () => {
+      const avail = wrap.clientWidth;
+      if (!avail) return;
+      const widths = Array.from(measure.children).map((el) => (el as HTMLElement).offsetWidth);
+      const moreWidth = widths.pop() ?? 0;
+      if (widths.reduce((a, b) => a + b, 0) <= avail) {
+        setVisibleCount(widths.length);
+        return;
+      }
+      let used = moreWidth;
+      let n = 0;
+      while (n < widths.length && used + widths[n] <= avail) used += widths[n++];
+      setVisibleCount(n);
+    };
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(wrap);
+    document.fonts?.ready.then(compute);
+    return () => ro.disconnect();
+  }, []);
+
+  // Keep an open panel inside the viewport, and move focus into it when opened from the keyboard
+  useLayoutEffect(() => {
+    if (!openMenu) return;
+    const panel = document.getElementById(panelId(openMenu));
+    const shell = panel?.parentElement;
+    if (!panel || !shell) return;
+    shell.style.transform = '';
+    const over = panel.getBoundingClientRect().right - (window.innerWidth - 16);
+    if (over > 0) shell.style.transform = `translateX(${-over}px)`;
+    if (pendingFocus.current) {
+      const items = panel.querySelectorAll<HTMLElement>('[data-menu-item]');
+      items[pendingFocus.current === 'first' ? 0 : items.length - 1]?.focus();
+      pendingFocus.current = null;
+    }
+  }, [openMenu]);
+
   const go = (tab: NavTab) => {
+    clearTimers();
     setActiveTab(tab);
-    setActiveDropdown(null);
+    setMenu(null);
+    setLensOpen(false);
     setMobileMenuOpen(false);
-    window.scrollTo({ top: 0 });
+    scrollToTop();
   };
 
-  const isItemActive = (item: NavItem) =>
-    activeTab === item.id || !!item.dropdown?.some(d => d.id === activeTab);
+  /* ---------- hover intent: a short delay to open, a longer grace period to close ---------- */
+  const hoverOpen = (id: string) => {
+    clearTimers();
+    const open = () => {
+      openedByHover.current = true;
+      setLensOpen(false);
+      setMenu(id);
+    };
+    if (openRef.current) open();
+    else timers.current.open = window.setTimeout(open, 80);
+  };
+  const hoverClose = () => {
+    clearTimers();
+    timers.current.close = window.setTimeout(() => setMenu(null), 180);
+  };
+
+  const toggleMenu = (id: string) => {
+    clearTimers();
+    setLensOpen(false);
+    if (openRef.current === id && openedByHover.current) {
+      // Clicking a menu that hover already opened pins it instead of closing it
+      openedByHover.current = false;
+      return;
+    }
+    openedByHover.current = false;
+    setMenu(openRef.current === id ? null : id);
+  };
+
+  const focusSiblingTrigger = (from: HTMLElement, dir: 1 | -1) => {
+    const triggers = Array.from<HTMLElement>(navWrapRef.current?.querySelectorAll<HTMLElement>('[data-nav-trigger]') ?? []);
+    const i = triggers.indexOf(from);
+    triggers[(i + dir + triggers.length) % triggers.length]?.focus();
+  };
+
+  const onTriggerKey = (e: React.KeyboardEvent<HTMLElement>, id: string, hasPanel: boolean) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      focusSiblingTrigger(e.currentTarget, e.key === 'ArrowRight' ? 1 : -1);
+    } else if (hasPanel && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+      e.preventDefault();
+      clearTimers();
+      openedByHover.current = false;
+      pendingFocus.current = e.key === 'ArrowDown' ? 'first' : 'last';
+      if (openRef.current === id) {
+        // Already open: the layout effect will not re-run, so focus directly
+        const items = document.getElementById(panelId(id))?.querySelectorAll<HTMLElement>('[data-menu-item]');
+        items?.[pendingFocus.current === 'first' ? 0 : items.length - 1]?.focus();
+        pendingFocus.current = null;
+      } else {
+        setMenu(id);
+      }
+    }
+  };
+
+  const closeAndReturn = (id: string) => {
+    setMenu(null);
+    document.getElementById(triggerId(id))?.focus();
+  };
+
+  const onWrapperBlur = (e: React.FocusEvent<HTMLLIElement>, id: string) => {
+    if (openRef.current === id && !e.currentTarget.contains(e.relatedTarget as Node | null)) setMenu(null);
+  };
+
+  /* ---------- desktop panel ---------- */
+  const renderPanel = (id: string, alignRight: boolean, content: React.ReactNode, wide = false) => (
+    <AnimatePresence>
+      {openMenu === id && (
+        <div className={`absolute top-full z-50 pt-2 ${alignRight ? 'right-0' : 'left-0'}`}>
+          <motion.div
+            id={panelId(id)}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.16, ease: EASE }}
+            onKeyDown={(e) => handlePanelKeys(e, () => closeAndReturn(id))}
+            className={`${wide ? 'w-[36rem]' : 'w-[23rem]'} rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.85)] p-1.5`}
+          >
+            {content}
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+
+  const activeIndicator = (
+    <motion.span
+      layoutId="nav-active-indicator"
+      aria-hidden="true"
+      className="absolute left-3 right-3 -bottom-px h-0.5 rounded-full bg-indigo-400"
+      transition={{ duration: 0.25, ease: EASE }}
+    />
+  );
 
   return (
-    <header
-      ref={headerRef}
-      id="main-header"
-      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,box-shadow] duration-300 border-b border-white/10 ${
-        isScrolled || mobileMenuOpen
-          ? 'bg-[#050505]/95 backdrop-blur-md shadow-2xl'
-          : 'bg-[#050505]/80 backdrop-blur-sm'
-      }`}
-    >
-      <div className="mc-container 2xl:!max-w-[96rem]">
-        <div className="flex items-center justify-between h-16 gap-3">
+    <MotionConfig reducedMotion="user">
+      <header
+        ref={headerRef}
+        id="main-header"
+        className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color] duration-300 border-b backdrop-blur-xl backdrop-saturate-150 ${
+          isScrolled || mobileMenuOpen
+            ? 'bg-[#050505]/90 border-white/10'
+            : 'bg-[#050505]/60 border-white/[0.06]'
+        }`}
+      >
+        <div className="mc-container">
+          <div className="flex items-center h-16 lg:h-20 gap-4 xl:gap-8">
 
-          {/* Logo & Brand Identity */}
-          <button
-            onClick={() => go('home')}
-            className="flex items-center gap-3 group text-left shrink-0 mc-tap"
-            id="brand-logo-button"
-            aria-label="MindCraft home"
-          >
-            <img
-              src={logoMark}
-              alt=""
-              width={44}
-              height={28}
-              className="h-7 w-auto transition-transform duration-200 group-active:scale-95"
-            />
-            <div className="flex flex-col leading-tight">
-              <span className="font-heading text-[15px] font-bold tracking-tight uppercase text-white group-hover:text-indigo-300 transition-colors">
-                MindCraft
-              </span>
-              <span className="hidden sm:flex items-center gap-1.5 text-[11px] text-white/50 font-mono uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Consultancy · Nairobi
-              </span>
-            </div>
-          </button>
-
-          {/* Desktop Navigation (xl and up) */}
-          <nav className="hidden 2xl:flex items-center gap-0.5" id="desktop-nav" aria-label="Primary">
-            {NAV_ITEMS.map((item) => {
-              const hasDropdown = !!item.dropdown;
-              const isActive = isItemActive(item);
-              const open = activeDropdown === item.id;
-
-              return (
-                <div
-                  key={item.id}
-                  className="relative"
-                  onMouseEnter={() => hasDropdown && setActiveDropdown(item.id)}
-                  onMouseLeave={() => hasDropdown && setActiveDropdown(null)}
-                >
-                  <button
-                    id={`nav-${item.id}`}
-                    aria-haspopup={hasDropdown ? 'menu' : undefined}
-                    aria-expanded={hasDropdown ? open : undefined}
-                    onClick={() => (hasDropdown ? setActiveDropdown(open ? null : item.id) : go(item.id))}
-                    className={`px-2.5 h-10 rounded-lg text-xs font-mono uppercase tracking-wider whitespace-nowrap transition-colors flex items-center gap-1.5 border ${
-                      isActive
-                        ? 'text-indigo-400 bg-white/5 border-white/10'
-                        : 'text-white/60 hover:text-white hover:bg-white/5 border-transparent'
-                    }`}
-                  >
-                    <span>{item.label}</span>
-                    
-                    {hasDropdown && (
-                      <ChevronDown className={`w-3 h-3 text-white/40 transition-transform duration-200 ${open ? 'rotate-180 text-indigo-300' : ''}`} />
-                    )}
-                  </button>
-
-                  <AnimatePresence>
-                    {hasDropdown && open && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -4 }}
-                        transition={{ duration: 0.16, ease: EASE }}
-                        role="menu"
-                        className="absolute top-full left-0 pt-1.5 w-80 z-50"
-                      >
-                        <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-2xl p-2 space-y-1">
-                          {item.dropdown!.map((sub) => {
-                            const Icon = sub.icon;
-                            return (
-                              <button
-                                key={sub.id + sub.label}
-                                role="menuitem"
-                                onClick={() => go(sub.id)}
-                                className={`w-full text-left p-2.5 rounded-xl transition-colors flex items-start gap-3 border ${
-                                  activeTab === sub.id
-                                    ? 'bg-indigo-950/40 border-indigo-500/40 text-white'
-                                    : 'border-transparent hover:border-white/10 hover:bg-white/5 text-white/70 hover:text-white'
-                                }`}
-                              >
-                                {Icon && (
-                                  <span className={`p-1.5 rounded-lg bg-white/5 border border-white/10 mt-0.5 ${sub.color}`}>
-                                    <Icon className="w-4 h-4" />
-                                  </span>
-                                )}
-                                <span>
-                                  <span className="block text-[13px] font-semibold text-white/90">{sub.label}</span>
-                                  <span className="block text-xs text-white/50 mt-0.5 leading-snug">{sub.desc}</span>
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </nav>
-
-          {/* Right Actions */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onOpenSearch}
-              id="global-search-btn"
-              className="mc-tap px-3 rounded-xl bg-[#0a0a0a] hover:bg-white/5 text-white/60 hover:text-white border border-white/10 transition-colors flex items-center justify-center gap-1.5 text-xs font-mono"
-              aria-label="Search the MindCraft platform"
-              title="Search (Ctrl/Cmd+K)"
+            {/* Logo & brand identity */}
+            <RouteLink
+              to="home"
+              onNavigate={go}
+              className="flex items-center shrink-0 mc-tap rounded-lg transition-transform duration-150 active:scale-[0.98]"
+              id="brand-logo-button"
+              aria-label="MindCraft Consultancy, home"
             >
-              <Search className="w-4 h-4 text-white/50" />
-              <span className="hidden min-[1800px]:inline text-white/50">SEARCH</span>
-              <kbd className="hidden min-[1800px]:inline px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-white/50">⌘K</kbd>
-            </button>
+              <BrandLogo height={64} sizes="(min-width: 1024px) 87px, 65px" priority className="h-12 lg:h-16" />
+            </RouteLink>
 
-            {/* Role Lens (desktop) */}
-            <div className="relative hidden 2xl:block">
-              <button
-                id="role-lens-button"
-                aria-haspopup="listbox"
-                aria-expanded={lensOpen}
-                onClick={() => setLensOpen(o => !o)}
-                aria-label={`Perspective lens: ${ROLE_LABELS[roleLens]}`}
-                className="h-11 min-w-11 px-3 rounded-xl bg-[#0a0a0a] hover:bg-white/5 border border-white/10 text-xs font-mono flex items-center justify-center gap-1.5 transition-colors"
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
-                <span className="hidden min-[1800px]:inline text-white/50">LENS:</span>
-                <span className="hidden min-[1800px]:inline text-indigo-300 font-semibold max-w-[8.5rem] truncate">{ROLE_LABELS[roleLens]}</span>
-                <ChevronDown className={`hidden min-[1800px]:block w-3 h-3 text-white/40 transition-transform duration-200 ${lensOpen ? 'rotate-180' : ''}`} />
-              </button>
-              <AnimatePresence>
-                {lensOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.16, ease: EASE }}
-                    role="listbox"
-                    className="absolute right-0 top-full mt-1.5 w-64 rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-2xl p-1.5 z-50"
-                  >
-                    <div className="px-2.5 py-1.5 text-[11px] font-mono uppercase tracking-widest text-white/50 border-b border-white/5 mb-1">
-                      Perspective Lens
-                    </div>
-                    {(Object.keys(ROLE_LABELS) as RoleLens[]).map((r) => (
+            {/* Desktop navigation (xl and up). Items that don't fit move into "More". */}
+            <div ref={navWrapRef} className="hidden xl:flex flex-1 min-w-0 relative self-stretch">
+              {/* Hidden measuring row: same faces as the live triggers, plus the More trigger last */}
+              <div className="absolute inset-x-0 top-0 h-0 overflow-hidden" aria-hidden="true">
+                <ul ref={measureRef} className="invisible flex w-max">
+                  {NAV_ITEMS.map((item) => (
+                    <li key={item.id} className={TRIGGER_BASE}>
+                      <TriggerFace label={item.label} caret={!!item.dropdown} />
+                    </li>
+                  ))}
+                  <li className={TRIGGER_BASE}>
+                    <TriggerFace label="More" caret />
+                  </li>
+                </ul>
+              </div>
+
+              <nav id="desktop-nav" aria-label="Primary" className="min-w-0">
+                <ul className="flex items-stretch">
+                  {visibleItems.map((item, index) => {
+                    const hasPanel = !!item.dropdown;
+                    const isActive = activeSection === item.id;
+                    const open = openMenu === item.id;
+                    return (
+                      <li
+                        key={item.id}
+                        className="relative"
+                        onPointerEnter={(e) => e.pointerType === 'mouse' && hasPanel && hoverOpen(item.id)}
+                        onPointerLeave={(e) => e.pointerType === 'mouse' && hasPanel && hoverClose()}
+                        onBlur={(e) => onWrapperBlur(e, item.id)}
+                      >
+                        {hasPanel ? (
+                          <button
+                            type="button"
+                            id={triggerId(item.id)}
+                            data-nav-trigger
+                            aria-expanded={open}
+                            aria-controls={panelId(item.id)}
+                            onClick={() => toggleMenu(item.id)}
+                            onKeyDown={(e) => onTriggerKey(e, item.id, true)}
+                            className={`${TRIGGER_BASE} ${isActive || open ? 'text-white' : 'text-white/65 hover:text-white'}`}
+                          >
+                            <TriggerFace label={item.label} caret open={open} />
+                            {isActive && activeIndicator}
+                          </button>
+                        ) : (
+                          <RouteLink
+                            to={item.id}
+                            onNavigate={go}
+                            id={triggerId(item.id)}
+                            data-nav-trigger
+                            aria-current={isActive ? 'page' : undefined}
+                            onKeyDown={(e) => onTriggerKey(e, item.id, false)}
+                            className={`${TRIGGER_BASE} ${isActive ? 'text-white' : 'text-white/65 hover:text-white'}`}
+                          >
+                            <TriggerFace label={item.label} caret={false} />
+                            {isActive && activeIndicator}
+                          </RouteLink>
+                        )}
+
+                        {hasPanel &&
+                          renderPanel(
+                            item.id,
+                            index >= visibleItems.length - 2 && overflowItems.length === 0,
+                            <ul className={item.wide ? 'grid grid-cols-2 gap-1' : 'space-y-0.5'}>
+                              {item.dropdown!.map((sub) => (
+                                <PanelItem key={sub.id + sub.label} item={sub} active={activeTab === sub.id} onNavigate={go} />
+                              ))}
+                            </ul>,
+                            item.wide
+                          )}
+                      </li>
+                    );
+                  })}
+
+                  {overflowItems.length > 0 && (
+                    <li
+                      className="relative"
+                      onPointerEnter={(e) => e.pointerType === 'mouse' && hoverOpen(MORE_ID)}
+                      onPointerLeave={(e) => e.pointerType === 'mouse' && hoverClose()}
+                      onBlur={(e) => onWrapperBlur(e, MORE_ID)}
+                    >
                       <button
-                        key={r}
-                        role="option"
-                        aria-selected={roleLens === r}
-                        onClick={() => { setRoleLens(r); setLensOpen(false); }}
-                        className={`w-full text-left px-2.5 h-10 rounded-lg text-xs transition-colors flex items-center justify-between font-mono ${
-                          roleLens === r
-                            ? 'bg-indigo-950/60 border border-indigo-500/40 text-indigo-300 font-semibold'
-                            : 'text-white/70 hover:bg-white/5 hover:text-white border border-transparent'
-                        }`}
+                        type="button"
+                        id={triggerId(MORE_ID)}
+                        data-nav-trigger
+                        aria-expanded={openMenu === MORE_ID}
+                        aria-controls={panelId(MORE_ID)}
+                        onClick={() => toggleMenu(MORE_ID)}
+                        onKeyDown={(e) => onTriggerKey(e, MORE_ID, true)}
+                        className={`${TRIGGER_BASE} ${moreIsActive || openMenu === MORE_ID ? 'text-white' : 'text-white/65 hover:text-white'}`}
                       >
-                        <span>{ROLE_LABELS[r]}</span>
-                        {roleLens === r && <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />}
+                        <TriggerFace label="More" caret open={openMenu === MORE_ID} />
+                        {moreIsActive && activeIndicator}
                       </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+
+                      {renderPanel(
+                        MORE_ID,
+                        true,
+                        <div className="space-y-1">
+                          {overflowItems.map((item) =>
+                            item.dropdown ? (
+                              <div key={item.id}>
+                                <div className="px-3 pt-2 pb-1 text-xs font-medium text-white/55">{item.label}</div>
+                                <ul className="space-y-0.5">
+                                  {item.dropdown.map((sub) => (
+                                    <PanelItem key={sub.id + sub.label} item={sub} active={activeTab === sub.id} onNavigate={go} />
+                                  ))}
+                                </ul>
+                              </div>
+                            ) : (
+                              <ul key={item.id}>
+                                <PanelItem
+                                  item={{ id: item.id, label: item.label, short: item.label, desc: item.desc ?? '' }}
+                                  active={activeSection === item.id}
+                                  onNavigate={go}
+                                />
+                              </ul>
+                            )
+                          )}
+                        </div>
+                      )}
+                    </li>
+                  )}
+                </ul>
+              </nav>
             </div>
 
-            <button
-              onClick={onOpenIntake}
-              id="header-start-engagement-btn"
-              className="mc-tap hidden sm:flex px-4 rounded-xl whitespace-nowrap bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white text-xs font-medium tracking-wide shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-[background-color,transform] duration-150 items-center gap-1.5"
-            >
-              <span>Start Engagement</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              onClick={() => setMobileMenuOpen(o => !o)}
-              id="mobile-menu-toggle-btn"
-              className="mc-tap 2xl:hidden rounded-xl bg-[#0a0a0a] border border-white/10 flex items-center justify-center text-white/70 hover:text-white"
-              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-nav-sheet"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile / tablet navigation sheet */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            id="mobile-nav-sheet"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2, ease: EASE }}
-            className="2xl:hidden absolute top-full inset-x-0 bg-[#050505] border-b border-white/10 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
-          >
-            <nav className="mc-container py-4 space-y-5 mc-safe-bottom" aria-label="Mobile">
+            {/* Right actions */}
+            <div className="flex items-center gap-2 ml-auto shrink-0">
               <button
-                onClick={() => go('home')}
-                className={`w-full mc-tap px-3 rounded-xl border text-left text-sm font-medium ${
-                  activeTab === 'home' ? 'bg-indigo-950/40 border-indigo-500/40 text-white' : 'bg-[#0a0a0a] border-white/10 text-white/80'
-                }`}
+                onClick={onOpenSearch}
+                id="global-search-btn"
+                className="mc-tap px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] text-white/60 hover:text-white border border-white/10 transition-colors flex items-center justify-center gap-2 text-[13px]"
+                aria-label="Search the MindCraft platform"
+                title="Search (Ctrl/Cmd+K)"
               >
-                Overview
+                <Search className="w-4 h-4 text-white/50" />
+                <span className="hidden min-[1800px]:inline text-white/55">Search</span>
+                <kbd className="hidden min-[1800px]:inline px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 font-mono text-xs text-white/55">⌘K</kbd>
               </button>
 
-              {NAV_ITEMS.filter(i => i.dropdown).map((item) => (
-                <div key={item.id}>
-                  <div className="flex items-center gap-2 px-1 mb-2">
-                    <span className="mc-eyebrow">{item.label}</span>
-                    {item.badge && <span className="text-[11px] font-mono text-white/40">{item.badge}</span>}
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                    {item.dropdown!.map((sub) => {
-                      const Icon = sub.icon;
-                      return (
+              {/* Role lens (desktop) */}
+              <div className="relative hidden xl:block" onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setLensOpen(false); }}>
+                <button
+                  id="role-lens-button"
+                  aria-haspopup="listbox"
+                  aria-expanded={lensOpen}
+                  aria-controls="role-lens-panel"
+                  onClick={() => { clearTimers(); setMenu(null); setLensOpen((o) => !o); }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowDown') {
+                      e.preventDefault();
+                      setMenu(null);
+                      setLensOpen(true);
+                      requestAnimationFrame(() =>
+                        document.querySelector<HTMLElement>('#role-lens-panel [aria-selected="true"]')?.focus()
+                      );
+                    }
+                  }}
+                  aria-label={`Perspective lens: ${ROLE_LABELS[roleLens]}`}
+                  title={`Perspective lens: ${ROLE_LABELS[roleLens]}`}
+                  className={`mc-tap px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border text-[13px] flex items-center justify-center gap-2 transition-colors ${
+                    roleLens !== 'all' ? 'border-indigo-500/35' : 'border-white/10'
+                  }`}
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
+                  <span className="hidden min-[1800px]:inline text-white/50">Lens</span>
+                  <span className="hidden min-[1800px]:inline text-indigo-300 font-semibold max-w-[8.5rem] truncate">{ROLE_LABELS[roleLens]}</span>
+                  <ChevronDown className={`hidden min-[1800px]:block w-3 h-3 text-white/40 transition-transform duration-200 ${lensOpen ? 'rotate-180' : ''}`} />
+                </button>
+                <AnimatePresence>
+                  {lensOpen && (
+                    <motion.div
+                      id="role-lens-panel"
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.16, ease: EASE }}
+                      role="listbox"
+                      aria-label="Perspective lens"
+                      onKeyDown={(e) =>
+                        handlePanelKeys(e, () => {
+                          setLensOpen(false);
+                          document.getElementById('role-lens-button')?.focus();
+                        })
+                      }
+                      className="absolute right-0 top-full mt-2 w-64 rounded-2xl bg-[#0a0a0a] border border-white/10 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.85)] p-1.5 z-50"
+                    >
+                      <div className="px-3 pt-2 pb-1.5 text-xs font-medium text-white/55">View the site as</div>
+                      {(Object.keys(ROLE_LABELS) as RoleLens[]).map((r) => (
                         <button
-                          key={sub.id + sub.label}
-                          onClick={() => go(sub.id)}
-                          className={`mc-tap text-left px-3 py-2.5 rounded-xl border flex items-start gap-3 transition-colors ${
-                            activeTab === sub.id
-                              ? 'bg-indigo-950/40 border-indigo-500/40'
-                              : 'bg-[#0a0a0a] border-white/10 active:bg-white/5'
+                          key={r}
+                          role="option"
+                          data-menu-item
+                          aria-selected={roleLens === r}
+                          onClick={() => { setRoleLens(r); setLensOpen(false); }}
+                          className={`w-full text-left px-3 h-10 rounded-xl text-[13px] transition-colors flex items-center justify-between ${
+                            roleLens === r
+                              ? 'bg-[#0d0f17] ring-1 ring-inset ring-indigo-500/35 text-indigo-200 font-semibold'
+                              : 'text-white/70 hover:bg-white/[0.05] hover:text-white'
                           }`}
                         >
-                          {Icon && <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${sub.color}`} />}
-                          <span>
-                            <span className="block text-[13px] font-semibold text-white">{sub.label}</span>
-                            <span className="block text-xs text-white/50 mt-0.5 leading-snug">{sub.desc}</span>
-                          </span>
+                          <span>{ROLE_LABELS[r]}</span>
+                          {roleLens === r && <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />}
                         </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-
-              <div className="grid grid-cols-2 gap-1.5">
-                {NAV_ITEMS.filter(i => !i.dropdown && i.id !== 'home').map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => go(item.id)}
-                    className={`mc-tap px-3 rounded-xl border text-left text-sm ${
-                      activeTab === item.id ? 'bg-indigo-950/40 border-indigo-500/40 text-white' : 'bg-[#0a0a0a] border-white/10 text-white/80'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Perspective lens (previously unavailable on phones) */}
-              <div>
-                <button
-                  onClick={() => setMobileLensOpen(o => !o)}
-                  aria-expanded={mobileLensOpen}
-                  className="w-full mc-tap px-3 rounded-xl bg-[#0a0a0a] border border-white/10 flex items-center justify-between text-xs font-mono"
-                >
-                  <span className="flex items-center gap-2">
-                    <SlidersHorizontal className="w-4 h-4 text-indigo-400" />
-                    <span className="text-white/50">LENS:</span>
-                    <span className="text-indigo-300 font-semibold">{ROLE_LABELS[roleLens]}</span>
-                  </span>
-                  <ChevronDown className={`w-4 h-4 text-white/40 transition-transform duration-200 ${mobileLensOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {mobileLensOpen && (
-                  <div className="mt-1.5 grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                    {(Object.keys(ROLE_LABELS) as RoleLens[]).map((r) => (
-                      <button
-                        key={r}
-                        onClick={() => { setRoleLens(r); setMobileLensOpen(false); }}
-                        className={`mc-tap px-3 rounded-xl border text-left text-xs font-mono flex items-center justify-between ${
-                          roleLens === r ? 'bg-indigo-950/60 border-indigo-500/40 text-indigo-300' : 'bg-[#0a0a0a] border-white/10 text-white/70'
-                        }`}
-                      >
-                        <span>{ROLE_LABELS[r]}</span>
-                        {roleLens === r && <CheckCircle2 className="w-4 h-4 text-indigo-400" />}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <button
-                onClick={() => { onOpenIntake(); setMobileMenuOpen(false); }}
-                className="w-full mc-tap rounded-xl bg-indigo-600 active:scale-[0.98] text-white font-medium text-sm flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-transform duration-150"
+                onClick={onOpenIntake}
+                id="header-start-engagement-btn"
+                className="mc-tap hidden sm:flex px-4 rounded-xl whitespace-nowrap bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white text-[13px] font-semibold transition-[background-color,transform] duration-150 items-center"
               >
-                <span>Start Engagement</span>
-                <ArrowRight className="w-4 h-4" />
+                Start a conversation
               </button>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+
+              <button
+                onClick={() => setMobileMenuOpen((o) => !o)}
+                id="mobile-menu-toggle-btn"
+                className="mc-tap xl:hidden rounded-xl bg-[#0a0a0a] border border-white/10 flex items-center justify-center text-white/70 hover:text-white"
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-nav-sheet"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Dim the page behind the sheet; tapping it closes the menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              key="mobile-nav-backdrop"
+              aria-hidden="true"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: EASE }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="xl:hidden fixed inset-x-0 top-16 lg:top-20 bottom-0 bg-black/60"
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Mobile / tablet navigation sheet: one row per section, groups expand in place */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              id="mobile-nav-sheet"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: EASE }}
+              className="xl:hidden absolute top-full inset-x-0 bg-[#050505] border-b border-white/10 max-h-[calc(100dvh-4rem)] lg:max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain"
+            >
+              <nav className="mc-container pt-2 pb-4" aria-label="Mobile">
+                <ul className="divide-y divide-white/[0.08]">
+                  {NAV_ITEMS.map((item) => {
+                    const isActive = activeSection === item.id;
+                    if (!item.dropdown) {
+                      return (
+                        <li key={item.id}>
+                          <RouteLink
+                            to={item.id}
+                            onNavigate={go}
+                            aria-current={isActive ? 'page' : undefined}
+                            className="mc-tap w-full py-3 flex items-center justify-between gap-3 text-left"
+                          >
+                            <span className={`text-[15px] font-medium ${isActive ? 'text-indigo-300' : 'text-white/90'}`}>{item.label}</span>
+                            {isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" aria-hidden="true" />}
+                          </RouteLink>
+                        </li>
+                      );
+                    }
+                    const expanded = mobileGroup === item.id;
+                    const groupPanel = `mobile-group-${item.id}`;
+                    return (
+                      <li key={item.id}>
+                        <button
+                          type="button"
+                          onClick={() => setMobileGroup(expanded ? null : item.id)}
+                          aria-expanded={expanded}
+                          aria-controls={groupPanel}
+                          className="mc-tap w-full py-3 flex items-center justify-between gap-3 text-left"
+                        >
+                          <span className="flex items-baseline gap-2 min-w-0">
+                            <span className={`text-[15px] font-medium ${isActive ? 'text-indigo-300' : 'text-white/90'}`}>{item.label}</span>
+                            {item.badge && <span className="text-xs text-white/55 truncate">{item.badge}</span>}
+                          </span>
+                          <span className="flex items-center gap-2.5 shrink-0">
+                            {isActive && !expanded && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" aria-hidden="true" />}
+                            <ChevronDown className={`w-4 h-4 text-white/40 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+                          </span>
+                        </button>
+                        {expanded && (
+                          <motion.ul
+                            id={groupPanel}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.18, ease: EASE }}
+                            className={`pb-3 grid grid-cols-1 gap-1 ${item.dropdown.length > 3 ? 'sm:grid-cols-2' : ''}`}
+                          >
+                            {item.dropdown.map((sub) => {
+                              const Icon = sub.icon;
+                              const subActive = activeTab === sub.id;
+                              return (
+                                <li key={sub.id + sub.label}>
+                                  <RouteLink
+                                    to={sub.id}
+                                    onNavigate={go}
+                                    aria-current={subActive ? 'page' : undefined}
+                                    className={`mc-tap w-full text-left px-3 py-2.5 rounded-xl flex items-start gap-3 transition-colors ${
+                                      subActive ? 'bg-[#0d0f17] ring-1 ring-inset ring-indigo-500/35' : 'active:bg-white/5'
+                                    }`}
+                                  >
+                                    {Icon && <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${sub.color}`} />}
+                                    <span className="min-w-0">
+                                      <span className={`block text-sm font-semibold ${subActive ? 'text-indigo-200' : 'text-white'}`}>{sub.label}</span>
+                                      <span className="block text-xs text-white/55 mt-0.5 leading-snug">{sub.desc}</span>
+                                    </span>
+                                  </RouteLink>
+                                </li>
+                              );
+                            })}
+                          </motion.ul>
+                        )}
+                      </li>
+                    );
+                  })}
+
+                  {/* Perspective lens */}
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => setMobileGroup(mobileGroup === 'lens' ? null : 'lens')}
+                      aria-expanded={mobileGroup === 'lens'}
+                      aria-controls="mobile-group-lens"
+                      className="mc-tap w-full py-3 flex items-center justify-between gap-3 text-left"
+                    >
+                      <span className="flex items-center gap-2 min-w-0">
+                        <SlidersHorizontal className="w-4 h-4 text-indigo-400 shrink-0" />
+                        <span className="text-[15px] font-medium text-white/90">Perspective</span>
+                        <span className="text-xs text-indigo-300 truncate">{ROLE_LABELS[roleLens]}</span>
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-white/40 shrink-0 transition-transform duration-200 ${mobileGroup === 'lens' ? 'rotate-180' : ''}`} />
+                    </button>
+                    {mobileGroup === 'lens' && (
+                      <motion.ul
+                        id="mobile-group-lens"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.18, ease: EASE }}
+                        className="pb-3 grid grid-cols-1 sm:grid-cols-2 gap-1"
+                      >
+                        {(Object.keys(ROLE_LABELS) as RoleLens[]).map((r) => (
+                          <li key={r}>
+                            <button
+                              type="button"
+                              onClick={() => { setRoleLens(r); setMobileGroup(null); }}
+                              aria-pressed={roleLens === r}
+                              className={`mc-tap w-full px-3 rounded-xl text-left text-sm flex items-center justify-between ${
+                                roleLens === r ? 'bg-[#0d0f17] ring-1 ring-inset ring-indigo-500/35 text-indigo-200' : 'text-white/75 active:bg-white/5'
+                              }`}
+                            >
+                              <span>{ROLE_LABELS[r]}</span>
+                              {roleLens === r && <CheckCircle2 className="w-4 h-4 text-indigo-400" />}
+                            </button>
+                          </li>
+                        ))}
+                      </motion.ul>
+                    )}
+                  </li>
+                </ul>
+              </nav>
+
+              {/* Primary action stays in reach on phones (the bar shows it from sm up) */}
+              <div className="sm:hidden sticky bottom-0 bg-[#050505]/95 backdrop-blur border-t border-white/10 pb-[env(safe-area-inset-bottom)]">
+                <div className="mc-container py-1.5">
+                  <button
+                    onClick={() => { onOpenIntake(); setMobileMenuOpen(false); }}
+                    className="w-full mc-tap rounded-xl bg-indigo-600 active:scale-[0.98] text-white font-medium text-sm flex items-center justify-center gap-2 transition-transform duration-150"
+                  >
+                    Start a conversation
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+    </MotionConfig>
   );
 };

@@ -3,6 +3,10 @@ import { MotionConfig, motion } from 'motion/react';
 import { ArrowRight, ArrowLeft, MapPin, Building2, FileText, Check } from 'lucide-react';
 import { MARKET_ENTRY_9STEPS, UNIVERSAL_INDUSTRIES, AFRICA_REGIONS_DATA } from '../data/industryAndAfricaData';
 import { NavTab } from '../types';
+import { BTN_PRIMARY, PageHeader } from './ui/primitives';
+import { ArtImage } from './ui/ArtImage';
+import { ArtCaption, Scrim } from './ui/Hero';
+import { useMediaQuery } from '../lib/useMediaQuery';
 
 interface Props {
   onNavigate: (tab: NavTab) => void;
@@ -12,25 +16,12 @@ interface Props {
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches
-  );
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const handler = () => setMatches(mq.matches);
-    handler();
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, [query]);
-  return matches;
-}
 
 const primaryBtn =
   'mc-tap inline-flex items-center justify-center gap-2 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition-[background-color,transform] duration-200 active:scale-[0.98] w-full sm:w-auto shrink-0';
 const ghostBtn =
   'mc-tap inline-flex items-center justify-center gap-2 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-sm font-medium text-white disabled:opacity-30 disabled:pointer-events-none transition-[background-color,transform] duration-200 active:scale-[0.98]';
-const monoLabel = 'text-[11px] font-mono uppercase tracking-wider text-gray-400';
+const monoLabel = 'text-xs font-medium text-gray-400';
 
 export const MarketEntryFrameworkView: React.FC<Props> = ({
   onNavigate,
@@ -85,7 +76,7 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
         className="space-y-4"
       >
         <div className="p-4 rounded-xl bg-[#050505] border border-white/[0.08] space-y-1.5">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">Core Strategic Question</div>
+          <div className="text-xs text-indigo-400 font-medium">Core Strategic Question</div>
           <p className="text-base text-white font-medium italic leading-relaxed">"{step.question}"</p>
         </div>
 
@@ -108,7 +99,7 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
           <button onClick={() => goToStep(idx - 1)} disabled={idx === 0} className={ghostBtn}>
             <ArrowLeft className="w-4 h-4" /> Previous Step
           </button>
-          <div className="text-[12px] font-mono text-gray-400 hidden sm:block">
+          <div className="text-[12px] tabular-nums text-gray-400 hidden sm:block">
             {idx + 1} of {total}
           </div>
           <button
@@ -127,33 +118,27 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="mc-section w-full bg-[#050505] text-white">
-        <div className="mc-container space-y-8">
+      <section className="mc-section mc-page-intro w-full text-white">
+        <div className="mc-container space-y-10 md:space-y-14">
           {/* Intent + facts + primary CTA */}
-          <header className="space-y-6">
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-              <div className="space-y-3 max-w-3xl">
-                <span className="mc-eyebrow !text-emerald-400">Signature 9-Step Interactive Framework</span>
-                <h1 className="mc-h2">Entering an African Market?</h1>
-                <p className="mc-lead">
-                  From initial addressable market sizing and competitor price teardowns to regulatory licensing, distributor due diligence, AI copilots, and ongoing governance.
-                </p>
-                <p className="text-[12px] font-mono text-gray-400">Pan-African Market Entry &amp; De-risking Blueprint</p>
-              </div>
-              <button onClick={handleLaunchEngagement} className={primaryBtn}>
-                Build a Market Entry Engagement <ArrowRight className="w-4 h-4" />
+          <PageHeader
+            title="A clearer way into a market."
+            lead="A structured planning sequence for market context, entry decisions and local execution."
+            meta="Market entry framework"
+            actions={
+              <button type="button" onClick={handleLaunchEngagement} className={BTN_PRIMARY}>
+                <span>Build a Market Entry Engagement</span>
               </button>
-            </div>
+            }
+            metrics={facts}
+          />
 
-            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/[0.08] border border-white/[0.08] rounded-2xl overflow-hidden">
-              {facts.map(f => (
-                <div key={f.label} className="bg-[#0a0a0a] px-4 py-4">
-                  <dd className="text-2xl font-semibold text-white leading-none">{f.value}</dd>
-                  <dt className="text-[11px] font-mono uppercase tracking-wider text-gray-400 mt-2">{f.label}</dt>
-                </div>
-              ))}
-            </dl>
-          </header>
+          <figure className="mc-art-bleed mc-full-bleed relative min-h-56 sm:min-h-72">
+            <ArtImage name="market-entry-port" alt="" sizes="100vw" position="object-[52%_50%]" />
+            <Scrim background="linear-gradient(90deg, rgba(5,5,5,.78), rgba(5,5,5,.12) 68%, rgba(5,5,5,.02))" />
+            <Scrim background="linear-gradient(180deg, rgba(5,5,5,.28), rgba(5,5,5,0) 35%, rgba(5,5,5,.72))" />
+            <ArtCaption className="absolute bottom-4 left-[max(1rem,calc((100vw-min(100vw-2rem,88rem))/2))]">Market entry illustration</ArtCaption>
+          </figure>
 
           {/* Context selectors */}
           <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-4 sm:p-6 space-y-5">
@@ -262,13 +247,13 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
                       {currentStep.stepNumber}
                     </span>
                     <div className="min-w-0">
-                      <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">
+                      <span className="text-xs text-indigo-400 font-medium">
                         Step {currentStep.stepNumber} of {String(total).padStart(2, '0')}
                       </span>
                       <h3 className="text-2xl font-bold text-white mt-0.5">{currentStep.title}</h3>
                     </div>
                   </div>
-                  <span className="text-[12px] font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/30 shrink-0">
+                  <span className="text-[12px] tabular-nums text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/30 shrink-0">
                     {selectedCountry} • {selectedIndustry}
                   </span>
                 </div>
@@ -286,7 +271,7 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
             <div className="space-y-6">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold text-white">Complete 9-Step Roadmap</h2>
-                <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30 truncate max-w-[60%]">
+                <span className="text-xs tabular-nums text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30 truncate max-w-[60%]">
                   {selectedCountry} • {selectedIndustry}
                 </span>
               </div>
@@ -329,7 +314,7 @@ export const MarketEntryFrameworkView: React.FC<Props> = ({
                         aria-current={isActive ? 'step' : undefined}
                         className="mc-tap w-full text-left py-2.5 active:scale-[0.99] transition-transform duration-200"
                       >
-                        <span className="block text-[11px] font-mono uppercase tracking-wider text-gray-400">
+                        <span className="block text-xs text-gray-400 font-medium">
                           Step {step.stepNumber}
                         </span>
                         <span className={`block text-base font-semibold leading-snug ${isActive ? 'text-white' : 'text-[#E0E0E0]'}`}>

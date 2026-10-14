@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { SERVICE_PILLARS } from '../data/mindcraftData';
 import { NavTab } from '../types';
-import { ContextualCTA, DeepDive, EASE, RelatedLinks, reveal } from './ui/primitives';
-import { Compass, CheckCircle2, ArrowRight, ChevronDown, FileText } from 'lucide-react';
+import { BTN_PRIMARY, BTN_SECONDARY, ContextualCTA, EASE, RelatedLinks, reveal } from './ui/primitives';
+import { scrollToId } from './PillarParts';
+import { ArtImage } from './ui/ArtImage';
+import { HeroCopy, HeroSection, Scrim } from './ui/Hero';
+import { ChevronDown } from 'lucide-react';
 
 interface BusinessConsultingPillarProps {
   onOpenIntake: () => void;
@@ -17,331 +20,271 @@ const PILLAR_TABS: Record<string, NavTab> = {
   'AI Enterprise Solutions': 'ai-solutions'
 };
 
-const levelOf = (score: string) => Number(score.match(/\d/)?.[0] ?? 0);
-
-const LevelMeter: React.FC<{ score: string }> = ({ score }) => {
-  const level = levelOf(score);
-  return (
-    <span className="flex items-center gap-1" aria-hidden="true">
-      {[1, 2, 3, 4, 5].map((n) => (
-        <span key={n} className={`h-1 w-4 rounded-full ${n <= level ? 'bg-teal-600' : 'bg-white/10'}`} />
-      ))}
-    </span>
-  );
-};
-
-interface DimensionShape {
-  name: string;
-  score: string;
-  assessment: string;
-  blindspots: string;
-  intervention: string;
-}
-
-const DimensionDetail: React.FC<{ dim: DimensionShape }> = ({ dim }) => (
-  <div className="space-y-3">
-    <div className="flex flex-wrap items-center justify-between gap-2">
-      <h3 className="font-mono text-sm font-bold text-white">{dim.name}</h3>
-      <span className="inline-flex items-center gap-2 rounded-lg border border-teal-600/40 bg-[#050505] px-2.5 py-1 font-mono text-xs text-teal-400">
-        Benchmark: {dim.score}
-        <LevelMeter score={dim.score} />
-      </span>
-    </div>
-    <div className="rounded-xl border border-white/[0.08] bg-[#050505] p-4">
-      <div className="mb-1 font-mono text-[11px] font-bold uppercase tracking-wider text-teal-400">Diagnostic inquiry</div>
-      <p className="text-sm leading-relaxed text-[#E0E0E0]">{dim.assessment}</p>
-    </div>
-    <div className="rounded-xl border border-amber-500/30 bg-[#050505] p-4">
-      <div className="mb-1 font-mono text-[11px] font-bold uppercase tracking-wider text-amber-400">Common blindspot</div>
-      <p className="text-sm leading-relaxed text-[#E0E0E0]">{dim.blindspots}</p>
-    </div>
-    <div className="rounded-xl border border-emerald-500/30 bg-[#050505] p-4">
-      <div className="mb-1 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-400">MindCraft intervention</div>
-      <p className="text-sm leading-relaxed text-[#E0E0E0]">{dim.intervention}</p>
-    </div>
-  </div>
-);
-
-/** Capability card: summary always visible, scope opens on demand. */
-const CapabilityRow: React.FC<{
-  index: number;
-  title: string;
-  description: string;
-  bullets: string[];
-  open: boolean;
-  onToggle: () => void;
-}> = ({ index, title, description, bullets, open, onToggle }) => {
-  const panelId = `cap-scope-${index}`;
-  return (
-    <motion.li
-      {...reveal}
-      transition={{ ...reveal.transition, delay: Math.min(index, 4) * 0.05 }}
-      className={`flex flex-col rounded-2xl border bg-[#0A0A0A] p-5 transition-colors duration-200 ${open ? 'border-teal-500/40' : 'border-white/10'}`}
-    >
-      <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-teal-400">Capability 0{index + 1}</span>
-      <h3 className="mt-1 text-base font-semibold text-white">{title}</h3>
-      <p className="mt-1.5 text-sm leading-snug text-white/70">{description}</p>
-
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-controls={panelId}
-        className="mc-tap -mx-2 mt-2 flex items-center justify-between rounded-lg px-2 text-xs font-mono text-teal-400 transition-colors hover:text-white active:scale-[0.98]"
-      >
-        <span>{open ? 'Hide scope' : `Scope: ${bullets.length} items`}</span>
-        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
-      </button>
-
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.ul
-            id={panelId}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2, ease: EASE }}
-            className="space-y-2 overflow-hidden border-t border-white/10 pt-3"
-          >
-            {bullets.map((bp) => (
-              <li key={bp} className="flex items-start gap-2 text-[13px] leading-relaxed text-[#E0E0E0]">
-                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-teal-500" aria-hidden="true" />
-                <span>{bp}</span>
-              </li>
-            ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
-    </motion.li>
-  );
-};
-
-const MATURITY_DIMENSIONS: DimensionShape[] = [
+/*
+ * AI-readiness diagnostic. The questions describe what a digital-maturity / AI-readiness assessment covers
+ * (corporate profile s.4, Pillar 1 and Pillar 3). "How we help" maps each dimension to a documented service;
+ * no scores or benchmarks are shown because none have been published.
+ */
+const DIMENSIONS: { name: string; ask: string; stall: string; help: string }[] = [
   {
-    name: '01. Strategy & Vision',
-    score: 'Level 2 / 5',
-    assessment: 'Is AI adoption anchored directly to measurable business growth, margin retention, or market expansion goals?',
-    blindspots: 'Executing isolated proof-of-concept experiments without executive sponsorship or clear ROI hurdles.',
-    intervention: 'Formulate an Enterprise AI & Growth Strategy with executive steering committee governance and 24-month roadmap.'
+    name: 'Strategy and vision',
+    ask: 'Is AI adoption tied to clear business goals such as growth, margin or market expansion?',
+    stall: 'Isolated experiments with no executive sponsor and no agreed measure of value.',
+    help: 'Enterprise AI strategy and use-case prioritisation aligned to business value and budget.'
   },
   {
-    name: '02. Leadership & Culture',
-    score: 'Level 1 / 5',
-    assessment: 'Do executive leaders and middle managers understand practical AI mechanics and lead change proactively?',
-    blindspots: 'Fear of workforce replacement, unmanaged hype expectations, or resistance from senior clinical/technical staff.',
-    intervention: 'Deliver structured C-suite AI briefings and middle management change enablement workshops.'
+    name: 'Leadership and culture',
+    ask: 'Do leaders and managers understand what AI can and cannot do, and lead the change?',
+    stall: 'Unmanaged expectations, or resistance rooted in uncertainty about roles.',
+    help: 'Executive AI briefings, change-readiness diagnostics and stakeholder engagement planning.'
   },
   {
-    name: '03. Data Readiness & Assets',
-    score: 'Level 2 / 5',
-    assessment: 'Is enterprise data accessible, clean, categorized, and protected by role-based access control?',
-    blindspots: 'Data fragmented across unlinked spreadsheets, siloed CRM/ERP instances, or unindexed historical documents.',
-    intervention: 'Establish a central governed data catalog and build pre-processing ingestion pipelines.'
+    name: 'Data readiness',
+    ask: 'Is the data you would rely on accessible, organised and protected?',
+    stall: 'Information spread across spreadsheets, separate systems and unindexed documents.',
+    help: 'Data strategy, governance and infrastructure advisory ahead of any AI deployment.'
   },
   {
-    name: '04. Technology & Infrastructure',
-    score: 'Level 3 / 5',
-    assessment: 'Does the enterprise possess secure cloud/hybrid infrastructure capable of hosting private LLM gateways and API pipelines?',
-    blindspots: 'Employees utilizing unsecured public consumer AI accounts with sensitive corporate data.',
-    intervention: 'Deploy a private enterprise AI gateway with tenant isolation and cryptographic audit trails.'
+    name: 'Technology and infrastructure',
+    ask: 'Can your systems support AI tools securely, and integrate with CRM and ERP?',
+    stall: 'Staff using public AI tools with sensitive information because no approved option exists.',
+    help: 'Technology and vendor selection advice for AI, CRM, ERP and data platforms.'
   },
   {
-    name: '05. Workforce Capability',
-    score: 'Level 2 / 5',
-    assessment: 'Have frontline teams been trained on function-specific prompt engineering and validation protocols?',
-    blindspots: 'Generic prompting resulting in inconsistent outputs and low daily workflow stickiness.',
-    intervention: 'Execute a 6-week applied AI accelerator with verified prompt libraries and internal champion certification.'
+    name: 'Workforce capability',
+    ask: 'Have teams been trained to use AI in their own functions, and to check what it produces?',
+    stall: 'Generic use that produces inconsistent results and fades after the first weeks.',
+    help: 'Function-specific AI training and train-the-trainer programmes, delivered with our AI Training team.'
   },
   {
-    name: '06. Process & SOP Integration',
-    score: 'Level 1 / 5',
-    assessment: 'Are AI outputs formally integrated into daily standard operating procedures with human verification gates?',
-    blindspots: 'AI outputs treated as discretionary informal notes rather than auditable business artifacts.',
-    intervention: 'Redesign core business SOPs to embed AI drafting with mandatory human-in-the-loop sign-off.'
+    name: 'Process and SOP integration',
+    ask: 'Are AI-assisted steps written into standard operating procedures, with human review where it matters?',
+    stall: 'AI outputs treated as informal notes rather than accountable work products.',
+    help: 'Process mapping and SOP design that build in clear human sign-off.'
   },
   {
-    name: '07. Governance & Ethics',
-    score: 'Level 2 / 5',
-    assessment: 'Are data privacy policies, local Data Protection Act compliance, and copyright safeguards enforced?',
-    blindspots: 'Zero formal enterprise AI policy, risking severe regulatory non-compliance penalties.',
-    intervention: 'Institute a formal Enterprise Responsible AI Policy and ethical review board.'
+    name: 'Governance and ethics',
+    ask: 'Are privacy, confidentiality and responsible-use rules defined and followed?',
+    stall: 'No written AI policy, which is a particular risk in regulated sectors.',
+    help: 'Responsible-use policies and guidelines, especially for pharmaceuticals, healthcare and banking.'
   },
   {
-    name: '08. Use Case Prioritization',
-    score: 'Level 3 / 5',
-    assessment: 'Are AI use cases ranked by business value vs technical feasibility with clear success metrics?',
-    blindspots: 'Attempting overly complex, unfeasible AI projects before securing quick-win operational momentum.',
-    intervention: 'Prioritize top 3 high-impact, low-complexity use cases for rapid 90-day deployment.'
+    name: 'Use-case prioritisation',
+    ask: 'Are potential uses ranked by business value and feasibility, with clear success measures?',
+    stall: 'Starting with complex projects before simpler, high-value ones have built momentum.',
+    help: 'A prioritised roadmap with owners, timelines and investment estimates.'
   }
 ];
 
 export const BusinessConsultingPillar: React.FC<BusinessConsultingPillarProps> = ({ onOpenIntake, setActiveTab }) => {
   const pillar = SERVICE_PILLARS.find((p) => p.id === 'consulting') || SERVICE_PILLARS[0];
-  const [openCap, setOpenCap] = useState<number | null>(null);
-  const [activeDimension, setActiveDimension] = useState(0);
-  const current = MATURITY_DIMENSIONS[activeDimension];
+  const [active, setActive] = useState(0);
+  const dim = DIMENSIONS[active];
+
+  // Roving focus: arrows move along the list in either orientation, Home/End jump to the ends
+  const onTabKey = (e: React.KeyboardEvent) => {
+    const last = DIMENSIONS.length - 1;
+    const next =
+      e.key === 'ArrowDown' || e.key === 'ArrowRight' ? (active === last ? 0 : active + 1)
+      : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? (active === 0 ? last : active - 1)
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : null;
+    if (next === null) return;
+    e.preventDefault();
+    setActive(next);
+    document.getElementById(`dim-tab-${next}`)?.focus();
+  };
 
   const related = [
     ...(pillar.intersections ?? []).map((x) => ({
       label: x.withPillar,
       desc: x.integratedValue.split(':')[0],
-      onClick: () => PILLAR_TABS[x.withPillar] && setActiveTab(PILLAR_TABS[x.withPillar]),
+      to: PILLAR_TABS[x.withPillar],
       tone: 'teal' as const
     })),
-    { label: 'Localization', desc: 'From global strategy to local result', onClick: () => setActiveTab('localization'), tone: 'emerald' as const },
-    { label: 'Senior expertise', desc: 'The senior experience behind our advisory', onClick: () => setActiveTab('senior-expertise') }
+    { label: 'Market localisation', desc: 'From global strategy to local result', to: 'localization', tone: 'emerald' as const },
+    { label: 'Senior expertise', desc: 'Pharmaceutical and healthcare consulting depth', to: 'senior-expertise' },
+    { label: 'Sketch an engagement', desc: '13 practice areas & 89 specialized healthcare services', to: 'engagement-builder', tone: 'indigo' as const }
   ];
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="mc-section bg-[#050505]" id="consulting-section" aria-labelledby="consulting-title">
-        <div className="mc-container space-y-9 md:space-y-12">
-          {/* A. Intent + CTA */}
-          <motion.header {...reveal} className="max-w-3xl">
-            <div className="mc-eyebrow !text-teal-400">
-              <Compass className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Pillar 01 · Strategic advisory</span>
-            </div>
-            <h1 id="consulting-title" className="mc-h1 mt-3 font-light">
-              Business <span className="font-bold text-teal-400">Consulting</span>
-            </h1>
-            <p className="mc-lead mt-4">{pillar.description}</p>
-            <p className="mt-3 font-mono text-xs text-white/60">
-              The question we answer: <span className="text-teal-400">{pillar.question}</span>
-            </p>
-            <div className="mt-5 flex flex-col sm:flex-row gap-3">
-              <button
-                type="button"
-                onClick={onOpenIntake}
-                className="mc-tap px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white text-sm font-semibold flex items-center justify-center gap-2 transition-[background-color,transform] duration-150"
-              >
-                <span>Scope a consulting engagement</span>
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <a
-                href="#consulting-capabilities"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('consulting-capabilities')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }}
-                className="mc-tap px-5 rounded-xl border border-white/10 hover:border-white/20 bg-white/5 active:scale-[0.98] text-white/90 text-sm flex items-center justify-center transition-[background-color,border-color,transform] duration-150"
-              >
-                See the five capabilities
-              </a>
-            </div>
-          </motion.header>
+      <HeroSection id="consulting-section" labelledBy="consulting-title" className="mc-art-bleed min-h-[35rem] bg-[#050505] lg:min-h-[min(46rem,calc(100dvh-5rem))]">
+        <div aria-hidden="true" className="absolute inset-0">
+          <ArtImage
+            name="consulting-boardroom"
+            alt=""
+            priority
+            sizes="100vw"
+            position="object-[60%_50%] lg:object-[64%_50%]"
+          />
+          <Scrim background="linear-gradient(90deg, #050505 0%, rgba(5,5,5,.93) 20%, rgba(5,5,5,.58) 45%, rgba(5,5,5,.12) 72%, rgba(5,5,5,.04) 100%)" />
+          <Scrim background="linear-gradient(180deg, rgba(5,5,5,.72) 0%, rgba(5,5,5,0) 24%, rgba(5,5,5,0) 70%, #050505 100%)" />
+        </div>
+        <div className="mc-container mc-art-copy flex min-h-[35rem] items-end py-14 sm:py-20 lg:min-h-[min(46rem,calc(100dvh-5rem))] lg:py-24">
+          <HeroCopy
+            id="consulting-title"
+            className="max-w-[36rem]"
+            title={
+              <>
+                <span className="sr-only">Business Consulting: </span>
+                Clear decisions, and a plan people <em>can act on</em>.
+              </>
+            }
+            lead={pillar.description}
+            note={
+              <>
+                The question we help answer: <span className="text-teal-300">{pillar.question}</span>
+              </>
+            }
+            actions={
+              <>
+                <button type="button" onClick={onOpenIntake} className={`${BTN_PRIMARY} !px-6`}>
+                  Scope a consulting engagement
+                </button>
+                <button type="button" onClick={() => scrollToId('consulting-capabilities')} className={`${BTN_SECONDARY} bg-black/35`}>
+                  <span>See the five capabilities</span>
+                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </>
+            }
+          />
+        </div>
+      </HeroSection>
 
-          {/* A. Five capabilities */}
-          <div id="consulting-capabilities" className="scroll-mt-24">
-            <div className="mc-eyebrow !text-teal-400">What we do</div>
-            <h2 className="mc-h2 mt-2 font-light">
-              Five capabilities, <span className="font-bold">one advisory team</span>
+      {/* ---------------------------------------------------------- */}
+      {/* Capabilities as an editorial index: the left column frames, the right column lists */}
+      <section className="mc-section" id="consulting-capabilities" aria-labelledby="consulting-caps-title">
+        <div className="mc-container grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+          <motion.div {...reveal} className="lg:col-span-4 lg:sticky lg:top-28 lg:self-start">
+            <h2 id="consulting-caps-title" className="mc-h2">
+              Five capabilities, <em>one advisory team</em>
             </h2>
-            <ul className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 lg:gap-4 items-start">
-              {pillar.capabilities.map((cap, i) => (
-                <CapabilityRow
-                  key={cap.title}
-                  index={i}
-                  title={cap.title}
-                  description={cap.description}
-                  bullets={cap.bulletPoints}
-                  open={openCap === i}
-                  onToggle={() => setOpenCap(openCap === i ? null : i)}
-                />
-              ))}
-            </ul>
-          </div>
-
-          {/* A. Deliverables */}
-          <motion.div {...reveal} className="rounded-2xl border border-teal-600/40 bg-[#0A0A0A] p-5 sm:p-6">
-            <div className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-teal-400">
-              <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-              <h2>Deliverables clients can expect</h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-white/65">
+              From the strategy itself to the structures, processes and rules that carry it out. Use one, or combine them.
+            </p>
+            <div className="mt-8 border-t border-white/[0.1] pt-6">
+              <h3 className="text-[13px] font-medium text-white/55">What you receive</h3>
+              <ul className="mt-3 space-y-3">
+                {pillar.deliverables.map((d) => (
+                  <li key={d} className="flex gap-3 text-sm leading-snug text-white/80">
+                    <span aria-hidden="true" className="mt-[0.45rem] h-1 w-3 shrink-0 rounded-full bg-teal-400" />
+                    {d}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="mt-4 grid gap-3 md:grid-cols-3">
-              {pillar.deliverables.map((del) => (
-                <li key={del} className="flex items-start gap-2.5 text-sm leading-relaxed text-[#E0E0E0]">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden="true" />
-                  <span>{del}</span>
-                </li>
-              ))}
-            </ul>
           </motion.div>
 
-          {/* C. Diagnostic deep dive */}
-          <DeepDive
-            tone="emerald"
-            title="AI-readiness diagnostic: 8 dimensions"
-            hint="How we assess an organization, where it typically stalls and how we intervene"
-          >
-            <p className="pt-3 text-sm text-white/60">Select a dimension to see its assessment criteria and our intervention.</p>
-            <div className="mt-4 grid gap-4 md:grid-cols-[16rem_1fr]">
-              <ul className="space-y-2">
-                {MATURITY_DIMENSIONS.map((dim, idx) => {
-                  const isSelected = activeDimension === idx;
-                  return (
-                    <li key={dim.name}>
-                      <button
-                        type="button"
-                        onClick={() => setActiveDimension(idx)}
-                        aria-expanded={isSelected}
-                        aria-controls={`dim-panel-${idx}`}
-                        className={`mc-tap flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-2.5 text-left transition-colors duration-200 active:scale-[0.98] ${
-                          isSelected
-                            ? 'border-teal-600/60 bg-[#0D0F17] text-white'
-                            : 'border-white/[0.08] bg-[#050505] text-[#9CA3AF] hover:border-white/20 hover:text-white'
-                        }`}
-                      >
-                        <span className="min-w-0 font-mono text-xs font-semibold leading-snug">{dim.name}</span>
-                        <span className="flex shrink-0 items-center gap-2">
-                          <LevelMeter score={dim.score} />
-                          <ChevronDown className={`h-4 w-4 transition-transform duration-200 md:hidden ${isSelected ? 'rotate-180' : ''}`} aria-hidden="true" />
-                        </span>
-                      </button>
-                      <AnimatePresence initial={false}>
-                        {isSelected && (
-                          <motion.div
-                            id={`dim-panel-${idx}`}
-                            initial={{ opacity: 0, y: -4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2, ease: EASE }}
-                            className="mt-2 md:hidden"
-                          >
-                            <DimensionDetail dim={dim} />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </li>
-                  );
-                })}
-              </ul>
-              <div className="hidden md:block">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={activeDimension}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2, ease: EASE }}
-                    className="rounded-2xl border border-white/[0.08] bg-[#0A0A0A] p-5"
+          <ol className="lg:col-span-8 border-t border-white/[0.1]">
+            {pillar.capabilities.map((cap, i) => (
+              <motion.li
+                key={cap.title}
+                {...reveal}
+                transition={{ ...reveal.transition, delay: Math.min(i, 3) * 0.04 }}
+                className="group grid grid-cols-[2.75rem_1fr] sm:grid-cols-[4.5rem_1fr] gap-x-4 border-b border-white/[0.1] py-7 sm:py-9"
+              >
+                <span aria-hidden="true" className="font-heading text-[1.75rem] sm:text-[2.5rem] font-medium leading-none tracking-[-0.03em] text-white/20 tabular-nums transition-colors duration-300 group-hover:text-teal-400/80">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div className="min-w-0">
+                  <h3 className="font-heading text-[1.25rem] sm:text-[1.5rem] font-medium leading-tight tracking-[-0.015em] text-white">{cap.title}</h3>
+                  <p className="mt-2 max-w-[38em] text-[15px] leading-relaxed text-white/70">{cap.description}</p>
+                  <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                    {cap.bulletPoints.map((b) => (
+                      <li key={b} className="flex gap-2.5 text-sm leading-snug text-white/70">
+                        <span aria-hidden="true" className="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-teal-400/80" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------- */}
+      {/* Diagnostic: a working tool, so it sits on its own surface */}
+      <section className="mc-section mc-editorial-band" aria-labelledby="diagnostic-title">
+        <div className="mc-container">
+          <motion.div {...reveal} className="max-w-2xl">
+            <h2 id="diagnostic-title" className="mc-h2">How we assess AI readiness</h2>
+            <p className="mc-lead mt-4">
+              Before recommending any AI investment, we look at eight dimensions of the organisation. Choose one to see what we ask, where organisations tend to stall and how we help.
+            </p>
+          </motion.div>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-[17rem_1fr] lg:grid-cols-[20rem_1fr] gap-6 lg:gap-12">
+            <div role="tablist" aria-label="Readiness dimensions" aria-orientation="vertical" className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {DIMENSIONS.map((d, i) => {
+                const selected = active === i;
+                return (
+                  <button
+                    key={d.name}
+                    type="button"
+                    role="tab"
+                    id={`dim-tab-${i}`}
+                    aria-selected={selected}
+                    aria-controls="dim-panel"
+                    tabIndex={selected ? 0 : -1}
+                    onClick={() => setActive(i)}
+                    onKeyDown={onTabKey}
+                    className={`mc-tap shrink-0 md:w-full flex items-center gap-3 rounded-lg px-3 text-left text-sm transition-colors duration-150 ${
+                      selected ? 'bg-[#0d0f17] text-white' : 'text-white/60 hover:text-white hover:bg-white/[0.03]'
+                    }`}
                   >
-                    <DimensionDetail dim={current} />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+                    <span className={`tabular-nums font-mono text-xs ${selected ? 'text-teal-300' : 'text-white/50'}`}>{String(i + 1).padStart(2, '0')}</span>
+                    <span className="whitespace-nowrap md:whitespace-normal">{d.name}</span>
+                    {selected && <span aria-hidden="true" className="ml-auto hidden md:block h-px w-6 bg-teal-400" />}
+                  </button>
+                );
+              })}
             </div>
-          </DeepDive>
 
-          {/* B. Pairs with + related */}
-          <RelatedLinks title="Pairs with and related" items={related} />
+            <div id="dim-panel" role="tabpanel" aria-labelledby={`dim-tab-${active}`} className="min-w-0">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={active}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2, ease: EASE }}
+                >
+                  <h3 className="font-heading text-[1.5rem] sm:text-[1.875rem] font-medium leading-tight tracking-[-0.02em] text-white">{dim.name}</h3>
+                  <dl className="mt-6 border-t border-white/[0.1]">
+                    {[
+                      { term: 'What we ask', text: dim.ask, accent: 'text-teal-300' },
+                      { term: 'Where it often stalls', text: dim.stall, accent: 'text-amber-300' },
+                      { term: 'How we help', text: dim.help, accent: 'text-emerald-300' }
+                    ].map((row) => (
+                      <div key={row.term} className="grid grid-cols-1 sm:grid-cols-[11rem_minmax(0,1fr)] gap-x-6 gap-y-1.5 border-b border-white/[0.1] py-4 sm:py-5">
+                        <dt className={`text-[13px] font-medium sm:pt-0.5 ${row.accent}`}>{row.term}</dt>
+                        <dd className="text-[15px] leading-relaxed text-white/80 max-w-[38em]">{row.text}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </section>
 
-          <ContextualCTA
-            title="Scope a consulting engagement"
-            body="Bring the decision you need to make. We scope the strategy, roadmap or process work around it."
-            primaryLabel="Talk to MindCraft"
-            onPrimary={onOpenIntake}
-          />
+      {/* ---------------------------------------------------------- */}
+      <section className="mc-section" aria-label="Next steps">
+        <div className="mc-container space-y-10 md:space-y-14">
+          <motion.div {...reveal}>
+            <ContextualCTA
+              title="Bring us the decision you need to make"
+              body="We scope the strategy, roadmap or process work around it, on its own or alongside research, training or AI solutions."
+              primaryLabel="Scope a consulting engagement"
+              onPrimary={onOpenIntake}
+            />
+          </motion.div>
+          <RelatedLinks title="Pairs with" items={related} />
         </div>
       </section>
     </MotionConfig>

@@ -1,239 +1,238 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MotionConfig, motion, AnimatePresence } from 'motion/react';
-import { DeepDive, EASE } from './ui/primitives';
-import {
-  CheckCircle2,
-  ArrowRight,
-  ArrowLeft,
-  Search,
-  LineChart,
-  Lightbulb,
-  Layout,
-  Zap,
-  Activity,
-  Layers
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { EASE, reveal } from './ui/primitives';
 
+interface MindCraftMethodProps {
+  /** Passed by App; the method section itself does not open the enquiry form. */
+  onOpenIntake?: () => void;
+}
 
-const methodSteps = [
+/*
+ * The seven stages of the MindCraft Method. Wording follows the services and deliverables in the corporate
+ * profile (s.4, s.8). No benchmarks, confidence scores or certifications: none have been published.
+ */
+const STAGES: { title: string; tagline: string; process: string; output: string; inputs: string[] }[] = [
   {
-    number: '01',
     title: 'Understand',
-    tagline: 'Context, Objective & Constraints Framing',
-    icon: Lightbulb,
-    inputs: ['Client business objective', 'Geographic & therapeutic scope', 'Regulatory & budget constraints', 'Executive success criteria'],
-    process: 'Rigorous diagnostic interviews with client sponsors, problem framing workshops, and baseline assumption challenging.',
-    outputs: ['Formal Engagement Charter & Problem Definition Statement'],
-    keyRigor: 'Zero reliance on generic assumptions; custom scoping tailored to African & international commercial realities.'
+    tagline: 'Frame the question',
+    process: 'Interviews with your sponsors and a framing workshop to agree the objective, the scope, the constraints and what success should look like.',
+    output: 'An agreed problem statement and engagement scope',
+    inputs: ['Your business objective', 'Geographic and product scope', 'Regulatory and budget constraints', 'How leadership will judge success']
   },
   {
-    number: '02',
     title: 'Investigate',
-    tagline: 'Primary + Secondary Evidence Gathering',
-    icon: Search,
-    inputs: ['Physician / Pharmacist / Patient networks', 'Regulatory health authority gazettes & databases', 'Trade import manifests & tender histories', 'Internal client transactional data'],
-    process: 'Primary surveys, Key Opinion Leader (KOL) panels, desk research and regulatory scans across African and international markets.',
-    outputs: ['Unvarnished Evidence Dossier & Verified Primary Datasets'],
-    keyRigor: 'Double-verified field data with strict statistical sampling and audited clinician credentials.'
+    tagline: 'Gather the evidence',
+    process: 'Primary surveys and interviews, Key Opinion Leader (KOL) research, desk research and regulatory scans across African and international markets.',
+    output: 'An evidence base of primary and secondary findings',
+    inputs: ['Physicians, pharmacists, patients, distributors and buyers', 'Regulatory authority publications', 'Trade, tender and procurement records', 'Your internal data']
   },
   {
-    number: '03',
     title: 'Analyze',
-    tagline: 'Data, Market, Strategic & Operational Modeling',
-    icon: LineChart,
-    inputs: ['Raw primary field survey datasets', 'Tender pricing distributions', 'Process cycle-time logs', 'Organizational AI maturity scores'],
-    process: 'Statistical regression, price-elasticity waterfall modeling, competitor pipeline SWOT, and value-stream process mapping.',
-    outputs: ['Strategic Insight Models, Competitor Matrices & Gap Diagnostics'],
-    keyRigor: 'Triangulation between qualitative physician sentiment and quantitative epidemiological pricing data.'
+    tagline: 'Make sense of it',
+    process: 'Market sizing, pricing and competitor analysis, and process mapping, with what people told us checked against the numbers.',
+    output: 'Insight models, competitor comparisons and gap analysis',
+    inputs: ['Survey and interview data', 'Pricing and tender data', 'Process and cycle-time data', 'AI-readiness assessment results']
   },
   {
-    number: '04',
     title: 'Decide',
-    tagline: 'Recommendations, Trade-offs & Priorities',
-    icon: CheckCircle2,
-    inputs: ['Analytical findings', 'Strategic trade-off options', 'Financial ROI models', 'Risk & compliance assessments'],
-    process: 'Executive decision workshops, scenario stress-testing, resource prioritization, and board-ready synthesis.',
-    outputs: ['Board-Ready Strategy Document & Prioritized Action Roadmap'],
-    keyRigor: 'Clear decision trade-offs with explicit confidence scores and evidence traceability.'
+    tagline: 'Choose and prioritise',
+    process: 'Decision workshops with your leadership on options, trade-offs, risks and priorities, brought together in a board-ready recommendation.',
+    output: 'A strategy document and prioritised roadmap',
+    inputs: ['Analytical findings', 'Strategic options and trade-offs', 'Financial and investment estimates', 'Risk and compliance assessment']
   },
   {
-    number: '05',
     title: 'Design',
-    tagline: 'Transformation, Technology & Training Architecture',
-    icon: Layout,
-    inputs: ['Approved strategic direction', 'Enterprise IT architecture specifications', 'Workforce competency gap audit', 'Regulatory SOP requirements'],
-    process: 'Blueprinting target operating models, authoring functional AI curricula, and engineering production AI system architecture.',
-    outputs: ['Operating Model Blueprint, AI System Specs & Training Curriculum'],
-    keyRigor: 'Integration of technical AI architecture, compliance guardrails, and change management from day one.'
+    tagline: 'Plan the change',
+    process: 'Design the operating model, processes and SOPs, the AI solution architecture and the training curriculum, together rather than one after another.',
+    output: 'Operating model design, solution specification and training curriculum',
+    inputs: ['The agreed strategic direction', 'Current systems and data', 'Workforce skills gaps', 'Regulatory and SOP requirements']
   },
   {
-    number: '06',
     title: 'Activate',
-    tagline: 'Deployment, Adoption & Capability Building',
-    icon: Zap,
-    inputs: ['Completed curriculum modules', 'Production AI software build', 'Standard Operating Procedures', 'Pilot cohort of end-users'],
-    process: 'Hands-on interactive AI training workshops, production software deployment into client cloud/on-prem, and SOP rollout.',
-    outputs: ['Certified Internal AI Champions & Live Production AI Tools'],
-    keyRigor: 'Applied training on real work tasks, with human-in-the-loop validation checkpoints.'
+    tagline: 'Put it to work',
+    process: 'Training on real work tasks, AI solutions deployed into your environment and new SOPs rolled out, with human review built in where it matters.',
+    output: 'Trained internal AI champions and working AI tools',
+    inputs: ['Training materials', 'The AI solution build', 'Standard operating procedures', 'A first group of users']
   },
   {
-    number: '07',
     title: 'Measure',
-    tagline: 'Impact, Learning & Continuous Improvement',
-    icon: Activity,
-    inputs: ['Post-launch commercial KPIs', 'Software uptime and usage telemetry', 'Workforce AI confidence audits', 'Regulatory audit compliance logs'],
-    process: 'Quarterly business reviews, adoption auditing, model drift monitoring, and continuous capability refresher clinics.',
-    outputs: ['Impact Scorecard, Value Realization Report & Optimization Plan'],
-    keyRigor: 'Continuous metric tracking tied to verified commercial revenue, time savings, and regulatory audit certainty.'
+    tagline: 'Check what changed',
+    process: 'Review adoption and results against the measures agreed at the start, collect feedback, and plan refreshers or improvements.',
+    output: 'An impact review and improvement plan',
+    inputs: ['Agreed business indicators', 'Usage data from deployed tools', 'Participant feedback and assessments', 'Compliance and audit records']
   }
 ];
 
+const pad = (n: number) => String(n).padStart(2, '0');
 
-export const MindCraftMethod: React.FC = () => {
-  const [activeStep, setActiveStep] = useState<number>(0);
-  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const mounted = useRef(false);
+export const MindCraftMethod: React.FC<MindCraftMethodProps> = () => {
+  const [active, setActive] = useState(0);
+  const stage = STAGES[active];
+  const last = STAGES.length - 1;
+  /* How far along the line the sequence has travelled (0 at the first stage, 1 at the last) */
+  const progress = active / last;
 
-  const current = methodSteps[activeStep];
+  const select = (i: number, focus = false) => {
+    setActive(i);
+    if (focus) document.getElementById(`method-stage-${i}`)?.focus();
+  };
 
-  // Keep the active chip visible in the phone rail without scrolling the page
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      return;
-    }
-    btnRefs.current[activeStep]?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
-  }, [activeStep]);
+  const onTabKey = (e: React.KeyboardEvent) => {
+    const next =
+      e.key === 'ArrowRight' || e.key === 'ArrowDown' ? (active === last ? 0 : active + 1)
+      : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? (active === 0 ? last : active - 1)
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : null;
+    if (next === null) return;
+    e.preventDefault();
+    select(next, true);
+  };
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="mc-section bg-[#050505]" id="model-method">
-        <div className="mc-container space-y-6 md:space-y-8">
-          {/* A. Intent */}
-          <header className="max-w-3xl">
-            <span className="mc-eyebrow">
-              <Layers className="w-3.5 h-3.5" aria-hidden="true" />
-              Universal delivery framework
-            </span>
-            <h2 className="mc-h2 mt-3 font-light">
-              The MindCraft Method: <span className="font-semibold">seven stages</span>
+      <section className="mc-section mc-surface relative overflow-hidden" id="model-method" aria-labelledby="method-title">
+        <div className="mc-container">
+          <motion.div {...reveal} className="max-w-2xl">
+            <p className="mc-meta">7 stages</p>
+            <h2 id="method-title" className="mc-h2 mt-3">
+              The MindCraft Method
             </h2>
-            <p className="mc-lead mt-3">
-              Every engagement moves from an ambiguous market question to validated evidence, strategic clarity, workforce readiness and measurable commercial transformation.
+            <p className="mc-lead mt-4">
+              Every engagement follows the same sequence, from framing the question to checking what changed. How deep each stage goes depends on
+              the work.
             </p>
-          </header>
+          </motion.div>
 
-          {/* Stage navigation: swipeable rail on phones, 7-up grid from lg */}
-          <div
-            role="tablist"
-            aria-label="Method stages"
-            className="mc-snap-row lg:!grid lg:!grid-cols-7 lg:!overflow-visible lg:!gap-2"
-          >
-            {methodSteps.map((step, idx) => {
-              const isCurrent = activeStep === idx;
-              const Icon = step.icon;
-              return (
-                <button
-                  key={step.number}
-                  ref={(el) => { btnRefs.current[idx] = el; }}
-                  type="button"
-                  role="tab"
-                  aria-selected={isCurrent}
-                  aria-controls="method-panel"
-                  onClick={() => setActiveStep(idx)}
-                  id={`method-step-btn-${step.number}`}
-                  className={`mc-tap !flex-none !basis-[7rem] lg:!basis-auto p-3 rounded-xl border text-left transition-colors active:scale-[0.98] relative overflow-hidden ${
-                    isCurrent
-                      ? 'bg-[#0d0f17] border-indigo-500/60 text-white'
-                      : 'bg-[#0a0a0a] border-white/10 text-white/70 hover:border-white/25 hover:text-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-[11px] font-mono font-bold ${isCurrent ? 'text-indigo-400' : 'text-white/50'}`}>{step.number}</span>
-                    <Icon className={`w-3.5 h-3.5 ${isCurrent ? 'text-indigo-400' : 'text-white/50'}`} aria-hidden="true" />
-                  </div>
-                  <div className="text-sm font-bold truncate text-white">{step.title}</div>
-                  {isCurrent && (
-                    <motion.div
-                      layoutId="method-active-bar"
-                      transition={{ duration: 0.2, ease: EASE }}
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-400"
-                    />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Stage detail */}
-          <div id="method-panel" role="tabpanel" aria-labelledby={`method-step-btn-${current.number}`} className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-4 sm:p-6">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <span className="text-[11px] font-mono text-indigo-400 font-bold tracking-wide">STAGE {current.number} / 07</span>
-                <h3 className="text-2xl font-bold text-white mt-1">{current.title}</h3>
-                <p className="text-sm text-white/65 mt-0.5">{current.tagline}</p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  disabled={activeStep === 0}
-                  onClick={() => setActiveStep(prev => prev - 1)}
-                  aria-label="Previous stage"
-                  className="mc-tap px-3 rounded-xl bg-[#050505] text-white/70 hover:text-white disabled:opacity-40 transition-colors active:scale-[0.98] border border-white/10 inline-flex items-center justify-center"
-                >
-                  <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  disabled={activeStep === methodSteps.length - 1}
-                  onClick={() => setActiveStep(prev => prev + 1)}
-                  aria-label="Next stage"
-                  className="mc-tap px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-40 transition-colors active:scale-[0.98] inline-flex items-center justify-center"
-                >
-                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                </button>
-              </div>
+          {/* The sequence: a horizontal line from lg, a vertical one below */}
+          <motion.div {...reveal} className="relative mt-12 lg:mt-16">
+            {/* Track and progress, horizontal */}
+            <div aria-hidden="true" className="hidden lg:block absolute left-[calc(100%/14)] right-[calc(100%/14)] top-[1.375rem] h-px bg-white/[0.14]">
+              <div
+                className="h-full origin-left bg-indigo-400 transition-transform duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+                style={{ transform: `scaleX(${progress})` }}
+              />
+            </div>
+            {/* Track and progress, vertical */}
+            <div aria-hidden="true" className="lg:hidden absolute left-[0.6875rem] top-[1.625rem] bottom-[1.625rem] w-px bg-white/[0.14]">
+              <div
+                className="w-full h-full origin-top bg-indigo-400 transition-transform duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+                style={{ transform: `scaleY(${progress})` }}
+              />
             </div>
 
+            <div role="tablist" aria-label="Method stages" className="relative flex flex-col lg:grid lg:grid-cols-7">
+              {STAGES.map((s, i) => {
+                const current = i === active;
+                const done = i < active;
+                return (
+                  <button
+                    key={s.title}
+                    type="button"
+                    role="tab"
+                    id={`method-stage-${i}`}
+                    aria-selected={current}
+                    aria-controls="method-panel"
+                    tabIndex={current ? 0 : -1}
+                    onClick={() => select(i)}
+                    onKeyDown={onTabKey}
+                    className="group mc-tap flex lg:flex-col items-center gap-4 lg:gap-0 py-1 lg:py-0 lg:px-2 text-left lg:text-center"
+                  >
+                    <span className="relative flex h-11 w-[1.375rem] lg:w-auto shrink-0 items-center justify-center">
+                      <span
+                        aria-hidden="true"
+                        className={`block rounded-full border transition-[transform,background-color,border-color] duration-200 ${
+                          current
+                            ? 'h-3.5 w-3.5 bg-indigo-400 border-indigo-300 scale-110'
+                            : done
+                              ? 'h-2.5 w-2.5 bg-indigo-400/70 border-transparent'
+                              : 'h-2.5 w-2.5 bg-[#0a0a0a] border-white/35 group-hover:border-white/70'
+                        }`}
+                      />
+                    </span>
+                    <span className="min-w-0 lg:mt-3">
+                      <span className={`font-mono text-xs tabular-nums ${current ? 'text-indigo-300' : 'text-white/55'}`}>{pad(i + 1)}</span>
+                      <span
+                        className={`ml-2.5 lg:ml-0 lg:mt-1 lg:block font-heading text-[1.0625rem] lg:text-[1.125rem] font-medium tracking-[-0.01em] transition-colors duration-150 ${
+                          current ? 'text-white' : 'text-white/70 group-hover:text-white'
+                        }`}
+                      >
+                        {s.title}
+                      </span>
+                      <span className={`hidden sm:inline lg:block ml-2.5 lg:ml-0 lg:mt-1 text-[13px] ${current ? 'text-white/70' : 'text-white/50'}`}>
+                        <span className="lg:hidden" aria-hidden="true">· </span>
+                        {s.tagline}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          {/* Stage detail */}
+          <div
+            id="method-panel"
+            role="tabpanel"
+            aria-labelledby={`method-stage-${active}`}
+            className="mt-8 lg:mt-12 rounded-2xl border border-white/[0.08] bg-[#050505] p-5 sm:p-8"
+          >
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={current.number}
-                initial={{ opacity: 0, y: 8 }}
+                key={active}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.18, ease: EASE }}
-                className="mt-4 space-y-4"
+                transition={{ duration: 0.2, ease: EASE }}
+                className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10"
               >
-                <p className="text-sm sm:text-base text-white/80 leading-relaxed">{current.process}</p>
-                <ul className="space-y-1.5">
-                  {current.outputs.map((out, i) => (
-                    <li key={i} className="text-sm text-emerald-400 font-medium flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-                      <span>{out}</span>
-                    </li>
-                  ))}
-                </ul>
-                <DeepDive title="Inputs and rigor benchmark" hint="What goes in, and the standard we hold">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3">
-                    <div>
-                      <div className="text-[11px] font-mono uppercase font-bold tracking-wider text-white/50 mb-2">Stage inputs</div>
-                      <ul className="space-y-1.5">
-                        {current.inputs.map((inp, i) => (
-                          <li key={i} className="text-sm text-white/80 flex items-start gap-1.5">
-                            <span className="text-indigo-400" aria-hidden="true">•</span>
-                            <span>{inp}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <div className="text-[11px] font-mono uppercase font-bold tracking-wider text-indigo-400 mb-2">Rigor benchmark</div>
-                      <p className="text-sm text-white/70 leading-relaxed italic">"{current.keyRigor}"</p>
-                    </div>
-                  </div>
-                </DeepDive>
+                <div className="md:col-span-7">
+                  <p className="mc-meta">
+                    Stage {pad(active + 1)} of {pad(STAGES.length)}
+                  </p>
+                  <h3 className="mt-3 font-heading text-[1.75rem] sm:text-[2.125rem] font-medium leading-tight tracking-[-0.02em] text-white">
+                    {stage.title}
+                    <span className="text-white/55"> · {stage.tagline}</span>
+                  </h3>
+                  <p className="mt-4 max-w-[36em] text-[15px] sm:text-base leading-relaxed text-white/75">{stage.process}</p>
+                  <p className="mt-6 text-[13px] font-medium text-white/55">What this stage produces</p>
+                  <p className="mt-1.5 text-[15px] font-medium text-emerald-300">{stage.output}</p>
+                </div>
+                <div className="md:col-span-5 md:border-l md:border-white/[0.08] md:pl-10">
+                  <p className="text-[13px] font-medium text-white/55">What goes in</p>
+                  <ul className="mt-3 space-y-2.5">
+                    {stage.inputs.map((inp) => (
+                      <li key={inp} className="flex gap-3 text-[14px] leading-snug text-white/75">
+                        <span aria-hidden="true" className="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-indigo-400" />
+                        {inp}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </motion.div>
             </AnimatePresence>
+
+            <div className="mt-8 flex items-center justify-between gap-3 border-t border-white/[0.08] pt-5">
+              <button
+                type="button"
+                disabled={active === 0}
+                onClick={() => select(active - 1)}
+                className="mc-tap inline-flex items-center gap-2 rounded-xl px-3 text-sm text-white/70 hover:text-white disabled:opacity-35 disabled:hover:text-white/70 transition-colors duration-150"
+              >
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                <span>{active > 0 ? STAGES[active - 1].title : 'Previous'}</span>
+              </button>
+              <button
+                type="button"
+                disabled={active === last}
+                onClick={() => select(active + 1)}
+                className="mc-tap inline-flex items-center gap-2 rounded-xl px-3 text-sm text-white/80 hover:text-white disabled:opacity-35 disabled:hover:text-white/80 transition-colors duration-150"
+              >
+                <span>{active < last ? STAGES[active + 1].title : 'Next'}</span>
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
           </div>
         </div>
       </section>

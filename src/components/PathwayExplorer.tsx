@@ -35,8 +35,8 @@ const selectClass =
 
 const StepLabel: React.FC<{ n: string; htmlFor?: string; id?: string; children: React.ReactNode }> = ({ n, htmlFor, id, children }) => (
   <label htmlFor={htmlFor} id={id} className="flex items-center gap-2 mb-2">
-    <span className="font-mono text-[11px] text-indigo-400 tabular-nums">{n}</span>
-    <span className="text-[11px] font-mono uppercase tracking-[0.12em] text-white/60">{children}</span>
+    <span className="tabular-nums text-xs text-indigo-400 tabular-nums">{n}</span>
+    <span className="text-xs text-white/60 font-medium">{children}</span>
   </label>
 );
 
@@ -90,7 +90,6 @@ export const PathwayExplorer: React.FC<PathwayExplorerProps> = ({ onNavigate, on
     <section className="mc-section" aria-labelledby={`${uid}-title`}>
       <div className="mc-container">
         <SectionHeader
-          eyebrow="Industry × Geography × Capability"
           title={<span id={`${uid}-title`}>Which MindCraft pathway fits you?</span>}
           lead="Pick your industry, where you operate and what you need. We compose the pathway and the scope."
         />
@@ -142,8 +141,8 @@ export const PathwayExplorer: React.FC<PathwayExplorerProps> = ({ onNavigate, on
 
             <fieldset>
               <legend id={capLabelId} className="flex items-center gap-2 mb-2">
-                <span className="font-mono text-[11px] text-indigo-400 tabular-nums">03</span>
-                <span className="text-[11px] font-mono uppercase tracking-[0.12em] text-white/60">Capability</span>
+                <span className="tabular-nums text-xs text-indigo-400 tabular-nums">03</span>
+                <span className="text-xs text-white/60 font-medium">Capability</span>
               </legend>
               <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby={capLabelId}>
                 {SERVICE_PILLARS.map((p) => {
@@ -188,7 +187,7 @@ export const PathwayExplorer: React.FC<PathwayExplorerProps> = ({ onNavigate, on
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: reduce ? 0 : 0.18, ease: EASE }}
-                    className="mt-3 font-heading text-xl sm:text-2xl lg:text-[1.75rem] font-light leading-snug text-white text-balance"
+                    className="mt-3 font-heading text-xl sm:text-2xl lg:text-[1.75rem] font-medium leading-snug text-white text-balance"
                   >
                     <span className={TONES[pui.tone].text}>{pillar.name}</span> for{' '}
                     <span className="text-white">{industry.name}</span>{' '}
@@ -200,16 +199,16 @@ export const PathwayExplorer: React.FC<PathwayExplorerProps> = ({ onNavigate, on
 
               <dl className="mt-5 space-y-3 text-sm">
                 <div className="grid grid-cols-[5.5rem_1fr] gap-3">
-                  <dt className="font-mono text-[11px] uppercase tracking-wider text-white/40 pt-0.5">Industry</dt>
-                  <dd className="text-white/70 leading-snug">{industry.tagline}</dd>
+                  <dt className="text-xs text-white/55 pt-0.5 font-medium">Industry</dt>
+                  <dd className="text-white/70 leading-snug max-w-[62ch]">{industry.tagline}</dd>
                 </div>
                 <div className="grid grid-cols-[5.5rem_1fr] gap-3">
-                  <dt className="font-mono text-[11px] uppercase tracking-wider text-white/40 pt-0.5">Geography</dt>
-                  <dd className="text-white/70 leading-snug">{geoContext}</dd>
+                  <dt className="text-xs text-white/55 pt-0.5 font-medium">Geography</dt>
+                  <dd className="text-white/70 leading-snug max-w-[62ch]">{geoContext}</dd>
                 </div>
                 <div className="grid grid-cols-[5.5rem_1fr] gap-3">
-                  <dt className="font-mono text-[11px] uppercase tracking-wider text-white/40 pt-0.5">Capability</dt>
-                  <dd className="text-white/70 leading-snug">{pillar.tagline}</dd>
+                  <dt className="text-xs text-white/55 pt-0.5 font-medium">Capability</dt>
+                  <dd className="text-white/70 leading-snug max-w-[62ch]">{pillar.tagline}</dd>
                 </div>
               </dl>
             </div>

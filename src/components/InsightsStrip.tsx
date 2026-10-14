@@ -1,46 +1,43 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import type { NavTab } from '../types';
 import { INSIGHTS_REPOSITORY } from '../data/mindcraftData';
-import { SectionHeader, reveal } from './ui/primitives';
+import { RouteLink, SectionHeader } from './ui/primitives';
 
-/** Homepage strip: category, title and read time only. */
+/** Homepage strip: a short ruled reading list (topic, title, read time) that leads into the Insights index. */
 export const InsightsStrip: React.FC<{ onNavigate: (tab: NavTab) => void }> = ({ onNavigate }) => {
-  const items = INSIGHTS_REPOSITORY.slice(0, 4);
+  const items = INSIGHTS_REPOSITORY.slice(0, 3);
   return (
-    <section className="mc-section bg-[#050505]" aria-label="Insights">
+    <section className="mc-section bg-[#050505]" aria-labelledby="insights-strip-title">
       <div className="mc-container">
         <SectionHeader
-          eyebrow="Insights"
-          title={<>How MindCraft <span className="font-bold text-indigo-400">thinks</span></>}
+          title={<span id="insights-strip-title">How MindCraft thinks</span>}
           lead="Perspectives on Life Sciences, African markets and applied AI."
           action={
-            <button
-              type="button"
-              onClick={() => onNavigate('insights')}
-              className="mc-tap self-start md:self-auto px-4 rounded-xl border border-white/10 hover:border-white/25 active:scale-[0.98] text-sm text-white/85 inline-flex items-center gap-2 transition-[border-color,transform] duration-150"
+            <RouteLink
+              to="insights"
+              onNavigate={onNavigate}
+              className="mc-tap self-start md:self-auto inline-flex items-center gap-2 text-sm font-medium text-indigo-300 hover:text-white transition-colors duration-150"
             >
-              All insights <ArrowRight className="w-4 h-4 text-indigo-400" aria-hidden="true" />
-            </button>
+              All insights <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </RouteLink>
           }
         />
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((a, i) => (
-            <motion.li key={a.id} {...reveal} transition={{ ...reveal.transition, delay: i * 0.05 }} className={i >= 3 ? 'hidden lg:block' : undefined}>
-              <button
-                type="button"
-                onClick={() => onNavigate('insights')}
-                className="mc-card-interactive mc-tap group w-full h-full text-left p-5 rounded-2xl bg-[#0a0a0a] border border-white/10 flex flex-col"
+        <ul className="border-t border-white/[0.1]">
+          {items.map((a) => (
+            <li key={a.id} className="border-b border-white/[0.1]">
+              <RouteLink
+                to="insights"
+                onNavigate={onNavigate}
+                className="group grid grid-cols-1 md:grid-cols-[12rem_minmax(0,1fr)_auto] gap-x-8 gap-y-1.5 py-5 sm:py-6 md:items-baseline"
               >
-                <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-400">{a.category}</span>
-                <span className="mt-3 font-heading text-base font-light text-white leading-snug">{a.title}</span>
-                <span className="mt-auto pt-4 flex items-center justify-between text-xs text-white/50">
-                  <span className="font-mono">{a.readTime}</span>
-                  <ArrowRight className="w-4 h-4 text-indigo-400 group-hover:translate-x-0.5 transition-transform duration-200" aria-hidden="true" />
+                <span className="text-[13px] font-medium text-indigo-300">{a.category}</span>
+                <span className="font-heading text-[1.125rem] sm:text-[1.25rem] font-medium leading-snug tracking-[-0.01em] text-white group-hover:text-indigo-100 transition-colors duration-150 max-w-[40em]">
+                  {a.title}
                 </span>
-              </button>
-            </motion.li>
+                <span className="text-[13px] tabular-nums text-white/55">{a.readTime}</span>
+              </RouteLink>
+            </li>
           ))}
         </ul>
       </div>
