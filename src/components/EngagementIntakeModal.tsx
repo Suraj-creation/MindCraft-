@@ -267,64 +267,24 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
     setIsSubmitting(true);
     setSubmitError('');
 
-    const autoReceipt = [
-      `Dear ${fullName.trim()},`,
-      '',
-      `Thank you for contacting MindCraft Consultancy Services.`,
-      '',
-      `We have received your engagement enquiry [Ref: ${ref}]. Our senior advisory practice is currently reviewing your strategic objectives and operational requirements.`,
-      '',
-      `--- SUMMARY OF YOUR ENQUIRY ---`,
-      `• Reference ID: ${ref}`,
-      `• Organisation: ${organization.trim()}`,
-      `• Contact: ${fullName.trim()}${roleTitle.trim() ? ` (${roleTitle.trim()})` : ''}`,
-      `• Work Email: ${email.trim()}`,
-      `• Industry: ${sector || 'Not specified'}`,
-      `• Support Areas Needed: ${selectedNeeds.length > 0 ? selectedNeeds.join(', ') : 'General Advisory'}`,
-      `• Markets in Scope: ${targetMarkets.trim() || 'Pan-African / Global'}${initialBlueprint?.selectedCountries?.length ? ` (${initialBlueprint.selectedCountries.join(', ')})` : ''}`,
-      `• Implementation Timing: ${timelineUrgency}`,
-      `• Strategic Challenge / Scope:`,
-      `${challengeDescription.trim() || 'Initial discovery discussion'}`,
-      `--------------------------------`,
-      '',
-      `Next Steps:`,
-      `A dedicated sector specialist from our Nairobi advisory practice will reach out to you at this email address within 24 business hours to arrange an initial confidential discovery session.`,
-      '',
-      `For any immediate inquiries, you can reach our team directly at ${CONTACT_EMAIL} or visit https://mindcraftconsultancy.com.`,
-      '',
-      `Warm regards,`,
-      '',
-      `Client Advisory & Operations Team`,
-      `MindCraft Consultancy Services`,
-      `Nairobi, Kenya`,
-      `info@mindcraftconsultancy.com`,
-      `https://mindcraftconsultancy.com`
-    ].join('\n');
-
-    const payload: Record<string, string> = {
-      _subject: `[New Engagement Brief] ${organization.trim() || fullName.trim()} — ${fullName.trim()} [${ref}]`,
-      _replyto: email.trim(),
-      _autoresponse: autoReceipt,
-      _captcha: 'false',
-      _template: 'table',
-      'Reference ID': ref,
-      'Client Name': fullName.trim(),
-      'Work Email': email.trim(),
-      'Organisation': organization.trim(),
-      'Role / Title': roleTitle.trim() || 'Not specified',
-      'Industry Vertical': sector || 'Not specified',
-      'Support Needed': selectedNeeds.length > 0 ? selectedNeeds.join(', ') : 'Not specified',
-      'Markets in Scope': targetMarkets.trim() || 'Not specified',
-      'Target African Countries': initialBlueprint?.selectedCountries?.length ? initialBlueprint.selectedCountries.join(', ') : 'None specified',
-      'Timing Urgency': timelineUrgency,
-      'Challenge Description': challengeDescription.trim() || 'Not specified',
-      'Pre-selected Scope Items': initialBlueprint?.selectedServices?.length ? initialBlueprint.selectedServices.join('; ') : 'None',
-      'Submission Timestamp': new Date().toUTCString(),
-      'Platform Origin': typeof window !== 'undefined' ? window.location.origin : 'https://mindcraftconsultancy.com'
+    const payload = {
+      referenceId: ref,
+      fullName: fullName.trim(),
+      roleTitle: roleTitle.trim(),
+      email: email.trim(),
+      organization: organization.trim(),
+      sector: sector || 'General Strategic Advisory',
+      supportNeeded: selectedNeeds.length > 0 ? selectedNeeds : ['General Advisory'],
+      targetMarkets: targetMarkets.trim() || 'Pan-African / Global',
+      africanCountries: initialBlueprint?.selectedCountries || [],
+      timelineUrgency: timelineUrgency,
+      scopeItems: initialBlueprint?.selectedServices || [],
+      challenge: challengeDescription.trim(),
+      timestamp: new Date().toUTCString()
     };
 
     try {
-      await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+      const response = await fetch('/api/send-enquiry', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -332,6 +292,10 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
         },
         body: JSON.stringify(payload)
       });
+
+      if (!response.ok) {
+        console.warn('Direct SMTP API returned status:', response.status);
+      }
       setIsSubmitting(false);
       setStep(5);
     } catch (err) {
@@ -340,6 +304,7 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
       setStep(5);
     }
   };
+
 
   const handleNext = () => {
     if (step === 1 && !stepOneValid) {
