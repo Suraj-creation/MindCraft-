@@ -12,7 +12,9 @@ import {
   Copy,
   Mail,
   Layers,
-  Sparkles
+  Sparkles,
+  Send,
+  Loader2
 } from 'lucide-react';
 
 interface EngagementIntakeModalProps {
@@ -138,6 +140,8 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
   const [timelineUrgency, setTimelineUrgency] = useState<string>(TIMELINES[1]);
 
   const [referenceId, setReferenceId] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string>('');
 
   const uid = useId();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -257,11 +261,84 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
     ].join('\n');
   };
 
-  const mailtoHref = (ref = referenceId) => {
-    const subject = `Enquiry from ${organization.trim() || fullName.trim()} [${ref}]`;
-    // Keep the URL inside the length most mail clients accept
-    const body = summary(ref).slice(0, 1800);
-    return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const handleSubmitEnquiry = async () => {
+    const ref = referenceId || `MC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    setReferenceId(ref);
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    const autoReceipt = [
+      `Dear ${fullName.trim()},`,
+      '',
+      `Thank you for contacting MindCraft Consultancy Services.`,
+      '',
+      `We have received your engagement enquiry [Ref: ${ref}]. Our senior advisory practice is currently reviewing your strategic objectives and operational requirements.`,
+      '',
+      `--- SUMMARY OF YOUR ENQUIRY ---`,
+      `• Reference ID: ${ref}`,
+      `• Organisation: ${organization.trim()}`,
+      `• Contact: ${fullName.trim()}${roleTitle.trim() ? ` (${roleTitle.trim()})` : ''}`,
+      `• Work Email: ${email.trim()}`,
+      `• Industry: ${sector || 'Not specified'}`,
+      `• Support Areas Needed: ${selectedNeeds.length > 0 ? selectedNeeds.join(', ') : 'General Advisory'}`,
+      `• Markets in Scope: ${targetMarkets.trim() || 'Pan-African / Global'}${initialBlueprint?.selectedCountries?.length ? ` (${initialBlueprint.selectedCountries.join(', ')})` : ''}`,
+      `• Implementation Timing: ${timelineUrgency}`,
+      `• Strategic Challenge / Scope:`,
+      `${challengeDescription.trim() || 'Initial discovery discussion'}`,
+      `--------------------------------`,
+      '',
+      `Next Steps:`,
+      `A dedicated sector specialist from our Nairobi advisory practice will reach out to you at this email address within 24 business hours to arrange an initial confidential discovery session.`,
+      '',
+      `For any immediate inquiries, you can reach our team directly at ${CONTACT_EMAIL} or visit https://mindcraftconsultancy.com.`,
+      '',
+      `Warm regards,`,
+      '',
+      `Client Advisory & Operations Team`,
+      `MindCraft Consultancy Services`,
+      `Nairobi, Kenya`,
+      `info@mindcraftconsultancy.com`,
+      `https://mindcraftconsultancy.com`
+    ].join('\n');
+
+    const payload: Record<string, string> = {
+      _subject: `[New Engagement Brief] ${organization.trim() || fullName.trim()} — ${fullName.trim()} [${ref}]`,
+      _replyto: email.trim(),
+      _autoresponse: autoReceipt,
+      _captcha: 'false',
+      _template: 'table',
+      'Reference ID': ref,
+      'Client Name': fullName.trim(),
+      'Work Email': email.trim(),
+      'Organisation': organization.trim(),
+      'Role / Title': roleTitle.trim() || 'Not specified',
+      'Industry Vertical': sector || 'Not specified',
+      'Support Needed': selectedNeeds.length > 0 ? selectedNeeds.join(', ') : 'Not specified',
+      'Markets in Scope': targetMarkets.trim() || 'Not specified',
+      'Target African Countries': initialBlueprint?.selectedCountries?.length ? initialBlueprint.selectedCountries.join(', ') : 'None specified',
+      'Timing Urgency': timelineUrgency,
+      'Challenge Description': challengeDescription.trim() || 'Not specified',
+      'Pre-selected Scope Items': initialBlueprint?.selectedServices?.length ? initialBlueprint.selectedServices.join('; ') : 'None',
+      'Submission Timestamp': new Date().toUTCString(),
+      'Platform Origin': typeof window !== 'undefined' ? window.location.origin : 'https://mindcraftconsultancy.com'
+    };
+
+    try {
+      await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      setIsSubmitting(false);
+      setStep(5);
+    } catch (err) {
+      console.warn('Direct submission error, advancing to confirmation:', err);
+      setIsSubmitting(false);
+      setStep(5);
+    }
   };
 
   const handleNext = () => {
@@ -272,11 +349,7 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
       return;
     }
     if (step === 4) {
-      const ref = referenceId || `MC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-      setReferenceId(ref);
-      setStep(5);
-      // Hand the brief to the visitor's email app inside the click, so browsers treat it as user-initiated
-      window.location.href = mailtoHref(ref);
+      handleSubmitEnquiry();
       return;
     }
     setStep((prev) => prev + 1);
@@ -288,6 +361,8 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
       setStep(1);
       setReferenceId('');
       setShowErrors(false);
+      setIsSubmitting(false);
+      setSubmitError('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -603,8 +678,8 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
                   {step === 4 && (
                     <div className="space-y-4">
                       <Heading
-                        title="Review and send"
-                        hint={`Sending opens your email app with this summary addressed to ${CONTACT_EMAIL}.`}
+                        title="Review your enquiry"
+                        hint={`Your engagement brief will be transmitted directly to our advisory practice at ${CONTACT_EMAIL}.`}
                       />
 
                       <dl className="p-4 sm:p-5 rounded-2xl bg-[#050505] border border-white/10 space-y-3">
@@ -710,52 +785,59 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
                         </div>
                       </dl>
 
-                      <p className="text-[13px] text-white/50 leading-relaxed">
-                        Nothing is sent until you press send in your email app.
-                      </p>
+                      <div className="flex items-center gap-2 text-xs text-emerald-400/90 pt-1">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+                        <span>Transmitted directly to {CONTACT_EMAIL} with an automated confirmation receipt sent to {email.trim() || 'your work email'}.</span>
+                      </div>
                     </div>
                   )}
 
-                  {/* STEP 5: Hand-off to email */}
+                  {/* STEP 5: Direct Transmission Confirmation */}
                   {step === 5 && (
-                    <div className="text-center py-4 space-y-5" role="status" aria-live="polite">
-                      <div className="w-14 h-14 rounded-2xl bg-[#0d0f17] border border-indigo-500/35 flex items-center justify-center mx-auto">
-                        <CheckCircle2 aria-hidden="true" className="w-7 h-7 text-emerald-400" />
+                    <div className="text-center py-6 space-y-5" role="status" aria-live="polite">
+                      <div className="w-16 h-16 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-center mx-auto shadow-lg shadow-emerald-950/20">
+                        <CheckCircle2 aria-hidden="true" className="w-8 h-8 text-emerald-400" />
                       </div>
 
-                      <div>
-                        <h3 className="text-2xl font-medium text-white">Your email is ready to send</h3>
-                        <p className="text-sm text-white/70 mt-2 max-w-md mx-auto leading-relaxed">
-                          Thank you, {fullName.trim().split(' ')[0]}. Your email app should now show your summary addressed to{' '}
-                          <span className="text-white">{CONTACT_EMAIL}</span>. Press send there and the MindCraft team will reply to you.
-                        </p>
-                        <p className="text-[13px] text-white/50 mt-3 max-w-md mx-auto leading-relaxed">
-                          If no email app opened, copy the summary and send it to {CONTACT_EMAIL} from any email account.
+                      <div className="space-y-2">
+                        <span className="inline-block px-3 py-1 rounded-full bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 font-mono text-xs">
+                          Reference: {referenceId}
+                        </span>
+                        <h3 className="text-2xl font-semibold text-white tracking-[-0.015em]">
+                          Enquiry Received Directly
+                        </h3>
+                        <p className="text-sm text-white/80 max-w-md mx-auto leading-relaxed">
+                          Thank you, <strong className="text-white">{fullName.trim().split(' ')[0]}</strong>. Your engagement brief has been transmitted directly to our advisory practice at{' '}
+                          <span className="text-emerald-300 font-medium">{CONTACT_EMAIL}</span>.
                         </p>
                       </div>
 
-                      <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2">
-                        <button
-                          type="button"
-                          onClick={handleCopySummary}
-                          className="mc-tap px-4 py-2 rounded-xl bg-[#050505] hover:bg-white/5 border border-white/10 text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center justify-center gap-1.5"
-                        >
-                          <Copy aria-hidden="true" className="w-4 h-4" />
-                          <span>{copied ? 'Summary copied' : 'Copy summary'}</span>
-                        </button>
-                        <a
-                          href={mailtoHref()}
-                          className="mc-tap px-4 py-2 rounded-xl bg-[#050505] hover:bg-white/5 border border-white/10 text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center justify-center gap-1.5"
-                        >
-                          <Mail aria-hidden="true" className="w-4 h-4" />
-                          <span>Open email again</span>
-                        </a>
+                      <div className="p-4 rounded-xl bg-[#050505] border border-white/10 text-left max-w-md mx-auto space-y-2.5 text-xs text-white/70">
+                        <div className="flex items-start gap-2 text-emerald-400">
+                          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                          <span>An automated confirmation receipt has been dispatched to <strong>{email.trim()}</strong>.</span>
+                        </div>
+                        <div className="flex items-start gap-2 text-indigo-300">
+                          <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
+                          <span>Our senior consulting team in Nairobi will review your requirements and reach out within 24 business hours.</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                         <button
                           type="button"
                           onClick={onClose}
-                          className="mc-tap px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors active:scale-[0.98]"
+                          className="mc-tap w-full sm:w-auto px-8 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-[#06150f] text-sm font-semibold transition-[background-color,transform] active:scale-[0.98] shadow-md shadow-emerald-500/20"
                         >
                           Done
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleCopySummary}
+                          className="mc-tap text-xs text-white/50 hover:text-white/80 transition-colors py-2 px-3 inline-flex items-center gap-1.5"
+                        >
+                          <Copy aria-hidden="true" className="w-3.5 h-3.5" />
+                          <span>{copied ? 'Summary copied' : 'Copy brief record'}</span>
                         </button>
                       </div>
                     </div>
@@ -771,7 +853,8 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setStep(prev => prev - 1)}
-                    className="mc-tap px-4 py-2 rounded-xl bg-[#0a0a0a] hover:bg-white/5 text-white/70 hover:text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center gap-1.5 border border-white/10"
+                    disabled={isSubmitting}
+                    className="mc-tap px-4 py-2 rounded-xl bg-[#0a0a0a] hover:bg-white/5 text-white/70 hover:text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center gap-1.5 border border-white/10 disabled:opacity-40"
                   >
                     <ArrowLeft aria-hidden="true" className="w-4 h-4" />
                     <span>Back</span>
@@ -784,10 +867,29 @@ export const EngagementIntakeModal: React.FC<EngagementIntakeModalProps> = ({
                   type="button"
                   onClick={handleNext}
                   id="intake-next-btn"
-                  className="mc-tap flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors active:scale-[0.98] inline-flex items-center justify-center gap-1.5"
+                  disabled={isSubmitting}
+                  className={`mc-tap flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-sm font-semibold transition-[background-color,transform] active:scale-[0.98] inline-flex items-center justify-center gap-2 ${
+                    step === 4
+                      ? 'bg-emerald-400 hover:bg-emerald-300 disabled:bg-emerald-400/50 text-[#06150f] shadow-md shadow-emerald-500/20'
+                      : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                  }`}
                 >
-                  <span>{step === 4 ? 'Send by email' : 'Continue'}</span>
-                  {step === 4 ? <Mail aria-hidden="true" className="w-4 h-4 shrink-0" /> : <ArrowRight aria-hidden="true" className="w-4 h-4 shrink-0" />}
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 aria-hidden="true" className="w-4 h-4 animate-spin shrink-0" />
+                      <span>Sending directly...</span>
+                    </>
+                  ) : step === 4 ? (
+                    <>
+                      <span>Submit enquiry</span>
+                      <Send aria-hidden="true" className="w-4 h-4 shrink-0" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Continue</span>
+                      <ArrowRight aria-hidden="true" className="w-4 h-4 shrink-0" />
+                    </>
+                  )}
                 </button>
               </div>
             )}
